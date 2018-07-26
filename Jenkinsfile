@@ -44,7 +44,6 @@ pipeline {
                 sh  """
                     ${TERRAFORM_CMD} apply -lock=false -input=false tfplan
                     """
-                }
             }
         }
     }
