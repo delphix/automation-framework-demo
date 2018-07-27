@@ -1,7 +1,7 @@
 pipeline {
     agent any
     environment {
-        TERRAFORM_CMD = 'docker run --network host -w /app -v ${HOME}/.aws:/root/.aws -v ${HOME}/.ssh:/root/.ssh -v `pwd`:/app hashicorp/terraform:light'
+        TERRAFORM = 'docker run --network host -w /app -v ${HOME}/.aws:/root/.aws -v ${HOME}/.ssh:/root/.ssh -v `pwd`:/app hashicorp/terraform:light'
     }
     stages {
         stage('checkout repo') {
@@ -17,17 +17,17 @@ pipeline {
         stage('init') {
             steps {
                 dir ('terraform') {
-                    sh  "${TERRAFORM_CMD} init -backend=true -input=false"
+                    sh  "${TERRAFORM} init -backend=true -input=false"
                 }
             }
         }
         stage('plan') {
             steps {
                 dir ('terraform') {
-                    sh  "${TERRAFORM_CMD} plan -out=tfplan -input=false"
+                    sh  "${TERRAFORM} plan -out=tfplan -input=false"
                     script {
-                      timeout(time: 10, unit: 'MINUTES') {
-                        input(id: "Deploy Gate", message: "Deploy ${params.project_name}?", ok: 'Deploy')
+                        timeout(time: 10, unit: 'MINUTES') {
+                            input(id: "Deploy Gate", message: "Deploy ${params.project_name}?", ok: 'Deploy')
                         }
                     }
                 }
@@ -36,7 +36,7 @@ pipeline {
         stage('apply') {
             steps {
                 dir ('terraform') {
-                    sh  "${TERRAFORM_CMD} apply -lock=false -input=false tfplan"
+                    sh  "${TERRAFORM} apply -lock=false -input=false tfplan"
                 }
             }
         }
