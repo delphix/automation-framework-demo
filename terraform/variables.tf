@@ -1,18 +1,23 @@
-variable "region" {
+variable "aws_region" {
   default = "us-west-2"
 }
 
-variable "rds_vpc_id" {
-  default = "vpc-37cf3e4f"
-  description = "Our default RDS virtual private cloud (rds_vpc)."
+variable "owner" {
+  description = "Tag to designate primary contact"
+  default = "Derek Smart"
 }
 
-variable "rds_public_subnets" {
-  default = "subnet-2dd2bc66"
-  description = "The public subnets of our RDS VPC rds-vpc."
+variable "expiration" {
+  description = "Tag to designate when asset should be terminated"
+  default = "2020-08-27"
 }
 
-variable "rds_public_subnet_group" {
-  default = "postgres-terraform managed"
-  description = "Apparently the group name, according to the RDS launch wizard."
+variable "cost_center" {
+  description = "Tag to designate where costs should be assigned"
+  default = "305000"
+}
+
+variable "project" {
+  description = "Tag to designate affiliated project"
+  default = "daf"
 }
