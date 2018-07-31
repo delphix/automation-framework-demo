@@ -13,6 +13,10 @@ resource "aws_subnet" "database1" {
     }
 }
 
+output "database1_id" {
+    value = "${aws_subnet.database1.id}"
+}
+
 resource "aws_subnet" "database2" {
     vpc_id = "${var.vpc_id}"
     cidr_block = "${var.database_networks[1]}"
@@ -28,22 +32,26 @@ resource "aws_subnet" "database2" {
     }
 }
 
+output "database2_id" {
+    value = "${aws_subnet.database2.id}"
+}
+
 resource "aws_db_subnet_group" "default" {
   name = "${var.project}_database_subnet_group"
   subnet_ids = ["${aws_subnet.database1.id}", "${aws_subnet.database2.id}"]
 
   tags {
-        "dlpx:Project" = "${var.project}"
-        "dlpx:Owner" = "${var.owner}"
-        "dlpx:Expiration" = "${var.expiration}"
-        "dlpx:CostCenter" = "${var.cost_center}"
-    }
+    "dlpx:Project" = "${var.project}"
+    "dlpx:Owner" = "${var.owner}"
+    "dlpx:Expiration" = "${var.expiration}"
+    "dlpx:CostCenter" = "${var.cost_center}"
+  }
 }
 
 data "aws_kms_secrets" "db" {
   secret {
     name    = "master_password"
-    payload = "AQICAHjVk6pILmgy+NWJt098mQz7G37xRyA8NKRGz1oJgqayogESEOwlFpioOXGXNSTuc+ddAAAAbDBqBgkqhkiG9w0BBwagXTBbAgEAMFYGCSqGSIb3DQEHATAeBglghkgBZQMEAS4wEQQMpufQVZV4IW4a12lFAgEQgCl7IKQUt3Lg0Al06tri5hq0IhCPg9DDF4fs6Ud+gn9vnNrJY8e27rLDQw=="
+    payload = "${var.kms_password}"
 
     context {
       foo = "bar"
@@ -61,7 +69,7 @@ resource "aws_db_instance" "daf-postgres" {
   instance_class           = "db.t2.micro"
   multi_az                 = false
   name                     = "${var.project}postgres"
-  parameter_group_name     = "default.postgres10"
+  parameter_group_name     = "daf-postgres10"
   password                 = "${data.aws_kms_secrets.db.plaintext["master_password"]}"
   port                     = 5432
   publicly_accessible      = true
@@ -70,6 +78,10 @@ resource "aws_db_instance" "daf-postgres" {
   username                 = "dafpostgresuser"
   vpc_security_group_ids   = ["${aws_security_group.daf-postgres.id}"]
   skip_final_snapshot = true
+}
+
+output "daf-postgres-name" {
+    value = "${aws_db_instance.daf-postgres.name}"
 }
 
 resource "aws_security_group" "daf-postgres" {

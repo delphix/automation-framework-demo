@@ -12,6 +12,10 @@ variable "vpc_id" {
   description = "VPC ID for the network."
 }
 
+variable "kms_password" {
+  description = "KMS Encrypted Master Password for Database."
+}
+
 variable "owner" {}
 variable "expiration" {}
 variable "cost_center" {}

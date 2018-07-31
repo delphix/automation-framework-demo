@@ -9,7 +9,6 @@ variable "vpc_id" {
 
 variable "key_name" {
   description = "Name of the SSH keypair to use in AWS (do not include .pem extension)."
-  default = "KEY_PAIR_NAME"
 }
 
 variable "owner" {}

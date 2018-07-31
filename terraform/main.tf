@@ -26,7 +26,8 @@ module "database" {
   expiration = "${var.expiration}"
   cost_center = "${var.cost_center}"
   project = "${var.project}"
-  vpc_id="${module.vpc.vpc_id}"
+  vpc_id = "${module.vpc.vpc_id}"
+  kms_password = "AQICAHjVk6pILmgy+NWJt098mQz7G37xRyA8NKRGz1oJgqayogESEOwlFpioOXGXNSTuc+ddAAAAbDBqBgkqhkiG9w0BBwagXTBbAgEAMFYGCSqGSIb3DQEHATAeBglghkgBZQMEAS4wEQQMpufQVZV4IW4a12lFAgEQgCl7IKQUt3Lg0Al06tri5hq0IhCPg9DDF4fs6Ud+gn9vnNrJY8e27rLDQw=="
 }
 
 module "delphix_engine" {
