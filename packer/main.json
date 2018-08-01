@@ -1,0 +1,51 @@
+{
+  "variables": {
+    "aws_access_key": "{{env `AWS_ACCESS_KEY_ID`}}",
+    "aws_secret_key": "{{env `AWS_SECRET_ACCESS_KEY`}}",
+    "region": "us-west-2"
+  },
+  "builders": [{
+    "type": "amazon-ebs",
+    "access_key": "{{user `aws_access_key`}}",
+    "secret_key": "{{user `aws_secret_key`}}",
+    "region": "{{user `region`}}",
+    "source_ami_filter": {
+      "filters": {
+      "virtualization-type": "hvm",
+      "name": "amzn2-ami-hvm-2.0.*-x86_64-gp2",
+      "root-device-type": "ebs"
+      },
+      "owners": ["137112412989"],
+      "most_recent": true
+    },
+    "instance_type": "t2.micro",
+    "ssh_username": "ec2-user",
+    "ami_name": "daf-postgres-{{timestamp}}"
+  }],
+  "provisioners" : [
+    {
+      "type" : "file",
+      "source" : "./data/",
+      "destination" : "/home/ec2-user/"
+    },
+    {
+      "type" : "shell",
+      "inline":[
+        "sudo yum update -y",
+        "sudo amazon-linux-extras install postgresql9.6",
+        "sudo yum install postgresql postgresql-server java-1.8.0 glibc.i686 -y",
+        "sudo /usr/bin/postgresql-setup initdb",
+        "sudo ln -s /etc/os-release /etc/redhat-release",
+        "sudo sh -c 'cat /home/ec2-user/pg_hba.conf > /var/lib/pgsql/data/pg_hba.conf'",
+        "sudo sh -c 'cat /home/ec2-user/postgresql.conf >> /var/lib/pgsql/data/postgresql.conf'"
+      ]
+    },
+    {
+      "type" : "shell",
+      "inline":[
+        "sudo systemctl start postgresql",
+        "sudo systemctl enable postgresql"
+      ]
+    }
+  ]
+}
