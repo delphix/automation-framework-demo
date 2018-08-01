@@ -23,6 +23,11 @@ resource "aws_subnet" "server_sub" {
     }
 }
 
+output "subnet_id" {
+    value = "${aws_subnet.server_sub.id}"
+}
+
+
 data "http" "your_ip" {
   url = "http://ipv4.icanhazip.com"
 
@@ -33,7 +38,7 @@ data "http" "your_ip" {
 }
 
 resource "aws_security_group" "security_group" {
-  name = "${var.project}_${var.vpc_id}"
+  name = "${var.project}_Delphix_Engine"
   description = "Allow all inbound traffic"
   vpc_id = "${var.vpc_id}"
   ingress {
@@ -51,12 +56,16 @@ resource "aws_security_group" "security_group" {
   }
 
   tags {
-    Name = "${var.project}_allow_all"
+    Name = "${var.project}_delphix_engine"
     "dlpx:Project" = "${var.project}"
     "dlpx:Owner" = "${var.owner}"
     "dlpx:Expiration" = "${var.expiration}"
     "dlpx:CostCenter" = "${var.cost_center}"
   }
+}
+
+output "security_group_id" {
+    value = "${aws_security_group.security_group.id}"
 }
 
 resource "aws_instance" "de" {
@@ -103,10 +112,10 @@ resource "aws_instance" "de" {
   }
 }
 
-output "delphix_public_ip" {
+output "public_ip" {
   value = "${aws_instance.de.public_ip}"
 }
 
-output "delphix_private_ip" {
+output "private_ip" {
   value = "${aws_instance.de.private_ip}"
 }

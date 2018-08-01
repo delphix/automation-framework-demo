@@ -40,3 +40,17 @@ module "delphix_engine" {
   vpc_id = "${module.vpc.vpc_id}"
   key_name = "Derek-CTO-west-2"
 }
+
+module "delphix_target" {
+  source = "./modules/delphix_target"
+  environment = "${terraform.workspace}"
+  owner = "${var.owner}"
+  expiration = "${var.expiration}"
+  cost_center = "${var.cost_center}"
+  project = "${var.project}"
+  vpc_id = "${module.vpc.vpc_id}"
+  key_name = "Derek-CTO-west-2"
+  ami_name = "daf-postgres-*"
+  de_security_group = "${module.delphix_engine.security_group_id}"
+  subnet_id = "${module.delphix_engine.subnet_id}"
+}

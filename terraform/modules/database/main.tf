@@ -64,12 +64,12 @@ resource "aws_db_instance" "daf-postgres" {
   backup_retention_period  = 7   # in days
   db_subnet_group_name     = "${var.project}_database_subnet_group"
   engine                   = "postgres"
-  engine_version           = "10.4"
+  engine_version           = "9.6.9"
   identifier               = "${var.project}-postgres"
   instance_class           = "db.t2.micro"
   multi_az                 = false
   name                     = "${var.project}postgres"
-  parameter_group_name     = "daf-postgres10"
+  parameter_group_name     = "daf-postgres96"
   password                 = "${data.aws_kms_secrets.db.plaintext["master_password"]}"
   port                     = 5432
   publicly_accessible      = true
