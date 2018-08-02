@@ -20,7 +20,7 @@
     },
     "instance_type": "t2.micro",
     "ssh_username": "ec2-user",
-    "ami_name": "daf-postgres-{{timestamp}}",
+    "ami_name": "delphix-postgres-{{timestamp}}",
     "tags": {
       "dlpx:Project" : "daf",
       "dlpx:Owner" : "Derek Smart",
@@ -45,7 +45,12 @@
         "sudo sh -c 'cat /home/ec2-user/pg_hba.conf > /var/lib/pgsql/data/pg_hba.conf'",
         "sudo sh -c 'cat /home/ec2-user/postgresql.conf >> /var/lib/pgsql/data/postgresql.conf'",
         "sudo usermod -aG wheel postgres",
-        "sudo sh -c 'echo \"postgres        ALL=(ALL)       NOPASSWD:ALL\" >> /etc/sudoers'"
+        "sudo sh -c 'echo \"postgres        ALL=(ALL)       NOPASSWD:ALL\" >> /etc/sudoers'",
+        "sudo -H -u postgres sh -c 'sudo mkdir -p /mnt/delphix'",
+        "sudo -H -u postgres sh -c 'sudo mkdir /var/lib/pgsql/toolkit'",
+        "sudo -H -u postgres sh -c 'sudo chmod 0770 /var/lib/pgsql/toolkit'",
+        "sudo -H -u postgres sh -c 'sudo mkdir -p /u02/pgarchive/'",
+        "sudo -H -u postgres sh -c 'sudo chmod 0700 /u02/pgarchive/'"
       ]
     },
     {
