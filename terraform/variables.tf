@@ -14,7 +14,7 @@ variable "expiration" {
 
 variable "cost_center" {
   description = "Tag to designate where costs should be assigned"
-  default = "305000"
+  default = "305000 - Development Engineering"
 }
 
 variable "project" {
