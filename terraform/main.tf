@@ -50,7 +50,7 @@ module "delphix_target" {
   project = "${var.project}"
   vpc_id = "${module.vpc.vpc_id}"
   key_name = "Derek-CTO-west-2"
-  ami_name = "daf-postgres-*"
+  ami_name = "delphix-postgres-*"
   de_security_group = "${module.delphix_engine.security_group_id}"
   subnet_id = "${module.delphix_engine.subnet_id}"
 }

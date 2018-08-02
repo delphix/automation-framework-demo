@@ -65,11 +65,17 @@ output "security_group_id" {
 
 resource "aws_instance" "target" {
   ami = "${data.aws_ami.delphix-ready-ami.id}"
-  instance_type = "t2.micro"
+  instance_type = "t2.medium"
   key_name = "${var.key_name}"
 
   vpc_security_group_ids = ["${aws_security_group.security_group.id}"]
   subnet_id = "${var.subnet_id}"
+
+  root_block_device {
+    volume_type           = "gp2"
+    volume_size           = "20"
+    delete_on_termination = "true"
+  }
 
   #Instance tags
   tags {
