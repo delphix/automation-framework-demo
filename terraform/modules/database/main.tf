@@ -13,7 +13,7 @@ resource "aws_subnet" "database1" {
     }
 }
 
-output "database1_id" {
+output "db1_subnet_id" {
     value = "${aws_subnet.database1.id}"
 }
 
@@ -32,7 +32,7 @@ resource "aws_subnet" "database2" {
     }
 }
 
-output "database2_id" {
+output "db2_subnet_id" {
     value = "${aws_subnet.database2.id}"
 }
 
@@ -46,6 +46,10 @@ resource "aws_db_subnet_group" "default" {
     "dlpx:Expiration" = "${var.expiration}"
     "dlpx:CostCenter" = "${var.cost_center}"
   }
+}
+
+output "sg_group_id" {
+    value = "${aws_db_subnet_group.default.id}"
 }
 
 data "aws_kms_secrets" "db" {
@@ -80,13 +84,24 @@ resource "aws_db_instance" "daf-postgres" {
   skip_final_snapshot = true
 }
 
-output "daf-postgres-name" {
+output "dbname" {
     value = "${aws_db_instance.daf-postgres.name}"
+}
+
+output "host" {
+    value = "${aws_db_instance.daf-postgres.endpoint}"
+}
+
+output "port" {
+    value = "${aws_db_instance.daf-postgres.port}"
+}
+
+output "username" {
+    value = "${aws_db_instance.daf-postgres.username}"
 }
 
 resource "aws_security_group" "daf-postgres" {
   name = "${var.project}-postgres"
-
   description = "RDS postgres servers (terraform-managed)"
   vpc_id = "${var.vpc_id}"
 
