@@ -20,7 +20,13 @@
     },
     "instance_type": "t2.micro",
     "ssh_username": "ec2-user",
-    "ami_name": "daf-postgres-{{timestamp}}"
+    "ami_name": "daf-postgres-{{timestamp}}",
+    "tags": {
+      "dlpx:Project" : "daf",
+      "dlpx:Owner" : "Derek Smart",
+      "dlpx:Expiration" : "2020-08-30",
+      "dlpx:CostCenter" : "305000"
+    }
   }],
   "provisioners" : [
     {
@@ -34,10 +40,12 @@
         "sudo yum update -y",
         "sudo amazon-linux-extras install postgresql9.6",
         "sudo yum install postgresql postgresql-server java-1.8.0 glibc.i686 -y",
-        "sudo /usr/bin/postgresql-setup initdb",
+        "sudo /usr/bin/postgresql-setup --initdb --unit postgresql",
         "sudo ln -s /etc/os-release /etc/redhat-release",
         "sudo sh -c 'cat /home/ec2-user/pg_hba.conf > /var/lib/pgsql/data/pg_hba.conf'",
-        "sudo sh -c 'cat /home/ec2-user/postgresql.conf >> /var/lib/pgsql/data/postgresql.conf'"
+        "sudo sh -c 'cat /home/ec2-user/postgresql.conf >> /var/lib/pgsql/data/postgresql.conf'",
+        "sudo usermod -aG wheel postgres",
+        "sudo sh -c 'echo \"postgres        ALL=(ALL)       NOPASSWD:ALL\" >> /etc/sudoers'"
       ]
     },
     {
