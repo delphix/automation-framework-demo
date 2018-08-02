@@ -89,7 +89,7 @@ output "dbname" {
 }
 
 output "host" {
-    value = "${aws_db_instance.daf-postgres.endpoint}"
+    value = "${aws_db_instance.daf-postgres.address}"
 }
 
 output "port" {

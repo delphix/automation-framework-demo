@@ -38,7 +38,7 @@ resource "aws_dms_endpoint" "target" {
   port                        = "${var.target_port}"
   ssl_mode                    = "none"
   server_name                 = "${var.target_host}"
-  username                    = "${var.source_username}"
+  username                    = "${var.target_username}"
 
   tags {
     Name = "${var.project}_aws_dms_endpoint_target"

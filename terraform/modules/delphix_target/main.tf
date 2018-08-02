@@ -29,6 +29,13 @@ resource "aws_security_group" "security_group" {
   }
 
   ingress {
+    from_port = 0
+    to_port = 0
+    protocol = "-1"
+    self = true
+  }
+
+  ingress {
       from_port = 0
       to_port = 0
       protocol = "-1"
