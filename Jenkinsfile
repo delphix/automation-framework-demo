@@ -22,9 +22,10 @@ pipeline {
             }
         }
         stage('workspace') {
-            when { branch 'master' }
             steps {
-                sh  "${TERRAFORM} workspace select production"
+                dir ('terraform') {
+                    sh  "${TERRAFORM} workspace select production"
+                }
             }
         }
         stage('plan') {
