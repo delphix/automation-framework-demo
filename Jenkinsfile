@@ -6,7 +6,7 @@ pipeline {
     stages {
         stage('checkout repo') {
             steps {
-              checkout scm
+                checkout scm
             }
         }
         stage('pull latest light terraform image') {
@@ -19,6 +19,12 @@ pipeline {
                 dir ('terraform') {
                     sh  "${TERRAFORM} init -backend=true -input=false"
                 }
+            }
+        }
+        stage('workspace') {
+            when { branch 'master' }
+            steps {
+                sh  "${TERRAFORM} workspace select production"
             }
         }
         stage('plan') {
