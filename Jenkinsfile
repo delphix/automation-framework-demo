@@ -6,7 +6,14 @@ pipeline {
     stages {
         stage('checkout repo') {
             steps {
-                checkout scm
+                script {
+                    def scmVars = checkout scm
+                    env.GIT_COMMIT = scmVars.GIT_COMMIT
+                    GIT_COMMIT = scmVars.GIT_COMMIT
+                    env.GIT_BRANCH = scmVars.GIT_BRANCH
+                    GIT_BRANCH = scmVars.GIT_BRANCH
+                    echo "git commit \"${env.GIT_COMMIT}\" branch \"${env.GIT_BRANCH}\""
+                }
             }
         }
         stage('pull latest light terraform image') {
