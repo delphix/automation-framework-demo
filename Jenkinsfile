@@ -8,6 +8,7 @@ pipeline {
             steps {
                 script {
                     def scmVars = checkout scm
+                    printenv
                     env.GIT_COMMIT = scmVars.GIT_COMMIT
                     GIT_COMMIT = scmVars.GIT_COMMIT
                     env.GIT_BRANCH = scmVars.GIT_BRANCH
