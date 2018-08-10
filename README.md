@@ -1,4 +1,4 @@
-# Automation Framework Demo Application
+# Automation Framework Demo Application Tester
 
 #### Table of Contents
 1.  [Contribute](#contribute)
