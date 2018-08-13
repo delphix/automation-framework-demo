@@ -13,7 +13,7 @@ pipeline {
                     env.GIT_BRANCH = scmVars.GIT_BRANCH
                     GIT_BRANCH = scmVars.GIT_BRANCH
                 }
-                writeFile file: 'payload.json', text: $payload
+                writeFile file: 'payload.json', text: payload
                 sh "printenv"
             }
         }
