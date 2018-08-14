@@ -24,7 +24,7 @@ pipeline {
                         env.DELPHIX_PASS = ${pass}
                     }
                 }
-                sh "java -jar daf.jar"
+
             }
         }
 
