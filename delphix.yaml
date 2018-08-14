@@ -1,8 +1,13 @@
 template: DAF
 api_key: not_yet_set
 config:
+  notes: RDS Postgres Sources
   data-sources:
     - postgres:
+        notes: Here are notes
+        replica: Default
+        source: dbdhcp3
+        start-order: 1
         ami: ami-0dfffed98347ecd
 connectors:
   - postgres:
