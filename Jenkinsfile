@@ -17,10 +17,12 @@ pipeline {
         stage('run delphix automation framework') {
             steps {
                 writeFile file: 'payload.json', text: payload
-                withCredentials([string(credentialsId: 'delphix_engine', variable: 'engine'), string(credentialsId: 'delphix_user', variable: 'user'), string(credentialsId: 'delphix_pass', variable: 'pass')]) {
-                    env.DELPHIX_ENGINE = ${engine}
-                    env.DELPHIX_USER = ${user}
-                    env.DELPHIX_PASS = ${pass}
+                script {
+                    withCredentials([string(credentialsId: 'delphix_engine', variable: 'engine'), string(credentialsId: 'delphix_user', variable: 'user'), string(credentialsId: 'delphix_pass', variable: 'pass')]) {
+                        env.DELPHIX_ENGINE = ${engine}
+                        env.DELPHIX_USER = ${user}
+                        env.DELPHIX_PASS = ${pass}
+                    }
                 }
                 sh "java -jar daf.jar"
             }
