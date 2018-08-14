@@ -1,5 +1,16 @@
 template: DAF
 api_key: not_yet_set
+config:
+  data-sources:
+    - postgres:
+        ami: ami-0dfffed98347ecd
+connectors:
+  - postgres:
+      host: hostname
+      port: port
+      database: database
+      username: username
+      password: password
 environments:
   - staging:
       branch: origin/staging
