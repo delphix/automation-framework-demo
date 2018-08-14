@@ -1,0 +1,18 @@
+template: DAF
+api_key: not_yet_set
+environments:
+  - staging:
+      branch: origin/staging
+      datapod: Staging
+      when:
+        - push: datapod.refresh
+  - uat:
+      branch: origin/test
+      datapod: Test
+      when:
+        - push: datapod.refresh
+  - develop:
+      branch: origin/develop
+      datapod: Develop
+      when:
+        - push: datapod.refresh

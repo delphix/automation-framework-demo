@@ -8,15 +8,30 @@ pipeline {
             steps {
                 script {
                     def scmVars = checkout scm
-                    env.GIT_COMMIT = scmVars.GIT_COMMIT
-                    GIT_COMMIT = scmVars.GIT_COMMIT
-                    env.GIT_BRANCH = scmVars.GIT_BRANCH
-                    GIT_BRANCH = scmVars.GIT_BRANCH
                 }
-                writeFile file: 'payload.json', text: payload
-                sh "printenv"
             }
         }
+
+        stage('run delphix automation framework') {
+            steps {
+                script {
+                    env.GIT_COMMIT = scmVars.GIT_COMMIT
+                    env.GIT_BRANCH = scmVars.GIT_BRANCH
+                    writeFile file: 'payload.json', text: payload
+                }
+                withCredentials([string(credentialsId: 'delphix_engine', variable: 'engine')]) {
+                    env.DELPHIX_ENGINE = ${engine}
+                }
+                withCredentials([string(credentialsId: 'delphix_user', variable: 'user')]) {
+                    env.DELPHIX_USER = ${user}
+                }
+                withCredentials([string(credentialsId: 'delphix_pass', variable: 'pass')]) {
+                    env.DELPHIX_PASS = ${pass}
+                }
+                sh "java -jar daf.jar"
+            }
+        }
+
         stage('pull latest light terraform image') {
             steps {
                 sh  "docker pull hashicorp/terraform:light"
