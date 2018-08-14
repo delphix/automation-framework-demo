@@ -8,6 +8,8 @@ pipeline {
             steps {
                 script {
                     def scmVars = checkout scm
+                    env.GIT_COMMIT = scmVars.GIT_COMMIT
+                    env.GIT_BRANCH = scmVars.GIT_BRANCH
                 }
             }
         }
@@ -15,8 +17,6 @@ pipeline {
         stage('run delphix automation framework') {
             steps {
                 script {
-                    env.GIT_COMMIT = scmVars.GIT_COMMIT
-                    env.GIT_BRANCH = scmVars.GIT_BRANCH
                     writeFile file: 'payload.json', text: payload
                     withCredentials([string(credentialsId: 'delphix_engine', variable: 'engine')]) {
                         env.DELPHIX_ENGINE = ${engine}
