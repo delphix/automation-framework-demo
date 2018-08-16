@@ -32,7 +32,6 @@ overridedb.*
 *.ipr
 *.iws
 .idea
-*.jar
 .DS_Store
 .svn
 *.svntmp
