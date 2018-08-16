@@ -1,5 +1,10 @@
 pipeline {
-    agent any
+    agent {
+        docker {
+            image 'maven:3-alpine'
+            args '-v /root/.m2:/root/.m2'
+        }
+    }
     environment {
         TERRAFORM = 'docker run --network host -w /app -v ${HOME}/.aws:/root/.aws -v ${HOME}/.ssh:/root/.ssh -v `pwd`:/app hashicorp/terraform:light'
     }
@@ -28,6 +33,15 @@ pipeline {
             }
         }
 
+        stage('migrate schema with liquibase') {
+            steps {
+                    withCredentials([string(credentialsId: 'dev_host', variable: 'host'), string(credentialsId: 'dev_user', variable: 'user'), string(credentialsId: 'dev_pass', variable: 'pass')]) {
+                    sh 'mvn liquibase:update -Dliquibase.password=$pass -Dliquibase.username=$user -Dliquibase.url=jdbc:postgresql://$host/questionmarks'
+                }
+            }
+        }
+
+        /*
         stage('pull latest light terraform image') {
             steps {
                 sh  "docker pull hashicorp/terraform:light"
@@ -66,5 +80,6 @@ pipeline {
                 }
             }
         }
+        */
     }
 }
