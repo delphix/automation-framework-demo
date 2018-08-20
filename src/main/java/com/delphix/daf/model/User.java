@@ -1,17 +1,19 @@
 package com.delphix.daf.model;
 
-import lombok.Data;
-
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
-@Data
 @Entity
 @Table(name = "users")
 public class User extends AuditModel {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    @GeneratedValue(generator = "user_generator")
+    @SequenceGenerator(
+            name = "user_generator",
+            sequenceName = "user_sequence",
+            initialValue = 1000
+    )
+    private Long id;
 
     @NotNull
     private String name;
