@@ -40,7 +40,7 @@ export class UserEditComponent implements OnInit, OnDestroy {
   }
 
   gotoList() {
-    this.router.navigate(['/user-list']);
+    this.router.navigate(['/users']);
   }
 
   save(form: NgForm) {
