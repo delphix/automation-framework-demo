@@ -1,5 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
 import { UserService } from '../shared/user/user.service';
+import { User } from '../shared/user/user.model';
+import { MatTableDataSource, MatSort } from '@angular/material';
 
 @Component({
   selector: 'app-user-list',
@@ -7,14 +9,23 @@ import { UserService } from '../shared/user/user.service';
   styleUrls: ['./user-list.component.css']
 })
 
-export class UserListComponent implements OnInit {
-  users: Array<any>;
+export class UserListComponent implements OnInit, AfterViewInit {
+
+  @ViewChild(MatSort) sort: MatSort;
+  public users: User[];
+  dataSource = new MatTableDataSource(this.users);
+  displayedColumns = ['username', 'firstname', 'lastname'];
 
   constructor(private userService: UserService) { }
 
   ngOnInit() {
     this.userService.getAll().subscribe(data => {
-      this.users = data;
+      this.users = data.content;
+      this.dataSource = new MatTableDataSource(this.users);
     });
+  }
+
+  ngAfterViewInit() {
+    this.dataSource.sort = this.sort;
   }
 }

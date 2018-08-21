@@ -1,5 +1,35 @@
-<<mat-toolbar color="primary">
-  <span>Welcome to {{title}}!</span>
-</mat-toolbar>
+<div class="wrapper-container" [class.wrapper-is-mobile]="mobileQuery.matches">
+	<mat-toolbar color="primary" class="wrapper-toolbar">
+		<button mat-icon-button (click)="snav.toggle()">
+			<mat-icon>apps</mat-icon>
+		</button>
+		<div routerLink="/" class="pl-15">DAF</div>
+		<span class="spacer"></span>
+		<!--
+		<a routerLink="/github/auth" class="auth_icon">
 
-<router-outlet></router-outlet>
+			<ng-container *ngIf="imageUrl.length > 0;else show_icon">
+				<img class="img-circle" src="{{imageUrl}}">
+			</ng-container>
+
+			<ng-template #show_icon>
+				<mat-icon class="icon-white vert-align-mid">fingerprint</mat-icon>
+			</ng-template>
+		</a>
+		  -->
+	</mat-toolbar>
+
+	<mat-sidenav-container class="wrapper-sidenav-container" [style.marginTop.px]="mobileQuery.matches ? 56 : 0">
+		<mat-sidenav #snav class="wrapper-sidenav" [mode]="mobileQuery.matches ? 'over' : 'side'" [fixedInViewport]="mobileQuery.matches" fixedTopGap="56" [opened]="mobileQuery.matches ? false : true">
+			<mat-nav-list>
+				<mat-menu></mat-menu>
+				<button mat-menu-item class="sidenav-btn" routerLinkActive="active-link" routerLink="/users" (click)="sendToRoute('/users',mobileQuery.matches)">
+					<mat-icon class="icon-white">supervisor_account</mat-icon> Users
+				</button>
+			</mat-nav-list>
+		</mat-sidenav>
+		<mat-sidenav-content class="sidenav-outlet">
+			<router-outlet></router-outlet>
+		</mat-sidenav-content>
+	</mat-sidenav-container>
+</div>

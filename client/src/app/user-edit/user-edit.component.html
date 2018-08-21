@@ -1,4 +1,4 @@
-<mat-card>
+<mat-card class=m-15>
   <form #userForm="ngForm" (ngSubmit)="save(userForm.value)">
     <mat-card-header>
       <mat-card-title><h2>{{user.firstname ? 'Edit' : 'Add'}} User</h2></mat-card-title>
@@ -17,7 +17,7 @@
     <mat-card-actions>
       <button mat-raised-button color="primary" type="submit" [disabled]="!userForm.form.valid">Save</button>
       <button mat-raised-button color="secondary" (click)="remove(user.id)" *ngIf="user.id" type="button">Delete</button>
-      <a mat-button routerLink="/user-list">Cancel</a>
+      <a mat-button routerLink="/users">Cancel</a>
     </mat-card-actions>
     <mat-card-footer></mat-card-footer>
   </form>

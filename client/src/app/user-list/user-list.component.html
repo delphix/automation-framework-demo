@@ -1,11 +1,22 @@
-<mat-card>
-  <mat-card-header>User List</mat-card-header>
-  <mat-card-content>
-    <mat-list>
-      <mat-list-item *ngFor="let user of users.content">
-        <h3 mat-line><a mat-button [routerLink]="['/user-edit', user.id]">{{user.lastname}}, {{user.firstname}}</a></h3>
-      </mat-list-item>
-    </mat-list>
-  </mat-card-content>
-  <button mat-fab color="primary" [routerLink]="['/user-add']">Add</button>
-</mat-card>
+<mat-toolbar class="m-15" color="secondary">
+  <h2>Users</h2>
+  <span class="fill-space"></span>
+  <button mat-raised-button color="primary" [routerLink]="['/users/add']">Add</button>
+</mat-toolbar>
+
+<mat-table [dataSource]=dataSource class="m-15" matSort>
+  <ng-container matColumnDef="username">
+    <mat-header-cell *matHeaderCellDef mat-sort-header> User Name </mat-header-cell>
+    <mat-cell *matCellDef="let element"><a mat-button [routerLink]="['/users/edit/', element.id]"> {{element.username}} </a></mat-cell>
+  </ng-container>
+  <ng-container matColumnDef="firstname">
+    <mat-header-cell *matHeaderCellDef mat-sort-header> First Name </mat-header-cell>
+    <mat-cell *matCellDef="let element"> {{element.firstname}} </mat-cell>
+  </ng-container>
+  <ng-container matColumnDef="lastname">
+    <mat-header-cell *matHeaderCellDef mat-sort-header> Last Name </mat-header-cell>
+    <mat-cell *matCellDef="let element"> {{element.lastname}} </mat-cell>
+  </ng-container>
+  <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+  <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+</mat-table>

@@ -10,8 +10,8 @@ import { NgForm } from '@angular/forms';
   styleUrls: ['./user-edit.component.css']
 })
 export class UserEditComponent implements OnInit, OnDestroy {
-  user: any = {};
 
+  user: any = {};
   sub: Subscription;
 
   constructor(private route: ActivatedRoute,
