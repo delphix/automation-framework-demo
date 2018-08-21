@@ -1,0 +1,30 @@
+databaseChangeLog:
+  - changeSet:
+      id: createUsersTable
+      author: Derek Smart
+      changes:
+      - createTable:
+          tableName: users
+          columns:
+          - column:
+              name: id
+              type: int
+              autoIncrement: true
+              constraints:
+                primaryKey: true
+                nullable: false
+          - column:
+              name: username
+              type: varchar(255)
+              constraints:
+                nullable: false
+          - column:
+              name: firstname
+              type: varchar(255)
+              constraints:
+                nullable: false
+          - column:
+              name: lastname
+              type: varchar(255)
+              constraints:
+                nullable: false
