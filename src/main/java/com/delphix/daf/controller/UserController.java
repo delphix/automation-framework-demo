@@ -1,5 +1,6 @@
 package com.delphix.daf.controller;
 
+import java.util.Optional;
 import com.delphix.daf.exception.ResourceNotFoundException;
 import com.delphix.daf.model.User;
 import com.delphix.daf.repository.UserRepository;
@@ -21,6 +22,11 @@ public class UserController {
         return userRepository.findAll(pageable);
     }
 
+    @GetMapping("/users/{userId}")
+    public Optional<User> getUser(@PathVariable Long userId) {
+        return userRepository.findById(userId);
+    }
+
 
     @PostMapping("/users")
     public User createUser(@Valid @RequestBody User user) {
@@ -32,7 +38,9 @@ public class UserController {
                                    @Valid @RequestBody User userRequest) {
         return userRepository.findById(userId)
                 .map(user -> {
-                    user.setName(userRequest.getName());
+                    user.setUsername(userRequest.getUsername());
+                    user.setFirstname(userRequest.getFirstname());
+                    user.setLastname(userRequest.getLastname());
                     return userRepository.save(user);
                 }).orElseThrow(() -> new ResourceNotFoundException("User not found with id " + userId));
     }

@@ -11,27 +11,49 @@ public class User extends AuditModel {
     @SequenceGenerator(
             name = "user_generator",
             sequenceName = "user_sequence",
-            initialValue = 1000
+            initialValue = 1
     )
     private Long id;
 
     @NotNull
-    private String name;
+    private String username;
+
+    @NotNull
+    private String firstname;
+
+    @NotNull
+    private String lastname;
 
     public Long getId() {
         return id;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public String getFirstname() {
+        return firstname;
+    }
+
+    public String getLastname() {
+        return lastname;
     }
 
     public void setId(Long id) {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setFirstname(String firstname) {
+        this.firstname = firstname;
+    }
+
+    public void setLastname(String lastname) {
+        this.lastname = lastname;
     }
 
 }

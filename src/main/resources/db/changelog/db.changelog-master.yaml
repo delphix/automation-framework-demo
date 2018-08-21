@@ -1,4 +1,4 @@
 databaseChangeLog:
-    - include:
-        file: changes/v0001.sql
-        relativeToChangelogFile: true
+  - include:
+      file: migrations/0001-create-users.yml
+      relativeToChangelogFile: true
