@@ -12,17 +12,21 @@ import { NgForm } from '@angular/forms';
 export class UserEditComponent implements OnInit, OnDestroy {
 
   user: any = {};
+  action = "Add";
   sub: Subscription;
 
-  constructor(private route: ActivatedRoute,
-              private router: Router,
-              private userService: UserService) {
+  constructor(
+    private route: ActivatedRoute,
+    private router: Router,
+    private userService: UserService
+  ) {
   }
 
   ngOnInit() {
     this.sub = this.route.params.subscribe(params => {
       const id = params['id'];
       if (id) {
+        this.action = "Edit";
         this.userService.get(id).subscribe((user: any) => {
           if (user) {
             this.user = user;
