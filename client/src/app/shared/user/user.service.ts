@@ -29,8 +29,8 @@ export class UserService {
     return result;
   }
 
-  remove(href: string) {
-    return this.http.delete(href);
+  remove(id: string) {
+    return this.http.delete(this.USER_API + '/' + id);
   }
 
 }

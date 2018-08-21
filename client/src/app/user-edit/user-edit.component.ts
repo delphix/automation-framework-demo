@@ -26,7 +26,6 @@ export class UserEditComponent implements OnInit, OnDestroy {
         this.userService.get(id).subscribe((user: any) => {
           if (user) {
             this.user = user;
-            this.user.href = user._links.self.href;
           } else {
             console.log(`User with id '${id}' not found, returning to list`);
             this.gotoList();
@@ -50,8 +49,8 @@ export class UserEditComponent implements OnInit, OnDestroy {
     }, error => console.error(error));
   }
 
-  remove(href) {
-    this.userService.remove(href).subscribe(result => {
+  remove(id) {
+    this.userService.remove(id).subscribe(result => {
       this.gotoList();
     }, error => console.error(error));
   }
