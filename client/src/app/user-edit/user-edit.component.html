@@ -1,0 +1,25 @@
+<mat-card>
+  <form #userForm="ngForm" (ngSubmit)="save(userForm.value)">
+    <mat-card-header>
+      <mat-card-title><h2>{{user.firstname ? 'Edit' : 'Add'}} User</h2></mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <input type="hidden" name="href" [(ngModel)]="user.href">
+      <mat-form-field>
+        <input matInput placeholder="User Name" [(ngModel)]="user.username" required name="username" #username>
+      </mat-form-field>
+      <mat-form-field>
+        <input matInput placeholder="First Name" [(ngModel)]="user.firstname" required name="firstname" #firstname>
+      </mat-form-field>
+      <mat-form-field>
+        <input matInput placeholder="Last Name" [(ngModel)]="user.lastname" required name="lastname" #lastname>
+      </mat-form-field>
+  </mat-card-content>
+    <mat-card-actions>
+      <button mat-raised-button color="primary" type="submit" [disabled]="!userForm.form.valid">Save</button>
+      <button mat-raised-button color="secondary" (click)="remove(user.href)" *ngIf="user.href" type="button">Delete</button>
+      <a mat-button routerLink="/user-list">Cancel</a>
+    </mat-card-actions>
+    <mat-card-footer></mat-card-footer>
+  </form>
+</mat-card>
