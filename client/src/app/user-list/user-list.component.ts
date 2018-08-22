@@ -19,7 +19,7 @@ export interface User{
 
 export class UserListComponent implements OnInit {
 
-  displayedColumns: string[] = ['username', 'firstname', 'lastname'];
+  displayedColumns: string[] = ['username', 'firstname', 'lastname', 'actions'];
   dataSource = new MatTableDataSource([]);
   @ViewChild(MatSort) sort: MatSort;
 
@@ -31,6 +31,16 @@ export class UserListComponent implements OnInit {
       this.dataSource = new MatTableDataSource(userData);
       this.dataSource.sort = this.sort;
     });
+  }
+
+  remove(id) {
+    this.userService.remove(id).subscribe(result => {
+      this.userService.getAll().subscribe(data => {
+        var userData: User[] = data.content;
+        this.dataSource = new MatTableDataSource(userData);
+        this.dataSource.sort = this.sort;
+      });
+    }, error => console.error(error));
   }
 
 }

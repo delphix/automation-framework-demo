@@ -21,8 +21,8 @@ export class UserService {
 
   save(user: any): Observable<any> {
     let result: Observable<Object>;
-    if (user['href']) {
-      result = this.http.put(user.href, user);
+    if (user['id']) {
+      result = this.http.put(this.USER_API + '/' + user.id, user);
     } else {
       result = this.http.post(this.USER_API, user);
     }

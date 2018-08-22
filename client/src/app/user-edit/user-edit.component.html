@@ -6,6 +6,7 @@
 <mat-card class="mat-elevation-z2 m-15">
   <form #userForm="ngForm" (ngSubmit)="save(userForm.value)">
     <mat-card-content>
+      <input type="hidden" name="id" [(ngModel)]="user.id">
       <mat-form-field>
         <input matInput placeholder="User Name" [(ngModel)]="user.username" required name="username" #username>
       </mat-form-field>
@@ -18,7 +19,6 @@
   </mat-card-content>
     <mat-card-actions>
       <button mat-raised-button color="primary" type="submit" [disabled]="!userForm.form.valid">Save</button>
-      <button mat-raised-button color="secondary" (click)="remove(user.id)" *ngIf="user.id" type="button">Delete</button>
       <a mat-button routerLink="/users">Cancel</a>
     </mat-card-actions>
     <mat-card-footer></mat-card-footer>

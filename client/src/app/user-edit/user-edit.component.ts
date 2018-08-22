@@ -52,10 +52,5 @@ export class UserEditComponent implements OnInit, OnDestroy {
       this.gotoList();
     }, error => console.error(error));
   }
-
-  remove(id) {
-    this.userService.remove(id).subscribe(result => {
-      this.gotoList();
-    }, error => console.error(error));
-  }
+  
 }
