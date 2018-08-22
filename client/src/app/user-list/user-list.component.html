@@ -1,10 +1,10 @@
-<mat-toolbar class="m-15" color="secondary">
+<mat-toolbar class="mat-elevation-z2 m-15" color="secondary">
   <h2>Users</h2>
   <span class="fill-space"></span>
   <button mat-raised-button color="primary" [routerLink]="['/users/add']">Add</button>
 </mat-toolbar>
 
-<mat-table [dataSource]=dataSource class="m-15" matSort>
+<mat-table [dataSource]=dataSource matSort class="mat-elevation-z2 m-15">
   <ng-container matColumnDef="username">
     <mat-header-cell *matHeaderCellDef mat-sort-header> User Name </mat-header-cell>
     <mat-cell *matCellDef="let element"><a mat-button [routerLink]="['/users/edit/', element.id]"> {{element.username}} </a></mat-cell>
