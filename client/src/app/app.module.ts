@@ -43,7 +43,8 @@ import { UserService } from './shared/user/user.service';
 import { PatientService } from './shared/patient/patient.service';
 import { UserListComponent } from './user-list/user-list.component';
 import { UserEditComponent } from './user-edit/user-edit.component';
-import { PatientListComponent } from './patient-list/patient-list.component'
+import { PatientListComponent } from './patient-list/patient-list.component';
+import { PatientEditComponent } from './patient-edit/patient-edit.component'
 
 const appRoutes: Routes = [
   { path: '', redirectTo: '/users', pathMatch: 'full' },
@@ -62,6 +63,14 @@ const appRoutes: Routes = [
   {
     path: 'patients',
     component: PatientListComponent
+  },
+  {
+    path: 'patients/add',
+    component: PatientEditComponent
+  },
+  {
+    path: 'patients/edit/:id',
+    component: PatientEditComponent
   }
 ];
 
@@ -70,7 +79,8 @@ const appRoutes: Routes = [
     AppComponent,
     UserListComponent,
     UserEditComponent,
-    PatientListComponent
+    PatientListComponent,
+    PatientEditComponent
   ],
   imports: [
     BrowserModule,
