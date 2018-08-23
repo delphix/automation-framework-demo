@@ -5,3 +5,6 @@ databaseChangeLog:
   - include:
       file: migrations/0002-create-patients.yml
       relativeToChangelogFile: true
+  - include:
+      file: migrations/0003-create-records.yml
+      relativeToChangelogFile: true
