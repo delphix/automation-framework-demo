@@ -34,13 +34,15 @@ export class UserListComponent implements OnInit {
   }
 
   remove(id) {
-    this.userService.remove(id).subscribe(result => {
-      this.userService.getAll().subscribe(data => {
-        var userData: User[] = data.content;
-        this.dataSource = new MatTableDataSource(userData);
-        this.dataSource.sort = this.sort;
-      });
-    }, error => console.error(error));
+    if(confirm(`Are you sure you want to delete this user?`)) {
+      this.userService.remove(id).subscribe(result => {
+        this.userService.getAll().subscribe(data => {
+          var userData: User[] = data.content;
+          this.dataSource = new MatTableDataSource(userData);
+          this.dataSource.sort = this.sort;
+        });
+      }, error => console.error(error));
+    }
   }
 
 }

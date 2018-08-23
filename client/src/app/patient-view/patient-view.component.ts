@@ -57,14 +57,24 @@ export class PatientViewComponent implements OnInit {
     });
   }
 
+  remove(id) {
+    if(confirm(`Are you sure you want to delete this patient?`)) {
+      this.patientService.remove(id).subscribe(result => {
+        this.router.navigate(['/patients']);
+      }, error => console.error(error));
+    }
+  }
+
   removeRecord(recordId) {
-    this.recordService.remove(this.id, recordId).subscribe(result => {
-      this.recordService.getAll(this.id).subscribe(data => {
-        var recordData: Record[] = data.content;
-        this.dataSource = new MatTableDataSource(recordData);
-        this.dataSource.sort = this.sort;
-      });
-    }, error => console.error(error));
+    if(confirm(`Are you sure you want to delete this record?`)) {
+      this.recordService.remove(this.id, recordId).subscribe(result => {
+        this.recordService.getAll(this.id).subscribe(data => {
+          var recordData: Record[] = data.content;
+          this.dataSource = new MatTableDataSource(recordData);
+          this.dataSource.sort = this.sort;
+        });
+      }, error => console.error(error));
+    }
   }
 
 }

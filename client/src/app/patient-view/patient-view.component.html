@@ -1,7 +1,8 @@
 <mat-toolbar class="mat-elevation-z2 m-15" color="secondary">
   <h2>{{ patient.firstname }} {{ patient.middlename }} {{ patient.lastname }}</h2>
   <span class="fill-space"></span>
-  <button mat-icon-button [routerLink]="['/patients/edit', id]"><mat-icon class="md-24">edit</mat-icon></button>
+  <button mat-icon-button color="primary" [routerLink]="['/patients/edit', id]"><mat-icon class="md-36">edit</mat-icon></button>
+  <button mat-icon-button color="primary" (click)="remove(id)"><mat-icon class="md-36">cancel</mat-icon></button>
 </mat-toolbar>
 
 <mat-card class="mat-elevation-z2 m-15">

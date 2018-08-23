@@ -47,7 +47,7 @@ export class RecordEditComponent implements OnInit, OnDestroy {
 
   gotoList() {
     this.router.navigate(['/patients', this.patientId]);
-  },
+  }
 
   save(form: NgForm) {
     this.recordService.save(this.patientId, form).subscribe(result => {
