@@ -691,61 +691,7 @@
 							]
 						}
 					},
-					"response": [
-						{
-							"name": "read successful",
-							"originalRequest": {
-								"method": "GET",
-								"header": [],
-								"body": {},
-								"url": {
-									"raw": "{{url}}/patients/{{patient_id}}",
-									"host": [
-										"{{url}}"
-									],
-									"path": [
-										"patients",
-										"{{patient_id}}"
-									]
-								}
-							},
-							"status": "OK",
-							"code": 200,
-							"_postman_previewlanguage": "json",
-							"header": [
-								{
-									"key": "Content-Type",
-									"value": "application/json;charset=UTF-8",
-									"name": "Content-Type",
-									"description": "The mime type of this content"
-								},
-								{
-									"key": "Date",
-									"value": "Wed, 22 Aug 2018 21:39:39 GMT",
-									"name": "Date",
-									"description": "The date and time that the message was sent"
-								},
-								{
-									"key": "Transfer-Encoding",
-									"value": "chunked",
-									"name": "Transfer-Encoding",
-									"description": "The form of encoding used to safely transfer the entity to the user. Currently defined methods are: chunked, compress, deflate, gzip, identity."
-								}
-							],
-							"cookie": [
-								{
-									"expires": "Mon Jan 18 2038 22:14:07 GMT-0500 (EST)",
-									"httpOnly": true,
-									"domain": "localhost",
-									"path": "/",
-									"secure": false,
-									"value": "6D034FDC504821BF37DD709995318857",
-									"key": "JSESSIONID"
-								}
-							],
-							"body": "{\"createdAt\":\"2018-08-22T21:36:02.254+0000\",\"updatedAt\":\"2018-08-22T21:37:47.240+0000\",\"id\":9,\"firstname\":\"James2\",\"middlename\":\"Derek2\",\"lastname\":\"Smart2\",\"ssn\":\"123-45-6789\",\"dobyear\":1982,\"dobmonth\":1,\"dobday\":1,\"address1\":\"148 Spring St\",\"address2\":\"\",\"city\":\"Fairbugn\",\"state\":\"GA\",\"zip\":\"30213\"}"
-						}
-					]
+					"response": []
 				},
 				{
 					"name": "delete",
@@ -795,6 +741,343 @@
 								{
 									"key": "Date",
 									"value": "Wed, 22 Aug 2018 21:40:25 GMT",
+									"name": "Date",
+									"description": "The date and time that the message was sent"
+								}
+							],
+							"cookie": [
+								{
+									"expires": "Mon Jan 18 2038 22:14:07 GMT-0500 (EST)",
+									"httpOnly": true,
+									"domain": "localhost",
+									"path": "/",
+									"secure": false,
+									"value": "6D034FDC504821BF37DD709995318857",
+									"key": "JSESSIONID"
+								}
+							],
+							"body": ""
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Records",
+			"item": [
+				{
+					"name": "create",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "4cfe104d-01c9-4482-b9ba-ec1544514541",
+								"type": "text/javascript",
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);",
+									"postman.setEnvironmentVariable(\"record_id\", jsonData.id);"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"type\": \"test3\"\n}"
+						},
+						"url": {
+							"raw": "{{url}}/patients/{{patient_id}}/records",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"patients",
+								"{{patient_id}}",
+								"records"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "readAll",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"type\": \"test\"\n}"
+						},
+						"url": {
+							"raw": "{{url}}/patients/{{patient_id}}/records",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"patients",
+								"{{patient_id}}",
+								"records"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "readAll successful",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"disabled": false
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n\t\"type\": \"test\"\n}"
+								},
+								"url": {
+									"raw": "{{url}}/patients/{{patient_id}}/records",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"patients",
+										"{{patient_id}}",
+										"records"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json;charset=UTF-8",
+									"name": "Content-Type",
+									"description": "The mime type of this content"
+								},
+								{
+									"key": "Date",
+									"value": "Thu, 23 Aug 2018 03:17:53 GMT",
+									"name": "Date",
+									"description": "The date and time that the message was sent"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked",
+									"name": "Transfer-Encoding",
+									"description": "The form of encoding used to safely transfer the entity to the user. Currently defined methods are: chunked, compress, deflate, gzip, identity."
+								}
+							],
+							"cookie": [
+								{
+									"expires": "Mon Jan 18 2038 22:14:07 GMT-0500 (EST)",
+									"httpOnly": true,
+									"domain": "localhost",
+									"path": "/",
+									"secure": false,
+									"value": "6D034FDC504821BF37DD709995318857",
+									"key": "JSESSIONID"
+								}
+							],
+							"body": "{\"content\":[{\"createdAt\":\"2018-08-23T03:08:34.195+0000\",\"updatedAt\":\"2018-08-23T03:08:34.195+0000\",\"id\":12,\"type\":\"test\"}],\"pageable\":{\"sort\":{\"sorted\":false,\"unsorted\":true},\"offset\":0,\"pageSize\":20,\"pageNumber\":0,\"unpaged\":false,\"paged\":true},\"last\":true,\"totalPages\":1,\"totalElements\":1,\"size\":20,\"number\":0,\"sort\":{\"sorted\":false,\"unsorted\":true},\"first\":true,\"numberOfElements\":1}"
+						}
+					]
+				},
+				{
+					"name": "update",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "4cfe104d-01c9-4482-b9ba-ec1544514541",
+								"type": "text/javascript",
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);",
+									"postman.setEnvironmentVariable(\"record_id\", jsonData.id);"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"type\": \"test23\"\n}"
+						},
+						"url": {
+							"raw": "{{url}}/patients/{{patient_id}}/records/{{record_id}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"patients",
+								"{{patient_id}}",
+								"records",
+								"{{record_id}}"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "update successful",
+							"originalRequest": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"disabled": false
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n\t\"type\": \"test23\"\n}"
+								},
+								"url": {
+									"raw": "{{url}}/patients/{{patient_id}}/records/{{record_id}}",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"patients",
+										"{{patient_id}}",
+										"records",
+										"{{record_id}}"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json;charset=UTF-8",
+									"name": "Content-Type",
+									"description": "The mime type of this content"
+								},
+								{
+									"key": "Date",
+									"value": "Thu, 23 Aug 2018 14:46:17 GMT",
+									"name": "Date",
+									"description": "The date and time that the message was sent"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked",
+									"name": "Transfer-Encoding",
+									"description": "The form of encoding used to safely transfer the entity to the user. Currently defined methods are: chunked, compress, deflate, gzip, identity."
+								}
+							],
+							"cookie": [
+								{
+									"expires": "Mon Jan 18 2038 22:14:07 GMT-0500 (EST)",
+									"httpOnly": true,
+									"domain": "localhost",
+									"path": "/",
+									"secure": false,
+									"value": "6D034FDC504821BF37DD709995318857",
+									"key": "JSESSIONID"
+								}
+							],
+							"body": "{\"createdAt\":\"2018-08-23T14:34:18.821+0000\",\"updatedAt\":\"2018-08-23T14:46:17.797+0000\",\"id\":14,\"type\":\"test23\"}"
+						}
+					]
+				},
+				{
+					"name": "read",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"url": {
+							"raw": "{{url}}/patients/{{patient_id}}/records/{{record_id}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"patients",
+								"{{patient_id}}",
+								"records",
+								"{{record_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {},
+						"url": {
+							"raw": "{{url}}/patients/{{patient_id}}/records/{{record_id}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"patients",
+								"{{patient_id}}",
+								"records",
+								"{{record_id}}"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "delete successful",
+							"originalRequest": {
+								"method": "DELETE",
+								"header": [],
+								"body": {},
+								"url": {
+									"raw": "{{url}}/patients/{{patient_id}}/records/{{record_id}}",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"patients",
+										"{{patient_id}}",
+										"records",
+										"{{record_id}}"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "plain",
+							"header": [
+								{
+									"key": "Content-Length",
+									"value": "0",
+									"name": "Content-Length",
+									"description": "The length of the response body in octets (8-bit bytes)"
+								},
+								{
+									"key": "Date",
+									"value": "Thu, 23 Aug 2018 15:08:52 GMT",
 									"name": "Date",
 									"description": "The date and time that the message was sent"
 								}

@@ -26,46 +26,43 @@ public class RecordController {
        return recordRepository.findByPatientId(patientId, pageable);
     }
 
-    @PostMapping("/patients/{patientId}/records")
-     public Record createRecord(@PathVariable (value = "patientId") Long patientId, @Valid @RequestBody Record record) {
-         return patientRepository.findById(patientId).map(patient -> {
-             record.setPatient(patient);
-             return recordRepository.save(record);
-         }).orElseThrow(() -> new ResourceNotFoundException("PatientId " + patientId + " not found"));
-     }
-
-
-/*
-    @GetMapping("/records/{recordId}")
-    public Optional<Record> getRecord(@PathVariable Long recordId) {
+    @GetMapping("/patients/{patientId}/records/{recordId}")
+    public Optional<Record> getRecord(@PathVariable (value = "patientId") Long patientId, @PathVariable (value = "recordId") Long recordId) {
+        if(!patientRepository.existsById(patientId)) {
+            throw new ResourceNotFoundException("PatientId " + patientId + " not found");
+        }
         return recordRepository.findById(recordId);
     }
 
-    @PatientMapping("/records")
-    public Record createRecord(@Valid @RequestBody Record record) {
-        return recordRepository.save(record);
+    @PostMapping("/patients/{patientId}/records")
+    public Record createRecord(@PathVariable (value = "patientId") Long patientId, @Valid @RequestBody Record record) {
+        return patientRepository.findById(patientId).map(patient -> {
+            record.setPatient(patient);
+            return recordRepository.save(record);
+        }).orElseThrow(() -> new ResourceNotFoundException("PatientId " + patientId + " not found"));
     }
 
-    @PutMapping("/records/{recordId}")
-    public Record updateRecord(@PathVariable Long recordId, @Valid @RequestBody Record recordRequest) {
-        return recordRepository.findById(recordId)
-                .map(record -> {
-
-
-                    record.setFirstname(recordRequest.getFirstname());
-
-
-                }).orElseThrow(() -> new ResourceNotFoundException("Record not found with id " + recordId));
+    @PutMapping("/patients/{patientId}/records/{recordId}")
+    public Record updateRecord(@PathVariable (value = "patientId") Long patientId, @PathVariable (value = "recordId") Long recordId, @Valid @RequestBody Record recordRequest) {
+        if(!patientRepository.existsById(patientId)) {
+            throw new ResourceNotFoundException("PatientId " + patientId + " not found");
+        }
+        return recordRepository.findById(recordId).map(record -> {
+            record.setType(recordRequest.getType());
+            return recordRepository.save(record);
+        }).orElseThrow(() -> new ResourceNotFoundException("RecordId " + recordId + "not found"));
     }
 
+    @DeleteMapping("/patients/{patientId}/records/{recordId}")
+    public ResponseEntity<?> deleteRecord(@PathVariable (value = "patientId") Long patientId, @PathVariable (value = "recordId") Long recordId) {
+        if(!patientRepository.existsById(patientId)) {
+            throw new ResourceNotFoundException("PostId " + patientId + " not found");
+        }
 
-    @DeleteMapping("/records/{recordId}")
-    public ResponseEntity<?> deleteRecord(@PathVariable Long recordId) {
-        return recordRepository.findById(recordId)
-                .map(record -> {
-                    recordRepository.delete(record);
-                    return ResponseEntity.ok().build();
-                }).orElseThrow(() -> new ResourceNotFoundException("Record not found with id " + recordId));
+        return recordRepository.findById(recordId).map(record -> {
+             recordRepository.delete(record);
+             return ResponseEntity.ok().build();
+        }).orElseThrow(() -> new ResourceNotFoundException("RecordId " + recordId + " not found"));
     }
-    */
+
 }
