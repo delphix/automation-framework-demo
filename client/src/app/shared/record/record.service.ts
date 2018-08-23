@@ -12,23 +12,23 @@ export class RecordService {
   getAll(patientId: string): Observable<any> {
     return this.http.get(this.API + '/patients/' + patientId + '/records');
   }
-  /*
-  get(id: string) {
-    return this.http.get(this.RECORD_API + '/' + id);
+
+  get(patientId: string, id: string) {
+    return this.http.get(this.API + '/patients/' + patientId + '/records/' + id);
   }
 
-  save(record: any): Observable<any> {
+  save(patientId: string, record: any): Observable<any> {
     let result: Observable<Object>;
     if (record['id']) {
-      result = this.http.put(this.RECORD_API + '/' + record.id, record);
+      result = this.http.put(this.API + '/patients/' + patientId + '/records/' + record.id, record);
     } else {
-      result = this.http.post(this.RECORD_API, record);
+      result = this.http.post(this.API + '/patients/' + patientId + '/records/', record);
     }
     return result;
   }
 
-  remove(id: string) {
-    return this.http.delete(this.RECORD_API + '/' + id);
+  remove(patientId: string, id: string) {
+    return this.http.delete(this.API + '/patients/' + patientId + '/records/' + id);
   }
-  */
+
 }

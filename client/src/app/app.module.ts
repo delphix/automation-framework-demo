@@ -46,10 +46,11 @@ import { UserListComponent } from './user-list/user-list.component';
 import { UserEditComponent } from './user-edit/user-edit.component';
 import { PatientListComponent } from './patient-list/patient-list.component';
 import { PatientEditComponent } from './patient-edit/patient-edit.component';
-import { PatientViewComponent } from './patient-view/patient-view.component'
+import { PatientViewComponent } from './patient-view/patient-view.component';
+import { RecordEditComponent } from './record-edit/record-edit.component'
 
 const appRoutes: Routes = [
-  { path: '', redirectTo: '/users', pathMatch: 'full' },
+  { path: '', redirectTo: '/patients', pathMatch: 'full' },
   {
     path: 'users',
     component: UserListComponent
@@ -77,6 +78,14 @@ const appRoutes: Routes = [
   {
     path: 'patients/:id',
     component: PatientViewComponent
+  },
+  {
+    path: 'patients/:patientId/records/add',
+    component: RecordEditComponent
+  },
+  {
+    path: 'patients/:patientId/records/edit/:id',
+    component: RecordEditComponent
   }
 ];
 
@@ -87,7 +96,8 @@ const appRoutes: Routes = [
     UserEditComponent,
     PatientListComponent,
     PatientEditComponent,
-    PatientViewComponent
+    PatientViewComponent,
+    RecordEditComponent
   ],
   imports: [
     BrowserModule,
