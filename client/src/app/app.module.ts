@@ -41,10 +41,12 @@ import { RouterModule, Routes } from '@angular/router';
 import { AppComponent } from './app.component';
 import { UserService } from './shared/user/user.service';
 import { PatientService } from './shared/patient/patient.service';
+import { RecordService } from './shared/record/record.service';
 import { UserListComponent } from './user-list/user-list.component';
 import { UserEditComponent } from './user-edit/user-edit.component';
 import { PatientListComponent } from './patient-list/patient-list.component';
-import { PatientEditComponent } from './patient-edit/patient-edit.component'
+import { PatientEditComponent } from './patient-edit/patient-edit.component';
+import { PatientViewComponent } from './patient-view/patient-view.component'
 
 const appRoutes: Routes = [
   { path: '', redirectTo: '/users', pathMatch: 'full' },
@@ -71,6 +73,10 @@ const appRoutes: Routes = [
   {
     path: 'patients/edit/:id',
     component: PatientEditComponent
+  },
+  {
+    path: 'patients/:id',
+    component: PatientViewComponent
   }
 ];
 
@@ -80,7 +86,8 @@ const appRoutes: Routes = [
     UserListComponent,
     UserEditComponent,
     PatientListComponent,
-    PatientEditComponent
+    PatientEditComponent,
+    PatientViewComponent
   ],
   imports: [
     BrowserModule,
@@ -120,7 +127,7 @@ const appRoutes: Routes = [
     FormsModule,
     RouterModule.forRoot(appRoutes)
   ],
-  providers: [UserService, PatientService],
+  providers: [UserService, PatientService, RecordService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
