@@ -404,6 +404,417 @@
 					]
 				}
 			]
+		},
+		{
+			"name": "Patients",
+			"item": [
+				{
+					"name": "create",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "7fb89667-9fc5-47b2-be64-8e23a8859d0b",
+								"type": "text/javascript",
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);",
+									"postman.setEnvironmentVariable(\"patient_id\", jsonData.id);"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"firstname\": \"James\",\n\t\"middlename\": \"Derek\",\n\t\"lastname\": \"Smart\",\n\t\"ssn\": \"123-45-6789\",\n\t\"dobyear\": \"1981\",\n\t\"dobmonth\": \"01\",\n\t\"dobday\": \"01\",\n\t\"address1\": \"148 Spring St\",\n\t\"address2\": \"\",\n\t\"city\": \"Fairbugn\",\n\t\"state\": \"GA\",\n\t\"zip\": \"30213\"\n}"
+						},
+						"url": {
+							"raw": "{{url}}/patients",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"patients"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "create successful",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"value": "application/json",
+										"disabled": false
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n\t\"firstname\": \"James\",\n\t\"middlename\": \"Derek\",\n\t\"lastname\": \"Smart\",\n\t\"ssn\": \"123-45-6789\",\n\t\"dobyear\": \"1981\",\n\t\"dobmonth\": \"01\",\n\t\"dobday\": \"01\",\n\t\"address1\": \"148 Spring St\",\n\t\"address2\": \"\",\n\t\"city\": \"Fairbugn\",\n\t\"state\": \"GA\",\n\t\"zip\": \"30213\"\n}"
+								},
+								"url": {
+									"raw": "{{url}}/patients",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"patients"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json;charset=UTF-8",
+									"name": "Content-Type",
+									"description": "The mime type of this content"
+								},
+								{
+									"key": "Date",
+									"value": "Wed, 22 Aug 2018 21:36:02 GMT",
+									"name": "Date",
+									"description": "The date and time that the message was sent"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked",
+									"name": "Transfer-Encoding",
+									"description": "The form of encoding used to safely transfer the entity to the user. Currently defined methods are: chunked, compress, deflate, gzip, identity."
+								}
+							],
+							"cookie": [
+								{
+									"expires": "Mon Jan 18 2038 22:14:07 GMT-0500 (EST)",
+									"httpOnly": true,
+									"domain": "localhost",
+									"path": "/",
+									"secure": false,
+									"value": "6D034FDC504821BF37DD709995318857",
+									"key": "JSESSIONID"
+								}
+							],
+							"body": "{\"createdAt\":\"2018-08-22T21:36:02.254+0000\",\"updatedAt\":\"2018-08-22T21:36:02.254+0000\",\"id\":9,\"firstname\":\"James\",\"middlename\":\"Derek\",\"lastname\":\"Smart\",\"ssn\":\"123-45-6789\",\"dobyear\":1981,\"dobmonth\":1,\"dobday\":1,\"address1\":\"148 Spring St\",\"address2\":\"\",\"city\":\"Fairbugn\",\"state\":\"GA\",\"zip\":\"30213\"}"
+						}
+					]
+				},
+				{
+					"name": "readAll",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"url": {
+							"raw": "{{url}}/patients/",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"patients",
+								""
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "readAll successful",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"body": {},
+								"url": {
+									"raw": "{{url}}/patients/",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"patients",
+										""
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json;charset=UTF-8",
+									"name": "Content-Type",
+									"description": "The mime type of this content"
+								},
+								{
+									"key": "Date",
+									"value": "Wed, 22 Aug 2018 21:39:07 GMT",
+									"name": "Date",
+									"description": "The date and time that the message was sent"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked",
+									"name": "Transfer-Encoding",
+									"description": "The form of encoding used to safely transfer the entity to the user. Currently defined methods are: chunked, compress, deflate, gzip, identity."
+								}
+							],
+							"cookie": [
+								{
+									"expires": "Mon Jan 18 2038 22:14:07 GMT-0500 (EST)",
+									"httpOnly": true,
+									"domain": "localhost",
+									"path": "/",
+									"secure": false,
+									"value": "6D034FDC504821BF37DD709995318857",
+									"key": "JSESSIONID"
+								}
+							],
+							"body": "{\"content\":[{\"createdAt\":\"2018-08-22T21:36:02.254+0000\",\"updatedAt\":\"2018-08-22T21:37:47.240+0000\",\"id\":9,\"firstname\":\"James2\",\"middlename\":\"Derek2\",\"lastname\":\"Smart2\",\"ssn\":\"123-45-6789\",\"dobyear\":1982,\"dobmonth\":1,\"dobday\":1,\"address1\":\"148 Spring St\",\"address2\":\"\",\"city\":\"Fairbugn\",\"state\":\"GA\",\"zip\":\"30213\"}],\"pageable\":{\"sort\":{\"sorted\":false,\"unsorted\":true},\"offset\":0,\"pageNumber\":0,\"pageSize\":20,\"unpaged\":false,\"paged\":true},\"last\":true,\"totalPages\":1,\"totalElements\":1,\"size\":20,\"number\":0,\"numberOfElements\":1,\"sort\":{\"sorted\":false,\"unsorted\":true},\"first\":true}"
+						}
+					]
+				},
+				{
+					"name": "update",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"firstname\": \"James2\",\n\t\"middlename\": \"Derek2\",\n\t\"lastname\": \"Smart2\",\n\t\"ssn\": \"123-45-6789\",\n\t\"dobyear\": \"1982\",\n\t\"dobmonth\": \"01\",\n\t\"dobday\": \"01\",\n\t\"address1\": \"148 Spring St\",\n\t\"address2\": \"\",\n\t\"city\": \"Fairbugn\",\n\t\"state\": \"GA\",\n\t\"zip\": \"30213\"\n}"
+						},
+						"url": {
+							"raw": "{{url}}/patients/{{patient_id}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"patients",
+								"{{patient_id}}"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "update successful",
+							"originalRequest": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"value": "application/json",
+										"disabled": false
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n\t\"firstname\": \"James2\",\n\t\"middlename\": \"Derek2\",\n\t\"lastname\": \"Smart2\",\n\t\"ssn\": \"123-45-6789\",\n\t\"dobyear\": \"1982\",\n\t\"dobmonth\": \"01\",\n\t\"dobday\": \"01\",\n\t\"address1\": \"148 Spring St\",\n\t\"address2\": \"\",\n\t\"city\": \"Fairbugn\",\n\t\"state\": \"GA\",\n\t\"zip\": \"30213\"\n}"
+								},
+								"url": {
+									"raw": "{{url}}/patients/{{patient_id}}",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"patients",
+										"{{patient_id}}"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json;charset=UTF-8",
+									"name": "Content-Type",
+									"description": "The mime type of this content"
+								},
+								{
+									"key": "Date",
+									"value": "Wed, 22 Aug 2018 21:37:47 GMT",
+									"name": "Date",
+									"description": "The date and time that the message was sent"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked",
+									"name": "Transfer-Encoding",
+									"description": "The form of encoding used to safely transfer the entity to the user. Currently defined methods are: chunked, compress, deflate, gzip, identity."
+								}
+							],
+							"cookie": [
+								{
+									"expires": "Mon Jan 18 2038 22:14:07 GMT-0500 (EST)",
+									"httpOnly": true,
+									"domain": "localhost",
+									"path": "/",
+									"secure": false,
+									"value": "6D034FDC504821BF37DD709995318857",
+									"key": "JSESSIONID"
+								}
+							],
+							"body": "{\"createdAt\":\"2018-08-22T21:36:02.254+0000\",\"updatedAt\":\"2018-08-22T21:37:47.240+0000\",\"id\":9,\"firstname\":\"James2\",\"middlename\":\"Derek2\",\"lastname\":\"Smart2\",\"ssn\":\"123-45-6789\",\"dobyear\":1982,\"dobmonth\":1,\"dobday\":1,\"address1\":\"148 Spring St\",\"address2\":\"\",\"city\":\"Fairbugn\",\"state\":\"GA\",\"zip\":\"30213\"}"
+						}
+					]
+				},
+				{
+					"name": "read",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"url": {
+							"raw": "{{url}}/patients/{{patient_id}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"patients",
+								"{{patient_id}}"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "read successful",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"body": {},
+								"url": {
+									"raw": "{{url}}/patients/{{patient_id}}",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"patients",
+										"{{patient_id}}"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json;charset=UTF-8",
+									"name": "Content-Type",
+									"description": "The mime type of this content"
+								},
+								{
+									"key": "Date",
+									"value": "Wed, 22 Aug 2018 21:39:39 GMT",
+									"name": "Date",
+									"description": "The date and time that the message was sent"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked",
+									"name": "Transfer-Encoding",
+									"description": "The form of encoding used to safely transfer the entity to the user. Currently defined methods are: chunked, compress, deflate, gzip, identity."
+								}
+							],
+							"cookie": [
+								{
+									"expires": "Mon Jan 18 2038 22:14:07 GMT-0500 (EST)",
+									"httpOnly": true,
+									"domain": "localhost",
+									"path": "/",
+									"secure": false,
+									"value": "6D034FDC504821BF37DD709995318857",
+									"key": "JSESSIONID"
+								}
+							],
+							"body": "{\"createdAt\":\"2018-08-22T21:36:02.254+0000\",\"updatedAt\":\"2018-08-22T21:37:47.240+0000\",\"id\":9,\"firstname\":\"James2\",\"middlename\":\"Derek2\",\"lastname\":\"Smart2\",\"ssn\":\"123-45-6789\",\"dobyear\":1982,\"dobmonth\":1,\"dobday\":1,\"address1\":\"148 Spring St\",\"address2\":\"\",\"city\":\"Fairbugn\",\"state\":\"GA\",\"zip\":\"30213\"}"
+						}
+					]
+				},
+				{
+					"name": "delete",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {},
+						"url": {
+							"raw": "{{url}}/patients/{{patient_id}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"patients",
+								"{{patient_id}}"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "delete successful",
+							"originalRequest": {
+								"method": "DELETE",
+								"header": [],
+								"body": {},
+								"url": {
+									"raw": "{{url}}/patients/{{patient_id}}",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"patients",
+										"{{patient_id}}"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "plain",
+							"header": [
+								{
+									"key": "Content-Length",
+									"value": "0",
+									"name": "Content-Length",
+									"description": "The length of the response body in octets (8-bit bytes)"
+								},
+								{
+									"key": "Date",
+									"value": "Wed, 22 Aug 2018 21:40:25 GMT",
+									"name": "Date",
+									"description": "The date and time that the message was sent"
+								}
+							],
+							"cookie": [
+								{
+									"expires": "Mon Jan 18 2038 22:14:07 GMT-0500 (EST)",
+									"httpOnly": true,
+									"domain": "localhost",
+									"path": "/",
+									"secure": false,
+									"value": "6D034FDC504821BF37DD709995318857",
+									"key": "JSESSIONID"
+								}
+							],
+							"body": ""
+						}
+					]
+				}
+			]
 		}
 	]
 }

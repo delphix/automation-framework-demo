@@ -40,8 +40,11 @@ import { RouterModule, Routes } from '@angular/router';
 
 import { AppComponent } from './app.component';
 import { UserService } from './shared/user/user.service';
+import { PatientService } from './shared/patient/patient.service';
 import { UserListComponent } from './user-list/user-list.component';
-import { UserEditComponent } from './user-edit/user-edit.component'
+import { UserEditComponent } from './user-edit/user-edit.component';
+import { PatientListComponent } from './patient-list/patient-list.component';
+import { PatientEditComponent } from './patient-edit/patient-edit.component'
 
 const appRoutes: Routes = [
   { path: '', redirectTo: '/users', pathMatch: 'full' },
@@ -56,6 +59,18 @@ const appRoutes: Routes = [
   {
     path: 'users/edit/:id',
     component: UserEditComponent
+  },
+  {
+    path: 'patients',
+    component: PatientListComponent
+  },
+  {
+    path: 'patients/add',
+    component: PatientEditComponent
+  },
+  {
+    path: 'patients/edit/:id',
+    component: PatientEditComponent
   }
 ];
 
@@ -63,47 +78,49 @@ const appRoutes: Routes = [
   declarations: [
     AppComponent,
     UserListComponent,
-    UserEditComponent
+    UserEditComponent,
+    PatientListComponent,
+    PatientEditComponent
   ],
   imports: [
     BrowserModule,
     HttpClientModule,
     BrowserAnimationsModule,
     MatAutocompleteModule,
-MatButtonModule,
-MatButtonToggleModule,
-MatCardModule,
-MatCheckboxModule,
-MatChipsModule,
-MatDatepickerModule,
-MatDialogModule,
-MatExpansionModule,
-MatGridListModule,
-MatIconModule,
-MatInputModule,
-MatListModule,
-MatMenuModule,
-MatNativeDateModule,
-MatPaginatorModule,
-MatProgressBarModule,
-MatProgressSpinnerModule,
-MatRadioModule,
-MatRippleModule,
-MatSelectModule,
-MatSidenavModule,
-MatSliderModule,
-MatSlideToggleModule,
-MatSnackBarModule,
-MatSortModule,
-MatTableModule,
-MatTabsModule,
-MatToolbarModule,
-MatTooltipModule,
-MatStepperModule,
+    MatButtonModule,
+    MatButtonToggleModule,
+    MatCardModule,
+    MatCheckboxModule,
+    MatChipsModule,
+    MatDatepickerModule,
+    MatDialogModule,
+    MatExpansionModule,
+    MatGridListModule,
+    MatIconModule,
+    MatInputModule,
+    MatListModule,
+    MatMenuModule,
+    MatNativeDateModule,
+    MatPaginatorModule,
+    MatProgressBarModule,
+    MatProgressSpinnerModule,
+    MatRadioModule,
+    MatRippleModule,
+    MatSelectModule,
+    MatSidenavModule,
+    MatSliderModule,
+    MatSlideToggleModule,
+    MatSnackBarModule,
+    MatSortModule,
+    MatTableModule,
+    MatTabsModule,
+    MatToolbarModule,
+    MatTooltipModule,
+    MatStepperModule,
     FormsModule,
     RouterModule.forRoot(appRoutes)
   ],
-  providers: [UserService],
+  providers: [UserService, PatientService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

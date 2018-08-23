@@ -1,0 +1,53 @@
+<mat-toolbar class="mat-elevation-z2 m-15" color="secondary">
+  <h2>{{ action }} Patient</h2>
+  <span class="fill-space"></span>
+</mat-toolbar>
+
+<mat-card class="mat-elevation-z2 m-15">
+  <form #patientForm="ngForm" (ngSubmit)="save(patientForm.value)">
+    <mat-card-content>
+      <input type="hidden" name="id" [(ngModel)]="patient.id">
+      <mat-form-field>
+        <input matInput placeholder="First Name" [(ngModel)]="patient.firstname" required name="firstname" #firstname>
+      </mat-form-field>
+      <mat-form-field>
+        <input matInput placeholder="Middle Name" [(ngModel)]="patient.middlename" required name="middlename" #middlename>
+      </mat-form-field>
+      <mat-form-field>
+        <input matInput placeholder="Last Name" [(ngModel)]="patient.lastname" required name="lastname" #lastname>
+      </mat-form-field>
+      <mat-form-field>
+        <input matInput placeholder="SSN" [(ngModel)]="patient.ssn" required name="ssn" #ssn>
+      </mat-form-field>
+      <mat-form-field>
+        <input matInput placeholder="DOB Year" [(ngModel)]="patient.dobyear" required name="dobyear" #dobyear>
+      </mat-form-field>
+      <mat-form-field>
+        <input matInput placeholder="DOB Month" [(ngModel)]="patient.dobmonth" required name="dobmonth" #dobmonth>
+      </mat-form-field>
+      <mat-form-field>
+        <input matInput placeholder="DOB Day" [(ngModel)]="patient.dobday" required name="dobday" #dobday>
+      </mat-form-field>
+      <mat-form-field>
+        <input matInput placeholder="Address 1" [(ngModel)]="patient.address1" required name="address1" #address1>
+      </mat-form-field>
+      <mat-form-field>
+        <input matInput placeholder="Address 1" [(ngModel)]="patient.address2" required name="address2" #address2>
+      </mat-form-field>
+      <mat-form-field>
+        <input matInput placeholder="City" [(ngModel)]="patient.city" required name="city" #city>
+      </mat-form-field>
+      <mat-form-field>
+        <input matInput placeholder="State" [(ngModel)]="patient.state" required name="state" #state>
+      </mat-form-field>
+      <mat-form-field>
+        <input matInput placeholder="Zip" [(ngModel)]="patient.zip" required name="zip" #zip>
+      </mat-form-field>
+    </mat-card-content>
+    <mat-card-actions>
+      <button mat-raised-button color="primary" type="submit" [disabled]="!patientForm.form.valid">Save</button>
+      <a mat-button routerLink="/patients">Cancel</a>
+    </mat-card-actions>
+    <mat-card-footer></mat-card-footer>
+  </form>
+</mat-card>
