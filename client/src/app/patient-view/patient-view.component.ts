@@ -1,8 +1,16 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Subscription } from 'rxjs/Subscription';
 import { ActivatedRoute, Router } from '@angular/router';
 import { PatientService } from '../shared/patient/patient.service';
-import { NgForm } from '@angular/forms';
+import { RecordService } from '../shared/record/record.service';
+import { MatTableDataSource, MatSort } from '@angular/material';
+
+export interface Record{
+  id: number;
+  type: string;
+  createdAt: string;
+  updatedAt: string;
+}
 
 @Component({
   selector: 'app-patient-view',
@@ -13,24 +21,35 @@ import { NgForm } from '@angular/forms';
 export class PatientViewComponent implements OnInit {
 
   patient: any = {};
+  id: string;
   sub: Subscription;
+  displayedColumns: string[] = ['id', 'type', 'createdAt', 'updatedAt', 'actions'];
+  dataSource = new MatTableDataSource([]);
+  @ViewChild(MatSort) sort: MatSort;
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private patientService: PatientService
+    private patientService: PatientService,
+    private recordService: RecordService
   ) {
   }
 
   ngOnInit() {
     this.sub = this.route.params.subscribe(params => {
-      const id = params['id'];
-      if (id) {
-        this.patientService.get(id).subscribe((patient: any) => {
+      this.id = params['id'];
+      if (this.id) {
+        this.patientService.get(this.id).subscribe((patient: any) => {
           if (patient) {
             this.patient = patient;
+
+            this.recordService.getAll(this.id).subscribe(data => {
+              var recordData: Record[] = data.content;
+              this.dataSource = new MatTableDataSource(recordData);
+              this.dataSource.sort = this.sort;
+            });
           } else {
-            console.log(`Patient with id '${id}' not found, returning to list`);
+            console.log(`Patient with id '${this.id}' not found, returning to list`);
             this.router.navigate(['/patients']);
           }
         });
