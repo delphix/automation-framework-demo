@@ -8,7 +8,7 @@
 <mat-card class="mat-elevation-z2 m-15">
   <mat-grid-list cols="2" rowHeight="2:1">
     <mat-grid-tile>
-      SSN: {{ patient.ssn }}<br />
+      SSN: {{ patient.ssn | mask:'front':6 }}<br />
       DOB: {{ patient.dobmonth }} / {{ patient.dobday }} / {{ patient.dobyear }}
     </mat-grid-tile>
     <mat-grid-tile>
@@ -51,3 +51,16 @@
   <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
   <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
 </mat-table>
+
+
+<mat-toolbar class="mat-elevation-z2 m-15" color="secondary">
+  <h2>Billing Information</h2>
+  <span class="fill-space"></span>
+  <button mat-icon-button [routerLink]="['records', 'add']"><mat-icon color="primary" class="md-36">add_circle</mat-icon></button>
+</mat-toolbar>
+
+<mat-toolbar class="mat-elevation-z2 m-15" color="secondary">
+  <h2>Payments</h2>
+  <span class="fill-space"></span>
+  <button mat-icon-button [routerLink]="['records', 'add']"><mat-icon color="primary" class="md-36">add_circle</mat-icon></button>
+</mat-toolbar>

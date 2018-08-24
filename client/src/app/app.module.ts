@@ -47,7 +47,8 @@ import { UserEditComponent } from './user-edit/user-edit.component';
 import { PatientListComponent } from './patient-list/patient-list.component';
 import { PatientEditComponent } from './patient-edit/patient-edit.component';
 import { PatientViewComponent } from './patient-view/patient-view.component';
-import { RecordEditComponent } from './record-edit/record-edit.component'
+import { RecordEditComponent } from './record-edit/record-edit.component';
+import { MaskPipe } from './mask.pipe'
 
 const appRoutes: Routes = [
   { path: '', redirectTo: '/patients', pathMatch: 'full' },
@@ -97,7 +98,8 @@ const appRoutes: Routes = [
     PatientListComponent,
     PatientEditComponent,
     PatientViewComponent,
-    RecordEditComponent
+    RecordEditComponent,
+    MaskPipe
   ],
   imports: [
     BrowserModule,
