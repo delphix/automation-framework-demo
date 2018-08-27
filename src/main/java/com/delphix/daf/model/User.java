@@ -13,4 +13,5 @@ public class User extends AuditModel {
     private @NonNull String username;
     private @NonNull String firstname;
     private @NonNull String lastname;
+    private @NonNull String password;
 }
