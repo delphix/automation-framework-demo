@@ -42,13 +42,15 @@ import { AppComponent } from './app.component';
 import { UserService } from './shared/user/user.service';
 import { PatientService } from './shared/patient/patient.service';
 import { RecordService } from './shared/record/record.service';
+import { AuthenticationService } from './shared/authentication/authentication.service';
 import { UserListComponent } from './user-list/user-list.component';
 import { UserEditComponent } from './user-edit/user-edit.component';
 import { PatientListComponent } from './patient-list/patient-list.component';
 import { PatientEditComponent } from './patient-edit/patient-edit.component';
 import { PatientViewComponent } from './patient-view/patient-view.component';
 import { RecordEditComponent } from './record-edit/record-edit.component';
-import { MaskPipe } from './mask.pipe'
+import { MaskPipe } from './mask.pipe';
+import { LoginComponent } from './login/login.component'
 
 const appRoutes: Routes = [
   { path: '', redirectTo: '/patients', pathMatch: 'full' },
@@ -87,7 +89,12 @@ const appRoutes: Routes = [
   {
     path: 'patients/:patientId/records/edit/:id',
     component: RecordEditComponent
+  },
+  {
+    path: 'login',
+    component: LoginComponent
   }
+
 ];
 
 @NgModule({
@@ -99,7 +106,8 @@ const appRoutes: Routes = [
     PatientEditComponent,
     PatientViewComponent,
     RecordEditComponent,
-    MaskPipe
+    MaskPipe,
+    LoginComponent
   ],
   imports: [
     BrowserModule,
@@ -139,7 +147,7 @@ const appRoutes: Routes = [
     FormsModule,
     RouterModule.forRoot(appRoutes)
   ],
-  providers: [UserService, PatientService, RecordService],
+  providers: [UserService, PatientService, RecordService, AuthenticationService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
