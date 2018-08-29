@@ -5,22 +5,12 @@
 		</button>
 		<div routerLink="/" class="pl-15">DAF</div>
 		<span class="spacer"></span>
-		<!--
-		<a routerLink="/github/auth" class="auth_icon">
-
-			<ng-container *ngIf="imageUrl.length > 0;else show_icon">
-				<img class="img-circle" src="{{imageUrl}}">
-			</ng-container>
-
-			<ng-template #show_icon>
-				<mat-icon class="icon-white vert-align-mid">fingerprint</mat-icon>
-			</ng-template>
+		<a [routerLink]="['/login']" class="auth_icon">
+			<mat-icon class="icon-white md-36">exit_to_app</mat-icon>
 		</a>
-		  -->
 	</mat-toolbar>
-
 	<mat-sidenav-container class="wrapper-sidenav-container" [style.marginTop.px]="mobileQuery.matches ? 56 : 0">
-		<mat-sidenav #snav class="wrapper-sidenav" [mode]="mobileQuery.matches ? 'over' : 'side'" [fixedInViewport]="mobileQuery.matches" fixedTopGap="56" [opened]="mobileQuery.matches ? false : true">
+		<mat-sidenav *ngIf="isLoginPage()" #snav class="wrapper-sidenav" [mode]="mobileQuery.matches ? 'over' : 'side'" [fixedInViewport]="mobileQuery.matches" fixedTopGap="56" [opened]="mobileQuery.matches ? false : true">
 			<mat-nav-list>
 				<mat-menu></mat-menu>
 				<button mat-menu-item class="sidenav-btn" routerLinkActive="active-link" routerLink="/patients" (click)="sendToRoute('/users',mobileQuery.matches)">

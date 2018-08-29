@@ -2,13 +2,6 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
 
-const httpOptions = {
-  headers: new HttpHeaders({
-    'Content-Type':  'application/json',
-    'Authorization': 'Bearer ' + localStorage.getItem("jwt")
-  })
-};
-
 @Injectable()
 export class PatientService {
 
@@ -19,7 +12,7 @@ export class PatientService {
   }
 
   getAll(): Observable<any> {
-    return this.http.get(this.PATIENT_API, httpOptions);
+    return this.http.get(this.PATIENT_API);
   }
 
   get(id: string) {

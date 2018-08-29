@@ -1,6 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import {
   MatAutocompleteModule,
   MatButtonModule,
@@ -36,8 +36,8 @@ import {
 } from '@angular/material';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FormsModule } from '@angular/forms';
-import { RouterModule, Routes } from '@angular/router';
-
+import { JwtInterceptor } from './helpers/jwt.interceptor';
+import { ErrorInterceptor } from './helpers/error.interceptor';
 import { AppComponent } from './app.component';
 import { UserService } from './shared/user/user.service';
 import { PatientService } from './shared/patient/patient.service';
@@ -51,51 +51,7 @@ import { PatientViewComponent } from './patient-view/patient-view.component';
 import { RecordEditComponent } from './record-edit/record-edit.component';
 import { MaskPipe } from './mask.pipe';
 import { LoginComponent } from './login/login.component'
-
-const appRoutes: Routes = [
-  { path: '', redirectTo: '/patients', pathMatch: 'full' },
-  {
-    path: 'users',
-    component: UserListComponent
-  },
-  {
-    path: 'users/add',
-    component: UserEditComponent
-  },
-  {
-    path: 'users/edit/:id',
-    component: UserEditComponent
-  },
-  {
-    path: 'patients',
-    component: PatientListComponent
-  },
-  {
-    path: 'patients/add',
-    component: PatientEditComponent
-  },
-  {
-    path: 'patients/edit/:id',
-    component: PatientEditComponent
-  },
-  {
-    path: 'patients/:id',
-    component: PatientViewComponent
-  },
-  {
-    path: 'patients/:patientId/records/add',
-    component: RecordEditComponent
-  },
-  {
-    path: 'patients/:patientId/records/edit/:id',
-    component: RecordEditComponent
-  },
-  {
-    path: 'login',
-    component: LoginComponent
-  }
-
-];
+import { routing } from './app.routing';
 
 @NgModule({
   declarations: [
@@ -145,9 +101,13 @@ const appRoutes: Routes = [
     MatTooltipModule,
     MatStepperModule,
     FormsModule,
-    RouterModule.forRoot(appRoutes)
+    routing
   ],
-  providers: [UserService, PatientService, RecordService, AuthenticationService],
+  providers: [
+    { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
+    { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
+    UserService, PatientService, RecordService, AuthenticationService
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

@@ -24,6 +24,10 @@ export class AppComponent {
     this.mobileQuery.addListener(this._mobileQueryListener);
   }
 
+  isLoginPage(): boolean {
+    return this.router.url.indexOf('/login');
+  }
+
   sendToRoute(sRoute: string, isMobile: boolean) {
     if (isMobile) {
       this.sidenav.close();
