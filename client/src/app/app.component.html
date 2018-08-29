@@ -1,6 +1,6 @@
 <div class="wrapper-container" [class.wrapper-is-mobile]="mobileQuery.matches">
 	<mat-toolbar color="primary" class="wrapper-toolbar">
-		<button mat-icon-button (click)="snav.toggle()">
+		<button *ngIf="isLoginPage()" mat-icon-button (click)="snav.toggle()">
 			<mat-icon>apps</mat-icon>
 		</button>
 		<div routerLink="/" class="pl-15">DAF</div>

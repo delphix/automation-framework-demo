@@ -24,7 +24,7 @@ export class AppComponent {
     this.mobileQuery.addListener(this._mobileQueryListener);
   }
 
-  isLoginPage(): boolean {
+  isLoginPage() {
     return this.router.url.indexOf('/login');
   }
 
