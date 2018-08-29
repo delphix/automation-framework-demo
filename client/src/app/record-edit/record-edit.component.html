@@ -1,0 +1,20 @@
+<mat-toolbar class="mat-elevation-z2 m-15" color="secondary">
+  <h2>{{ action }} Record</h2>
+  <span class="fill-space"></span>
+</mat-toolbar>
+
+<mat-card class="mat-elevation-z2 m-15">
+  <form #recordForm="ngForm" (ngSubmit)="save(recordForm.value)">
+    <mat-card-content>
+      <input type="hidden" name="id" [(ngModel)]="record.id">
+      <mat-form-field>
+        <input matInput placeholder="Type" [(ngModel)]="record.type" required name="type" #type>
+      </mat-form-field>
+    </mat-card-content>
+    <mat-card-actions>
+      <button mat-raised-button color="primary" type="submit" [disabled]="!recordForm.form.valid">Save</button>
+      <a mat-button [routerLink]="['/patients', patientId]">Cancel</a>
+    </mat-card-actions>
+    <mat-card-footer></mat-card-footer>
+  </form>
+</mat-card>

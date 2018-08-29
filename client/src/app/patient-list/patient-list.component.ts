@@ -41,13 +41,15 @@ export class PatientListComponent implements OnInit {
   }
 
   remove(id) {
-    this.patientService.remove(id).subscribe(result => {
-      this.patientService.getAll().subscribe(data => {
-        var patientData: Patient[] = data.content;
-        this.dataSource = new MatTableDataSource(patientData);
-        this.dataSource.sort = this.sort;
-      });
-    }, error => console.error(error));
+    if(confirm(`Are you sure you want to delete this patient?`)) {
+      this.patientService.remove(id).subscribe(result => {
+        this.patientService.getAll().subscribe(data => {
+          var patientData: Patient[] = data.content;
+          this.dataSource = new MatTableDataSource(patientData);
+          this.dataSource.sort = this.sort;
+        });
+      }, error => console.error(error));
+    }
   }
 
 }

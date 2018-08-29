@@ -28,7 +28,8 @@
   <ng-container matColumnDef="actions">
     <mat-header-cell *matHeaderCellDef> Actions </mat-header-cell>
     <mat-cell *matCellDef="let element">
-      <button mat-icon-button [routerLink]="['/patients/edit', element.id]"><mat-icon class="md-24">edit</mat-icon></button>
+      <button mat-icon-button [routerLink]="['/patients/', element.id]"><mat-icon class="md-24">remove_red_eye</mat-icon></button>
+        <button mat-icon-button [routerLink]="['/patients/edit', element.id]"><mat-icon class="md-24">edit</mat-icon></button>
       <button mat-icon-button (click)="remove(element.id)"><mat-icon class="md-24">cancel</mat-icon></button>
     </mat-cell>
   </ng-container>
