@@ -28,7 +28,7 @@ pipeline {
             }
         }
 
-        stage('migrate schema with liquibase') {
+        stage('migrate schema') {
             steps {
                 withCredentials([string(credentialsId: 'dev_host', variable: 'dev_host'), string(credentialsId: 'dev_user', variable: 'dev_user'), string(credentialsId: 'dev_pass', variable: 'dev_pass')]) {
                     sh 'mvn liquibase:update -Dliquibase.password=$dev_pass -Dliquibase.username=$dev_user -Dliquibase.url=jdbc:postgresql://$dev_host:5434/postgres'
