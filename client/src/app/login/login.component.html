@@ -15,7 +15,7 @@
     </mat-card-content>
     <mat-card-actions>
       <button mat-raised-button color="primary" type="submit" [disabled]="!loginForm.form.valid">Save</button>
-      <a mat-button [routerLink]="['/patients', patientId]">Cancel</a>
+      <a mat-button [routerLink]="returnUrl">Cancel</a>
     </mat-card-actions>
     <mat-card-footer></mat-card-footer>
   </form>
