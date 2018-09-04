@@ -75,3 +75,21 @@ module "dms" {
   db1_subnet_id = "${module.database.db1_subnet_id}"
   db2_subnet_id = "${module.database.db2_subnet_id}"
 }
+
+module "web_server" {
+  source = "./modules/web_server"
+  environment = "${terraform.workspace}"
+  owner = "${var.owner}"
+  expiration = "${var.expiration}"
+  cost_center = "${var.cost_center}"
+  project = "${var.project}"
+  vpc_id = "${module.vpc.vpc_id}"
+  key_name = "Derek-CTO-west-2"
+  ami_name = "daf-app-*"
+  de_security_group = "${module.delphix_engine.security_group_id}"
+  subnet_id = "${module.delphix_engine.subnet_id}"
+}
+
+output "ec2_ip" {
+    value = "${module.web_server.public_ip}"
+}

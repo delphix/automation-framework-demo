@@ -62,6 +62,12 @@ resource "aws_security_group" "security_group" {
     "dlpx:Expiration" = "${var.expiration}"
     "dlpx:CostCenter" = "${var.cost_center}"
   }
+  
+  lifecycle {
+    ignore_changes = [
+      "ingress"
+    ]
+  }
 }
 
 output "security_group_id" {

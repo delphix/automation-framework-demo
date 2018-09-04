@@ -1,0 +1,14 @@
+---
+- hosts: localhost
+  connection: local
+  gather_facts: no
+  roles:
+  - set-hosts
+  - build-api
+  - build-app
+
+- hosts: ec2hosts
+  gather_facts: no
+  roles:
+  - deploy-api
+  - deploy-app

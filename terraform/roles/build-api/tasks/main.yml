@@ -1,0 +1,3 @@
+---
+- name: "BUILD HTML"
+  command: chdir=../client ng build --prod

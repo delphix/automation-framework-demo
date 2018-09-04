@@ -1,0 +1,12 @@
+---
+- name: "DEPLOY API"
+  become: true
+  synchronize:
+    src: "../target/app-api.jar"
+    dest: "{{ api_root }}app-api.jar"
+
+- set_fact: set_owner=true
+  when: set_owner is undefined
+
+- set_fact: set_mode=true
+  when: set_mode is undefined
