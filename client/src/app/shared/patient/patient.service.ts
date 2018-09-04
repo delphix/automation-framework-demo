@@ -1,12 +1,12 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
+import { environment } from './../../../environments/environment';
 
 @Injectable()
 export class PatientService {
 
-  public API = '//localhost:8080';
-  public PATIENT_API = this.API + '/patients';
+  public PATIENT_API = environment.APIBase + '/patients';
 
   constructor(private http: HttpClient) {
   }

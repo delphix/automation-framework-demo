@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
+import { environment } from './../../../environments/environment';
 
 const headers = new HttpHeaders().set('Content-Type', 'application/json');
 
@@ -9,7 +10,7 @@ const headers = new HttpHeaders().set('Content-Type', 'application/json');
 })
 export class AuthenticationService {
 
-  public API = '//localhost:8080/auth';
+  public API = `${environment.APIBase}/auth`;
 
   constructor(private http: HttpClient) { }
 
