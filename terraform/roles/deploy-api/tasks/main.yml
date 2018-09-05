@@ -1,12 +1,17 @@
 ---
-- name: "DEPLOY API"
+- name: STOP API SERVICE
   become: true
+  systemd:
+    name: app-api
+    state: stopped
+
+- name: "DEPLOY API"
   synchronize:
     src: "../target/app-api.jar"
     dest: "{{ api_root }}app-api.jar"
 
-- set_fact: set_owner=true
-  when: set_owner is undefined
-
-- set_fact: set_mode=true
-  when: set_mode is undefined
+- name: START API SERVICE
+  become: true
+  systemd:
+    name: app-api
+    state: started

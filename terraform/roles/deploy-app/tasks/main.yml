@@ -33,6 +33,6 @@
 
 - name: Start service httpd, if not running
   become: true
-  service:
+  systemd:
     name: httpd
     state: started

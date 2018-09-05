@@ -30,10 +30,16 @@
   }],
   "provisioners" : [
     {
+      "type" : "file",
+      "source" : "./data/app-api.service",
+      "destination" : "/home/ec2-user/app-api.service"
+    },
+    {
       "type" : "shell",
       "inline":[
         "sudo yum update -y",
-        "sudo yum install -y java-1.8.0 httpd"
+        "sudo yum install -y java-1.8.0 httpd",
+        "sudo sh -c 'cp /home/ec2-user/app-api.service /etc/systemd/system/app-api.service'"
       ]
     }
   ]
