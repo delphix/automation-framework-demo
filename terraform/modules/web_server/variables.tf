@@ -6,10 +6,6 @@ variable "ami_name" {
   description = "Name of the congigured target AMI."
 }
 
-variable "de_security_group" {
-  description = "ID for Delphix Engine Security Group"
-}
-
 variable "vpc_id" {
   description = "VPC ID for the network."
 }
@@ -17,6 +13,27 @@ variable "vpc_id" {
 variable "key_name" {
   description = "Name of the SSH keypair to use in AWS (do not include .pem extension)."
 }
+
+variable "db_url" {
+  description = "Database Host URL."
+}
+
+variable "db_name" {
+  description = "KMS Encrypted value for Database Name."
+}
+
+variable "db_user" {
+  description = "KMS Encrypted value for Database Username."
+}
+
+variable "db_pass" {
+  description = "KMS Encrypted value for Database Password."
+}
+
+variable "jwt_secret" {
+  description = "KMS Encrypted value for JWT Secret."
+}
+
 
 variable "owner" {}
 variable "expiration" {}

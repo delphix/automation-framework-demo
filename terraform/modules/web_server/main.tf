@@ -101,7 +101,42 @@ output "private_ip" {
   value = "${aws_instance.web_server.private_ip}"
 }
 
-resource "null_resource" "deploy_daf_app_stack" {
+
+data "aws_kms_secrets" "db" {
+  secret {
+    name    = "name"
+    payload = "${var.db_name}"
+  }
+  secret {
+    name    = "user"
+    payload = "${var.db_user}"
+  }
+  secret {
+    name    = "pass"
+    payload = "${var.db_pass}"
+  }
+  secret {
+    name    = "jwt"
+    payload = "${var.jwt_secret}"
+  }
+}
+
+resource "null_resource" "deploy_stack" {
+  triggers {
+    new_id = "${uuid()}"
+  }
+  provisioner "local-exec" {
+    command = "sed -i '' -e 's#spring.datasource.url=.*#spring.datasource.url=jdbc:postgresql://${var.db_url}:5434/${data.aws_kms_secrets.db.plaintext["name"]}#g' ../src/main/resources/application.properties"
+  }
+  provisioner "local-exec" {
+    command = "sed -i '' -e 's/spring.datasource.username=.*/spring.datasource.username=${data.aws_kms_secrets.db.plaintext["user"]}/g' ../src/main/resources/application.properties"
+  }
+  provisioner "local-exec" {
+    command = "sed -i '' -e 's/spring.datasource.password=.*/spring.datasource.password=${data.aws_kms_secrets.db.plaintext["pass"]}/g' ../src/main/resources/application.properties"
+  }
+  provisioner "local-exec" {
+    command = "sed -i '' -e 's/jwt.secret=.*/jwt.secret=${data.aws_kms_secrets.db.plaintext["jwt"]}/g' ../src/main/resources/application.properties"
+  }
   provisioner "local-exec" {
     command = "sed -i '' -e 's/localhost/${aws_instance.web_server.public_ip}/g' ../client/src/environments/environment.prod.ts"
   }

@@ -12,6 +12,7 @@
 .metadata
 .factorypath
 .recommenders
+.notes
 bin
 build
 lib/

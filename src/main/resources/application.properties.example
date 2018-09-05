@@ -6,6 +6,8 @@ spring.datasource.url=jdbc:postgresql://
 spring.datasource.username=
 spring.datasource.password=
 
+spring.liquibase.enabled=false
+
 # The SQL dialect makes Hibernate generate better SQL for the chosen database
 spring.jpa.properties.hibernate.dialect = org.hibernate.dialect.PostgreSQLDialect
 
