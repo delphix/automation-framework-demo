@@ -2,6 +2,7 @@ pipeline {
     agent any
     environment {
         TERRAFORM = 'docker run --network host -w /app -v ${HOME}/.aws:/root/.aws -v ${HOME}/.ssh:/root/.ssh -v `pwd`:/app hashicorp/terraform:light'
+        PACKER = 'docker run --network host -w /app -v ${HOME}/.aws:/root/.aws -v ${HOME}/.ssh:/root/.ssh -v `pwd`:/app hashicorp/packer:light'
     }
     stages {
         stage('checkout repo') {
@@ -37,27 +38,22 @@ pipeline {
             }
         }
 
-        /*
         stage('pull latest light terraform image') {
             steps {
                 sh  "docker pull hashicorp/terraform:light"
+                //sh  "docker pull hashicorp/packer:light"
             }
         }
-        stage('init') {
+
+        stage('init terraform backend') {
             steps {
                 dir ('terraform') {
                     sh  "${TERRAFORM} init -backend=true -input=false"
                 }
             }
         }
-        stage('workspace') {
-            steps {
-                dir ('terraform') {
-                    sh  "${TERRAFORM} workspace select production"
-                }
-            }
-        }
-        stage('plan') {
+
+        stage('plan environment changes') {
             steps {
                 dir ('terraform') {
                     sh  "${TERRAFORM} plan -out=tfplan -input=false"
@@ -69,13 +65,13 @@ pipeline {
                 }
             }
         }
-        stage('apply') {
+
+        stage('apply environment changes') {
             steps {
                 dir ('terraform') {
                     sh  "${TERRAFORM} apply -lock=false -input=false tfplan"
                 }
             }
         }
-        */
     }
 }
