@@ -3,7 +3,7 @@
 		<button *ngIf="isLoginPage()" mat-icon-button (click)="snav.toggle()">
 			<mat-icon>apps</mat-icon>
 		</button>
-		<div routerLink="/" class="pl-15">DAF</div>
+		<div class="pl-15"><a class="header-link" routerLink="/">DAF</a></div>
 		<span class="spacer"></span>
 		<a [routerLink]="['/login']" class="auth_icon">
 			<mat-icon class="icon-white md-36">exit_to_app</mat-icon>
