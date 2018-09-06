@@ -88,16 +88,36 @@ module "dev_web_server" {
   ami_name = "daf-app-*"
   subnet_id = "${module.delphix_engine.subnet_id}"
   env_tag ="develop"
-}
-
-module "deploy" {
-  source = "./modules/deploy"
-  env_ip = "${module.dev_web_server.public_ip}"
   db_url = "${module.delphix_target.private_ip}"
+  db_port = "5434"
   db_name = "AQICAHh+IJ9ZGZ6ND/EG3/5iYCK2lApzMxUuVM3qFtq0OzBORwEaneHrCmM9nIZsOph3RquxAAAAZjBkBgkqhkiG9w0BBwagVzBVAgEAMFAGCSqGSIb3DQEHATAeBglghkgBZQMEAS4wEQQMDWmBqRH4JoyAeP9kAgEQgCPSpRgjAmTbQAc5N+vBi1lLhmKrEHTUJgBbJDg/JkUtxGUuWQ=="
   db_user = "AQICAHh+IJ9ZGZ6ND/EG3/5iYCK2lApzMxUuVM3qFtq0OzBORwFmgJ0Sp1P2rIVXNlgoR7r+AAAAZjBkBgkqhkiG9w0BBwagVzBVAgEAMFAGCSqGSIb3DQEHATAeBglghkgBZQMEAS4wEQQMzq0oilNFDR53AqYWAgEQgCPBHw2pXxdHz4GW7bXZ71eip40KHhPqgQTb7HRkUAMaiR+Osw=="
   db_pass = "AQICAHh+IJ9ZGZ6ND/EG3/5iYCK2lApzMxUuVM3qFtq0OzBORwFe5KlJySzPZ161bnEs4bebAAAAbDBqBgkqhkiG9w0BBwagXTBbAgEAMFYGCSqGSIb3DQEHATAeBglghkgBZQMEAS4wEQQMkG40F3kDjO9nCTiWAgEQgCl0L3ciYG0aAie6LD2LnwZld8SrCxNtK9FW8L0sf351leSPmnqR26Bm1Q=="
   jwt_secret = "AQICAHh+IJ9ZGZ6ND/EG3/5iYCK2lApzMxUuVM3qFtq0OzBORwHYij2+HRangHqrNyWTysmZAAAAijCBhwYJKoZIhvcNAQcGoHoweAIBADBzBgkqhkiG9w0BBwEwHgYJYIZIAWUDBAEuMBEEDPwElthCkIRyJVOiOAIBEIBGbgAuDbuvYWfsSzOT2d+ur/iigJPUdPwExqrn3rbmEUGN8CsJ9SgD620Jei70x6JvDMtTus68koTR9T7YOb7bPhoEaaJhZg=="
+}
+
+module "prod_web_server" {
+  source = "./modules/web_server"
+  environment = "${terraform.workspace}"
+  owner = "${var.owner}"
+  expiration = "${var.expiration}"
+  cost_center = "${var.cost_center}"
+  project = "${var.project}"
+  vpc_id = "${module.vpc.vpc_id}"
+  key_name = "Derek-CTO-west-2"
+  ami_name = "daf-app-*"
+  subnet_id = "${module.delphix_engine.subnet_id}"
+  env_tag ="prod"
+  db_url = "daf-postgres.chnrjno1jp2y.us-west-2.rds.amazonaws.com"
+  db_port = "5432"
+  db_name = "AQICAHh+IJ9ZGZ6ND/EG3/5iYCK2lApzMxUuVM3qFtq0OzBORwGpjfR9K/80922z5FJPHe9KAAAAZjBkBgkqhkiG9w0BBwagVzBVAgEAMFAGCSqGSIb3DQEHATAeBglghkgBZQMEAS4wEQQMOMJksXrspm8zYqMaAgEQgCM53SqJXDzHc1C+RSCjHHd2ogwawsmHv0Z/VhzBg85z94HBKQ=="
+  db_user = "AQICAHh+IJ9ZGZ6ND/EG3/5iYCK2lApzMxUuVM3qFtq0OzBORwEoOTpTObyDOsIVfO94wWmhAAAAbTBrBgkqhkiG9w0BBwagXjBcAgEAMFcGCSqGSIb3DQEHATAeBglghkgBZQMEAS4wEQQMX0E8bSxcHkUBEAdtAgEQgCqiDpN282lwUI2T8wcOZaDGN2Yy7FZducQPv8YVMQ8N3IMdwQ57S/L9SyI="
+  db_pass = "AQICAHh+IJ9ZGZ6ND/EG3/5iYCK2lApzMxUuVM3qFtq0OzBORwHUpHWNXKGvrTADQlidN6IyAAAAbDBqBgkqhkiG9w0BBwagXTBbAgEAMFYGCSqGSIb3DQEHATAeBglghkgBZQMEAS4wEQQMb3aFhevTOIImda0QAgEQgCnlsqs+hzNLNRoi5kZPSy0+Ae1hw2nP3SwT4kTUWfI8Tvk/WQvlyyJSeQ=="
+  jwt_secret = "AQICAHh+IJ9ZGZ6ND/EG3/5iYCK2lApzMxUuVM3qFtq0OzBORwGHujIiOEDAKJEEJlnjKpKOAAAAijCBhwYJKoZIhvcNAQcGoHoweAIBADBzBgkqhkiG9w0BBwEwHgYJYIZIAWUDBAEuMBEEDMmVREQ8wUyi7D2hTAIBEIBGuOEAANgB3Z6HdoDbrG8Xl/xlOrtv0OJ4geacRSHO+TMHSH7nFQWfUFo/E0xwDsCss8DoFWxqpRoR9fEF0MpGePpm9it/xA=="
+}
+
+output "prod_ec2_ip" {
+    value = "${module.prod_web_server.public_ip}"
 }
 
 output "dev_ec2_ip" {
