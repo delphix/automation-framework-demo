@@ -7,25 +7,16 @@ data "aws_ami" "delphix-ready-ami" {
   }
 }
 
-data "http" "your_ip" {
-  url = "http://ipv4.icanhazip.com"
-
-  # Optional request headers
-  request_headers {
-    "Accept" = "application/json"
-  }
-}
-
 resource "aws_security_group" "security_group" {
   name = "${var.project}_postgres_ec2"
   description = "Allow Limited Access to Postgres Target"
   vpc_id = "${var.vpc_id}"
 
   ingress {
-      from_port = 22
-      to_port = 22
-      protocol = "tcp"
-      cidr_blocks = ["${chomp("${data.http.your_ip.body}")}/32"]
+      from_port = 0
+      to_port = 0
+      protocol = "-1"
+      cidr_blocks = "${var.static_ips}"
   }
 
   ingress {
@@ -42,6 +33,20 @@ resource "aws_security_group" "security_group" {
       security_groups = ["${var.de_security_group}"]
   }
 
+  ingress {
+      from_port = 0
+      to_port = 0
+      protocol = "-1"
+      security_groups = ["${var.jenkins_sg}"]
+  }
+
+  ingress {
+      from_port = 5434
+      to_port = 5436
+      protocol = "tcp"
+      security_groups = ["${var.dev_web_sg}"]
+  }
+
   egress {
     from_port = 0
     to_port = 0
@@ -55,12 +60,6 @@ resource "aws_security_group" "security_group" {
     "dlpx:Owner" = "${var.owner}"
     "dlpx:Expiration" = "${var.expiration}"
     "dlpx:CostCenter" = "${var.cost_center}"
-  }
-
-  lifecycle {
-    ignore_changes = [
-      "ingress"
-    ]
   }
 }
 

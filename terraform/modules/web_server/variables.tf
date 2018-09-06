@@ -48,3 +48,6 @@ variable "expiration" {}
 variable "cost_center" {}
 variable "project" {}
 variable "environment" {}
+variable "static_ips" {
+  type  = "list"
+}

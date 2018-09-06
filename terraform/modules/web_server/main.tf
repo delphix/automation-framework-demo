@@ -7,16 +7,6 @@ data "aws_ami" "delphix-ready-ami" {
   }
 }
 
-data "http" "your_ip" {
-  url = "http://ipv4.icanhazip.com"
-
-  # Optional request headers
-  request_headers {
-    "Accept" = "application/json"
-  }
-}
-
-
 resource "aws_security_group" "security_group" {
   name = "${var.project}_${var.env_tag}_app_sg"
   description = "Allow Limited Access to Web Server"
@@ -26,21 +16,21 @@ resource "aws_security_group" "security_group" {
       from_port = 22
       to_port = 22
       protocol = "tcp"
-      cidr_blocks = ["${chomp("${data.http.your_ip.body}")}/32"]
+      cidr_blocks = "${var.static_ips}"
   }
 
   ingress {
       from_port = 80
       to_port = 80
       protocol = "tcp"
-      cidr_blocks = ["${chomp("${data.http.your_ip.body}")}/32"]
+      cidr_blocks = "${var.static_ips}"
   }
 
   ingress {
       from_port = 8080
       to_port = 8080
       protocol = "tcp"
-      cidr_blocks = ["${chomp("${data.http.your_ip.body}")}/32"]
+      cidr_blocks = "${var.static_ips}"
   }
 
   ingress {

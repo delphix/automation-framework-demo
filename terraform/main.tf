@@ -37,8 +37,10 @@ module "delphix_engine" {
   expiration = "${var.expiration}"
   cost_center = "${var.cost_center}"
   project = "${var.project}"
+  static_ips = "${var.static_ips}"
   vpc_id = "${module.vpc.vpc_id}"
   key_name = "Derek-CTO-west-2"
+  jenkins_sg = "sg-0e9fe830541933f0b"
 }
 
 module "delphix_target" {
@@ -48,11 +50,14 @@ module "delphix_target" {
   expiration = "${var.expiration}"
   cost_center = "${var.cost_center}"
   project = "${var.project}"
+  static_ips = "${var.static_ips}"
   vpc_id = "${module.vpc.vpc_id}"
   key_name = "Derek-CTO-west-2"
   ami_name = "delphix-postgres-*"
   de_security_group = "${module.delphix_engine.security_group_id}"
   subnet_id = "${module.delphix_engine.subnet_id}"
+  jenkins_sg = "sg-0e9fe830541933f0b"
+  dev_web_sg = "${module.dev_web_server.security_group_id}"
 }
 
 module "dms" {
@@ -83,6 +88,7 @@ module "dev_web_server" {
   expiration = "${var.expiration}"
   cost_center = "${var.cost_center}"
   project = "${var.project}"
+  static_ips = "${var.static_ips}"
   vpc_id = "${module.vpc.vpc_id}"
   key_name = "Derek-CTO-west-2"
   ami_name = "daf-app-*"
@@ -103,6 +109,7 @@ module "prod_web_server" {
   expiration = "${var.expiration}"
   cost_center = "${var.cost_center}"
   project = "${var.project}"
+  static_ips = "${var.static_ips}"
   vpc_id = "${module.vpc.vpc_id}"
   key_name = "Derek-CTO-west-2"
   ami_name = "daf-app-*"
