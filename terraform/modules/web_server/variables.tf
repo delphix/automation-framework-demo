@@ -42,6 +42,10 @@ variable "jwt_secret" {
   description = "KMS Encrypted value for JWT Secret."
 }
 
+variable "jenkins_sg" {
+  description = "Jenkins Security Group ID."
+}
+
 
 variable "owner" {}
 variable "expiration" {}
