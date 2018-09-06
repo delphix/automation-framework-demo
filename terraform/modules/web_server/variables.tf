@@ -14,26 +14,9 @@ variable "key_name" {
   description = "Name of the SSH keypair to use in AWS (do not include .pem extension)."
 }
 
-variable "db_url" {
-  description = "Database Host URL."
+variable "env_tag" {
+  description = "Environment Tag."
 }
-
-variable "db_name" {
-  description = "KMS Encrypted value for Database Name."
-}
-
-variable "db_user" {
-  description = "KMS Encrypted value for Database Username."
-}
-
-variable "db_pass" {
-  description = "KMS Encrypted value for Database Password."
-}
-
-variable "jwt_secret" {
-  description = "KMS Encrypted value for JWT Secret."
-}
-
 
 variable "owner" {}
 variable "expiration" {}

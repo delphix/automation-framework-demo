@@ -76,7 +76,7 @@ module "dms" {
   db2_subnet_id = "${module.database.db2_subnet_id}"
 }
 
-module "web_server" {
+module "dev_web_server" {
   source = "./modules/web_server"
   environment = "${terraform.workspace}"
   owner = "${var.owner}"
@@ -87,6 +87,12 @@ module "web_server" {
   key_name = "Derek-CTO-west-2"
   ami_name = "daf-app-*"
   subnet_id = "${module.delphix_engine.subnet_id}"
+  env_tag ="develop"
+}
+
+module "deploy" {
+  source = "./modules/deploy"
+  env_ip = "${module.dev_web_server.public_ip}"
   db_url = "${module.delphix_target.private_ip}"
   db_name = "AQICAHh+IJ9ZGZ6ND/EG3/5iYCK2lApzMxUuVM3qFtq0OzBORwEaneHrCmM9nIZsOph3RquxAAAAZjBkBgkqhkiG9w0BBwagVzBVAgEAMFAGCSqGSIb3DQEHATAeBglghkgBZQMEAS4wEQQMDWmBqRH4JoyAeP9kAgEQgCPSpRgjAmTbQAc5N+vBi1lLhmKrEHTUJgBbJDg/JkUtxGUuWQ=="
   db_user = "AQICAHh+IJ9ZGZ6ND/EG3/5iYCK2lApzMxUuVM3qFtq0OzBORwFmgJ0Sp1P2rIVXNlgoR7r+AAAAZjBkBgkqhkiG9w0BBwagVzBVAgEAMFAGCSqGSIb3DQEHATAeBglghkgBZQMEAS4wEQQMzq0oilNFDR53AqYWAgEQgCPBHw2pXxdHz4GW7bXZ71eip40KHhPqgQTb7HRkUAMaiR+Osw=="
@@ -94,6 +100,6 @@ module "web_server" {
   jwt_secret = "AQICAHh+IJ9ZGZ6ND/EG3/5iYCK2lApzMxUuVM3qFtq0OzBORwHYij2+HRangHqrNyWTysmZAAAAijCBhwYJKoZIhvcNAQcGoHoweAIBADBzBgkqhkiG9w0BBwEwHgYJYIZIAWUDBAEuMBEEDPwElthCkIRyJVOiOAIBEIBGbgAuDbuvYWfsSzOT2d+ur/iigJPUdPwExqrn3rbmEUGN8CsJ9SgD620Jei70x6JvDMtTus68koTR9T7YOb7bPhoEaaJhZg=="
 }
 
-output "ec2_ip" {
-    value = "${module.web_server.public_ip}"
+output "dev_ec2_ip" {
+    value = "${module.dev_web_server.public_ip}"
 }
