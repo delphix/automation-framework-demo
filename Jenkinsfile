@@ -53,6 +53,27 @@ pipeline {
             }
         }
 
+        stage ('taint application environment') {
+            steps {
+                script {
+                    if (${env.GIT_BRANCH} == "origin/develop") {
+                        stage ('develop') {
+                          dir ('terraform') {
+                              sh  "${TERRAFORM} terraform taint -module=dev_web_server null_resource.deploy_stack"
+                          }
+                        }
+                    }
+                    if (${env.GIT_BRANCH} == "origin/master") {
+                      stage ('prod') {
+                        dir ('terraform') {
+                            sh  "${TERRAFORM} terraform taint -module=prod_web_server null_resource.deploy_stack"
+                        }
+                      }
+                    }
+                }
+            }
+        }
+
         stage('plan environment changes') {
             steps {
                 dir ('terraform') {
