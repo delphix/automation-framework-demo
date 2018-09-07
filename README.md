@@ -9,6 +9,9 @@
 3.  [Statement of Support](#statement-of-support)
 4.  [License](#license)
 
+## Note for OSX Users
+Replace SED with GSED.
+
 ## <a id="contribute"></a>Contribute
 
 1.  Fork the project.

@@ -119,19 +119,19 @@ data "aws_kms_secrets" "db" {
 
 resource "null_resource" "deploy_stack" {
   provisioner "local-exec" {
-    command = "sed -i '' -e 's#spring.datasource.url=.*#spring.datasource.url=jdbc:postgresql://${var.db_url}:${var.db_port}/${data.aws_kms_secrets.db.plaintext["name"]}#g' ../src/main/resources/application.properties"
+    command = "sed -i -e 's#spring.datasource.url=.*#spring.datasource.url=jdbc:postgresql://${var.db_url}:${var.db_port}/${data.aws_kms_secrets.db.plaintext["name"]}#g' ../src/main/resources/application.properties"
   }
   provisioner "local-exec" {
-    command = "sed -i '' -e 's/spring.datasource.username=.*/spring.datasource.username=${data.aws_kms_secrets.db.plaintext["user"]}/g' ../src/main/resources/application.properties"
+    command = "sed -i -e 's/spring.datasource.username=.*/spring.datasource.username=${data.aws_kms_secrets.db.plaintext["user"]}/g' ../src/main/resources/application.properties"
   }
   provisioner "local-exec" {
-    command = "sed -i '' -e 's/spring.datasource.password=.*/spring.datasource.password=${data.aws_kms_secrets.db.plaintext["pass"]}/g' ../src/main/resources/application.properties"
+    command = "sed -i -e 's/spring.datasource.password=.*/spring.datasource.password=${data.aws_kms_secrets.db.plaintext["pass"]}/g' ../src/main/resources/application.properties"
   }
   provisioner "local-exec" {
-    command = "sed -i '' -e 's/jwt.secret=.*/jwt.secret=${data.aws_kms_secrets.db.plaintext["jwt"]}/g' ../src/main/resources/application.properties"
+    command = "sed -i -e 's/jwt.secret=.*/jwt.secret=${data.aws_kms_secrets.db.plaintext["jwt"]}/g' ../src/main/resources/application.properties"
   }
   provisioner "local-exec" {
-    command = "sed -i '' -e 's#APIBase:.*#APIBase: \"//${aws_instance.web_server.public_ip}:8080\"#g' ../client/src/environments/environment.prod.ts"
+    command = "sed -i -e 's#APIBase:.*#APIBase: \"//${aws_instance.web_server.public_ip}:8080\"#g' ../client/src/environments/environment.prod.ts"
   }
   provisioner "local-exec" {
     command = "ansible-playbook -e public_ip='${aws_instance.web_server.public_ip}' deploy.yaml -vvv"
