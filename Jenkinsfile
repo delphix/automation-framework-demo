@@ -1,9 +1,5 @@
 pipeline {
     agent any
-    environment {
-        TERRAFORM = 'docker run --network host -w /app/terraform -v ${HOME}/.aws:/root/.aws -v ${HOME}/.ssh:/root/.ssh -v `pwd`:/app hashicorp/terraform:light'
-        PACKER = 'docker run --network host -w /app -v ${HOME}/.aws:/root/.aws -v ${HOME}/.ssh:/root/.ssh -v `pwd`:/app hashicorp/packer:light'
-    }
     stages {
         stage('checkout repo') {
             steps {
@@ -38,17 +34,12 @@ pipeline {
             }
         }
 
-        stage('pull latest light terraform image') {
-            steps {
-                sh  "docker pull hashicorp/terraform:light"
-                //sh  "docker pull hashicorp/packer:light"
-            }
-        }
-
         stage('init terraform backend') {
             steps {
-                sh  "${TERRAFORM} init -backend=true -input=false"
-                sh  "${TERRAFORM} workspace select production"
+              dir ('terraform') {
+                sh  "terraform init -backend=true -input=false"
+                sh  "terraform workspace select production"
+              }
             }
         }
 
@@ -57,12 +48,16 @@ pipeline {
                 script {
                     if ("${env.GIT_BRANCH}" == "origin/develop") {
                         stage ('develop') {
-                            sh  "${TERRAFORM} taint -module=dev_web_server null_resource.deploy_stack"
+                          dir ('terraform') {
+                            sh  "terraform taint -module=dev_web_server null_resource.deploy_stack"
+                          }
                         }
                     }
                     if ("${env.GIT_BRANCH}" == "origin/master") {
                         stage ('prod') {
-                            sh  "${TERRAFORM} taint -module=prod_web_server null_resource.deploy_stack"
+                          dir ('terraform') {
+                            sh  "terraform taint -module=prod_web_server null_resource.deploy_stack"
+                          }
                         }
                     }
                 }
@@ -71,18 +66,22 @@ pipeline {
 
         stage('plan environment changes') {
             steps {
-                sh  "${TERRAFORM} plan -out=tfplan -input=false"
+              dir ('terraform') {
+                sh  "terraform plan -out=tfplan -input=false"
                 script {
                     timeout(time: 10, unit: 'MINUTES') {
                         input(id: "Deploy Gate", message: "Deploy ${params.project_name}?", ok: 'Deploy')
                     }
                 }
+              }
             }
         }
 
         stage('apply environment changes') {
             steps {
-                sh  "${TERRAFORM} apply -lock=false -input=false tfplan"
+              dir ('terraform') {
+                sh  "terraform apply -lock=false -input=false tfplan"
+              }
             }
         }
     }
