@@ -90,6 +90,7 @@ pipeline {
         stage('apply environment changes') {
             steps {
                 dir ('terraform') {
+                    sh "pwd"
                     sh  "${TERRAFORM} apply -lock=false -input=false tfplan"
                 }
             }
