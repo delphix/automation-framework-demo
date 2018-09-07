@@ -47,8 +47,8 @@ pipeline {
 
         stage('init terraform backend') {
             steps {
-                sh  "${TERRAFORM} workspace select production"
                 sh  "${TERRAFORM} init -backend=true -input=false"
+                sh  "${TERRAFORM} workspace select production"
             }
         }
 
