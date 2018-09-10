@@ -11,6 +11,9 @@ resource "local_file" "pem" {
 }
 
 resource "null_resource" "chmod" {
+  triggers {
+    new_id = "${uuid()}"
+  }
   provisioner "local-exec" {
     command = "chmod 400 ./inventory/ansible-deploy-key.pem"
   }
