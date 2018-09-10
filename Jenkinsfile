@@ -8,6 +8,7 @@ pipeline {
                     env.GIT_COMMIT = scmVars.GIT_COMMIT
                     env.GIT_BRANCH = scmVars.GIT_BRANCH
                 }
+                sh "cp ./src/main/resources/application.properties.example ./src/main/resources/application.properties"
             }
         }
 
@@ -16,7 +17,6 @@ pipeline {
               dir ('terraform') {
                 sh  "terraform init -backend=true -input=false"
                 sh  "terraform workspace select production"
-                sh "cp ./src/main/resources/application.properties.example ./src/main/resources/application.properties"
               }
             }
         }
