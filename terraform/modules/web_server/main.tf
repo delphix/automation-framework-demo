@@ -122,19 +122,19 @@ resource "null_resource" "deploy_stack" {
     command = "sed -i -e 's#spring.datasource.url=.*#spring.datasource.url=jdbc:postgresql://${var.db_url}:${var.db_port}/${data.aws_kms_secrets.db.plaintext["name"]}#g' ../src/main/resources/application.properties"
   }
   provisioner "local-exec" {
-    command = "sed -i -e 's#liquibase.url=.*#liquibase.url=jdbc:postgresql://${var.db_url}:${var.db_port}/${data.aws_kms_secrets.db.plaintext["name"]}#g' ../src/main/resources/application.properties"
+    command = "sed -i -e 's#url=.*#url=jdbc:postgresql://${var.db_url}:${var.db_port}/${data.aws_kms_secrets.db.plaintext["name"]}#g' ../src/main/resources/application.properties"
   }
   provisioner "local-exec" {
     command = "sed -i -e 's/spring.datasource.username=.*/spring.datasource.username=${data.aws_kms_secrets.db.plaintext["user"]}/g' ../src/main/resources/application.properties"
   }
   provisioner "local-exec" {
-    command = "sed -i -e 's/liquibase.username=.*/liquibase.username=${data.aws_kms_secrets.db.plaintext["user"]}/g' ../src/main/resources/application.properties"
+    command = "sed -i -e 's/username=.*/username=${data.aws_kms_secrets.db.plaintext["user"]}/g' ../src/main/resources/application.properties"
   }
   provisioner "local-exec" {
     command = "sed -i -e 's/spring.datasource.password=.*/spring.datasource.password=${data.aws_kms_secrets.db.plaintext["pass"]}/g' ../src/main/resources/application.properties"
   }
   provisioner "local-exec" {
-    command = "sed -i -e 's/liquibase.password=.*/liquibase.password=${data.aws_kms_secrets.db.plaintext["pass"]}/g' ../src/main/resources/application.properties"
+    command = "sed -i -e 's/password=.*/password=${data.aws_kms_secrets.db.plaintext["pass"]}/g' ../src/main/resources/application.properties"
   }
   provisioner "local-exec" {
     command = "sed -i -e 's/jwt.secret=.*/jwt.secret=${data.aws_kms_secrets.db.plaintext["jwt"]}/g' ../src/main/resources/application.properties"
