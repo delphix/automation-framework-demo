@@ -11,34 +11,12 @@ pipeline {
             }
         }
 
-        stage('run delphix automation framework') {
-            steps {
-                writeFile file: 'payload.json', text: payload
-                script {
-                    withCredentials([string(credentialsId: 'delphix_engine', variable: 'engine'), string(credentialsId: 'delphix_user', variable: 'user'), string(credentialsId: 'delphix_pass', variable: 'pass')]) {
-                        env.DELPHIX_ENGINE = engine
-                        env.DELPHIX_USER = user
-                        env.DELPHIX_PASS = pass
-                    }
-                }
-                sh "java -jar daf.jar"
-            }
-        }
-
-        stage('migrate schema') {
-            steps {
-                sh "cp ./src/main/resources/application.properties.example ./src/main/resources/application.properties"
-                withCredentials([string(credentialsId: 'dev_host', variable: 'dev_host'), string(credentialsId: 'dev_user', variable: 'dev_user'), string(credentialsId: 'dev_pass', variable: 'dev_pass')]) {
-                    sh 'mvn liquibase:update -Dliquibase.password=$dev_pass -Dliquibase.username=$dev_user -Dliquibase.url=jdbc:postgresql://$dev_host:5434/postgres'
-                }
-            }
-        }
-
         stage('init terraform backend') {
             steps {
               dir ('terraform') {
                 sh  "terraform init -backend=true -input=false"
                 sh  "terraform workspace select production"
+                sh "cp ./src/main/resources/application.properties.example ./src/main/resources/application.properties"
               }
             }
         }
@@ -81,6 +59,35 @@ pipeline {
             steps {
               dir ('terraform') {
                 sh  "terraform apply -lock=false -input=false tfplan"
+              }
+            }
+        }
+
+        stage('run delphix automation framework') {
+            steps {
+                writeFile file: 'payload.json', text: payload
+                script {
+                    withCredentials([string(credentialsId: 'delphix_engine', variable: 'engine'), string(credentialsId: 'delphix_user', variable: 'user'), string(credentialsId: 'delphix_pass', variable: 'pass')]) {
+                        env.DELPHIX_ENGINE = engine
+                        env.DELPHIX_USER = user
+                        env.DELPHIX_PASS = pass
+                    }
+                }
+                sh "java -jar daf.jar"
+
+            }
+        }
+
+        stage('migrate schema') {
+            steps {
+                sh 'mvn liquibase:update'
+            }
+        }
+
+        stage('deploy application') {
+            steps {
+              dir ('terraform') {
+                sh  "ansible-playbook deploy.yaml -vvv"
               }
             }
         }

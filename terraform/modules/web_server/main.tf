@@ -143,6 +143,6 @@ resource "null_resource" "deploy_stack" {
     command = "sed -i -e 's#APIBase:.*#APIBase: \"//${aws_instance.web_server.public_ip}:8080\"#g' ../client/src/environments/environment.prod.ts"
   }
   provisioner "local-exec" {
-    command = "ansible-playbook -e public_ip='${aws_instance.web_server.private_ip}' deploy.yaml -vvv"
+    command = "sed -i -e 's#public_ip:.*#public_ip: \"${aws_instance.web_server.public_ip}\"#g' ./inventory/group_vars/all.yaml"
   }
 }
