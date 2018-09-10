@@ -78,7 +78,10 @@ pipeline {
             }
         }
 
-        stage('migrate schema') {
+        stage ('migrate schema') {
+            when {
+                expression { "${env.GIT_BRANCH}" != "origin/master" }
+            }
             steps {
                 sh 'mvn liquibase:update'
             }
