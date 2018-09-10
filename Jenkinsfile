@@ -64,6 +64,9 @@ pipeline {
         }
 
         stage('run delphix automation framework') {
+            when {
+                expression { "${env.GIT_BRANCH}" != "origin/master" }
+            }
             steps {
                 writeFile file: 'payload.json', text: payload
                 script {
@@ -74,7 +77,6 @@ pipeline {
                     }
                 }
                 sh "java -jar daf.jar"
-
             }
         }
 
