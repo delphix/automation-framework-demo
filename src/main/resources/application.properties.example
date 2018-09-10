@@ -1,5 +1,8 @@
 changeLogFile=src/main/resources/db/changelog/db.changelog-master.yaml
 driver-class-name=org.postgresql.Driver
+liquibase.password=
+liquibase.username=
+liquibase.url=
 
 ## Spring DATASOURCE (DataSourceAutoConfiguration & DataSourceProperties)
 spring.datasource.url=jdbc:postgresql://
