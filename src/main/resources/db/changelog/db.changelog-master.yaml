@@ -11,3 +11,6 @@ databaseChangeLog:
   - include:
       file: migrations/0004-users-passwords.yml
       relativeToChangelogFile: true
+  - include:
+      file: migrations/0005-create-billings.yml
+      relativeToChangelogFile: true
