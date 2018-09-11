@@ -42,6 +42,7 @@ import { AppComponent } from './app.component';
 import { UserService } from './shared/user/user.service';
 import { PatientService } from './shared/patient/patient.service';
 import { RecordService } from './shared/record/record.service';
+import { BillingService } from './shared/billing/billing.service';
 import { AuthenticationService } from './shared/authentication/authentication.service';
 import { UserListComponent } from './user-list/user-list.component';
 import { UserEditComponent } from './user-edit/user-edit.component';
@@ -106,7 +107,7 @@ import { routing } from './app.routing';
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
-    UserService, PatientService, RecordService, AuthenticationService
+    UserService, PatientService, RecordService, BillingService, AuthenticationService
   ],
   bootstrap: [AppComponent]
 })
