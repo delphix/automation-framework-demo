@@ -53,6 +53,7 @@ import { RecordEditComponent } from './record-edit/record-edit.component';
 import { MaskPipe } from './mask.pipe';
 import { LoginComponent } from './login/login.component'
 import { routing } from './app.routing';
+import { BillingEditComponent } from './billing-edit/billing-edit.component';
 
 @NgModule({
   declarations: [
@@ -64,7 +65,8 @@ import { routing } from './app.routing';
     PatientViewComponent,
     RecordEditComponent,
     MaskPipe,
-    LoginComponent
+    LoginComponent,
+    BillingEditComponent
   ],
   imports: [
     BrowserModule,

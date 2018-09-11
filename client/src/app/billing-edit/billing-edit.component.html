@@ -1,0 +1,46 @@
+<mat-toolbar class="mat-elevation-z2 m-15" color="secondary">
+  <h2>{{ action }} Billing Information</h2>
+  <span class="fill-space"></span>
+</mat-toolbar>
+
+<mat-card class="mat-elevation-z2 m-15">
+  <form #billingForm="ngForm" (ngSubmit)="save(billingForm.value)">
+    <mat-card-content>
+      <input type="hidden" name="id" [(ngModel)]="billing.id">
+
+      <mat-form-field>
+        <input matInput placeholder="Credit Card Number" [(ngModel)]="billing.ccnum" required name="ccnum" #ccnum>
+      </mat-form-field>
+      <mat-form-field>
+        <input matInput placeholder="Credit Card Type" [(ngModel)]="billing.cctype" required name="cctype" #cctype>
+      </mat-form-field>
+      <mat-form-field>
+        <input matInput placeholder="Expiration Month" [(ngModel)]="billing.ccexpmonth" required name="ccexpmonth" #ccexpmonth>
+      </mat-form-field>
+      <mat-form-field>
+        <input matInput placeholder="Expiration Year" [(ngModel)]="billing.ccexpyear" required name="ccexpyear" #ccexpyear>
+      </mat-form-field>
+      <mat-form-field>
+        <input matInput placeholder="Address 1" [(ngModel)]="billing.address1" required name="address1" #address1>
+      </mat-form-field>
+      <mat-form-field>
+        <input matInput placeholder="Address 2" [(ngModel)]="billing.address2" required name="address2" #address2>
+      </mat-form-field>
+      <mat-form-field>
+        <input matInput placeholder="City" [(ngModel)]="billing.city" required name="city" #city>
+      </mat-form-field>
+      <mat-form-field>
+        <input matInput placeholder="State" [(ngModel)]="billing.state" required name="state" #state>
+      </mat-form-field>
+      <mat-form-field>
+        <input matInput placeholder="Zip" [(ngModel)]="billing.zip" required name="zip" #zip>
+      </mat-form-field>
+  
+    </mat-card-content>
+    <mat-card-actions>
+      <button mat-raised-button color="primary" type="submit" [disabled]="!billingForm.form.valid">Save</button>
+      <a mat-button [routerLink]="['/patients', patientId]">Cancel</a>
+    </mat-card-actions>
+    <mat-card-footer></mat-card-footer>
+  </form>
+</mat-card>

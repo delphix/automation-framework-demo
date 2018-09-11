@@ -13,6 +13,21 @@ export interface Record{
   updatedAt: string;
 }
 
+export interface Billing{
+  id: number;
+  ccnum: string;
+  cctype: string;
+  ccexpmonth: number;
+  ccexpyear: number;
+  address1: string;
+  address2: string;
+  city: string;
+  state: string;
+  zip: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
 @Component({
   selector: 'app-patient-view',
   templateUrl: './patient-view.component.html',
@@ -54,7 +69,7 @@ export class PatientViewComponent implements OnInit {
             });
 
             this.billingService.getAll(this.id).subscribe(data => {
-              var billingData: Record[] = data.content;
+              var billingData: Billing[] = data.content;
               this.billings = new MatTableDataSource(billingData);
               this.billings.sort = this.sort;
             });
@@ -83,6 +98,18 @@ export class PatientViewComponent implements OnInit {
           var recordData: Record[] = data.content;
           this.records = new MatTableDataSource(recordData);
           this.records.sort = this.sort;
+        });
+      }, error => console.error(error));
+    }
+  }
+
+  removeBilling(billingId) {
+    if(confirm(`Are you sure you want to delete this record?`)) {
+      this.billingService.remove(this.id, billingId).subscribe(result => {
+        this.billingService.getAll(this.id).subscribe(data => {
+          var billingData: Billing[] = data.content;
+          this.billings = new MatTableDataSource(billingData);
+          this.billings.sort = this.sort;
         });
       }, error => console.error(error));
     }
