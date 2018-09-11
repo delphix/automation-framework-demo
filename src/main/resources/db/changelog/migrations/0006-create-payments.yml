@@ -14,11 +14,6 @@ databaseChangeLog:
                 primaryKey: true
                 nullable: false
           - column:
-              name: billing_id
-              type: int
-              constraints:
-                nullable: false
-          - column:
               name: patient_id
               type: int
               constraints:
