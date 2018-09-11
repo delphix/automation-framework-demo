@@ -21,6 +21,11 @@ public class PaymentController {
     @Autowired
     private PatientRepository patientRepository;
 
+    @GetMapping("/payments")
+    public Page<Payment> getPatients(Pageable pageable) {
+        return paymentRepository.findAll(pageable);
+    }
+
     @GetMapping("/patients/{patientId}/payments")
     public Page<Payment> getAllPaymentsByPatientId(@PathVariable (value = "patientId") Long patientId, Pageable pageable) {
        return paymentRepository.findByPatientId(patientId, pageable);

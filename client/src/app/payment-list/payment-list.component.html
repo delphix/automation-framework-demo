@@ -1,0 +1,33 @@
+<mat-toolbar class="mat-elevation-z2 m-15" color="secondary">
+  <h2>Payments</h2>
+  <span class="fill-space"></span>
+</mat-toolbar>
+
+<mat-table [dataSource]=payments matSort class="mat-elevation-z2 m-15">
+  <ng-container matColumnDef="id">
+    <mat-header-cell *matHeaderCellDef mat-sort-header> ID</mat-header-cell>
+    <mat-cell *matCellDef="let element"> {{element.id}}</mat-cell>
+  </ng-container>
+  <ng-container matColumnDef="amount">
+    <mat-header-cell *matHeaderCellDef mat-sort-header> Amount </mat-header-cell>
+    <mat-cell *matCellDef="let element"> {{ element.amount | stripe }}</mat-cell>
+  </ng-container>
+  <ng-container matColumnDef="patient">
+    <mat-header-cell *matHeaderCellDef mat-sort-header> Patient </mat-header-cell>
+    <mat-cell *matCellDef="let element"><a [routerLink]="['/patients/', element.patient.id]"> {{ element.patient.lastname }}, {{ element.patient.firstname }}</a></mat-cell>
+  </ng-container>
+  <ng-container matColumnDef="currency">
+    <mat-header-cell *matHeaderCellDef mat-sort-header> Currency </mat-header-cell>
+    <mat-cell *matCellDef="let element"> {{element.currency}}</mat-cell>
+  </ng-container>
+  <ng-container matColumnDef="type">
+    <mat-header-cell *matHeaderCellDef mat-sort-header> Type </mat-header-cell>
+    <mat-cell *matCellDef="let element"> {{element.type}}</mat-cell>
+  </ng-container>
+  <ng-container matColumnDef="createdAt">
+    <mat-header-cell *matHeaderCellDef mat-sort-header> Created </mat-header-cell>
+    <mat-cell *matCellDef="let element"> {{element.createdAt | date: 'short'}}</mat-cell>
+  </ng-container>
+  <mat-header-row *matHeaderRowDef="paymentColumns"></mat-header-row>
+  <mat-row *matRowDef="let row; columns: paymentColumns;"></mat-row>
+</mat-table>

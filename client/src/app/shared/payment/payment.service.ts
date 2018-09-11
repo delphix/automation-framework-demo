@@ -10,7 +10,11 @@ export class PaymentService {
 
   constructor(private http: HttpClient) { }
 
-  getAll(patientId: string): Observable<any> {
+  getAll(): Observable<any> {
+    return this.http.get(this.API + '/payments');
+  }
+
+  getAllByPatient(patientId: string): Observable<any> {
     return this.http.get(this.API + '/patients/' + patientId + '/payments');
   }
 

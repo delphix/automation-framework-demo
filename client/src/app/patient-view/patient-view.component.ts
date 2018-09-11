@@ -89,8 +89,8 @@ export class PatientViewComponent implements OnInit {
               this.billings.sort = this.sort;
             });
 
-            this.paymentService.getAll(this.id).subscribe(data => {
-              var paymentData: Billing[] = data.content;
+            this.paymentService.getAllByPatient(this.id).subscribe(data => {
+              var paymentData: Payment[] = data.content;
               this.payments = new MatTableDataSource(paymentData);
               this.payments.sort = this.sort;
             });
@@ -139,7 +139,7 @@ export class PatientViewComponent implements OnInit {
   removePayment(paymentId) {
     if(confirm(`Are you sure you want to delete this record?`)) {
       this.paymentService.remove(this.id, paymentId).subscribe(result => {
-        this.paymentService.getAll(this.id).subscribe(data => {
+        this.paymentService.getAllByPatient(this.id).subscribe(data => {
           var paymentData: Billing[] = data.content;
           this.payments = new MatTableDataSource(paymentData);
           this.payments.sort = this.sort;
