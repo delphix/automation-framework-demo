@@ -1,0 +1,51 @@
+databaseChangeLog:
+  - changeSet:
+      id: createPaymentsTable
+      author: Derek Smart
+      changes:
+      - createTable:
+          tableName: payments
+          columns:
+          - column:
+              name: id
+              type: int
+              autoIncrement: true
+              constraints:
+                primaryKey: true
+                nullable: false
+          - column:
+              name: billing_id
+              type: int
+              constraints:
+                nullable: false
+          - column:
+              name: patient_id
+              type: int
+              constraints:
+                nullable: false
+          - column:
+              name: amount
+              type: int
+              constraints:
+                  nullable: false
+          - column:
+              name: authcode
+              type: varchar(32)
+              constraints:
+                  nullable: false
+          - column:
+              name: currency
+              type: varchar(4)
+              constraints:
+                  nullable: false
+          - column:
+              name: captured
+              type: boolean
+              defaultValueBoolean: false
+              constraints:
+                  nullable: false
+          - column:
+              name: type
+              type: varchar(32)
+              constraints:
+                  nullable: false
