@@ -4,6 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { PatientService } from '../shared/patient/patient.service';
 import { RecordService } from '../shared/record/record.service';
 import { BillingService } from '../shared/billing/billing.service';
+import { PaymentService } from '../shared/payment/payment.service';
 import { MatTableDataSource, MatSort } from '@angular/material';
 
 export interface Record{
@@ -28,6 +29,17 @@ export interface Billing{
   updatedAt: string;
 }
 
+export interface Payment{
+  id: number;
+  amount: number;
+  authcode: string;
+  currency: string;
+  captured: boolean;
+  type: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
 @Component({
   selector: 'app-patient-view',
   templateUrl: './patient-view.component.html',
@@ -41,8 +53,10 @@ export class PatientViewComponent implements OnInit {
   sub: Subscription;
   recordColumns: string[] = ['id', 'type', 'createdAt', 'updatedAt', 'actions'];
   billingColumns: string[] = ['id', 'ccnum', 'createdAt', 'updatedAt', 'actions'];
+  paymentColumns: string[] = ['id', 'amount', 'currency', 'type', 'createdAt', 'actions'];
   records = new MatTableDataSource([]);
   billings = new MatTableDataSource([]);
+  payments = new MatTableDataSource([]);
   @ViewChild(MatSort) sort: MatSort;
 
   constructor(
@@ -50,7 +64,8 @@ export class PatientViewComponent implements OnInit {
     private router: Router,
     private patientService: PatientService,
     private recordService: RecordService,
-    private billingService: BillingService
+    private billingService: BillingService,
+    private paymentService: PaymentService
   ) {
   }
 
@@ -72,6 +87,12 @@ export class PatientViewComponent implements OnInit {
               var billingData: Billing[] = data.content;
               this.billings = new MatTableDataSource(billingData);
               this.billings.sort = this.sort;
+            });
+
+            this.paymentService.getAll(this.id).subscribe(data => {
+              var paymentData: Billing[] = data.content;
+              this.payments = new MatTableDataSource(paymentData);
+              this.payments.sort = this.sort;
             });
 
           } else {
