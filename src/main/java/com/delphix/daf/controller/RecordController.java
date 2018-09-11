@@ -56,7 +56,7 @@ public class RecordController {
     @DeleteMapping("/patients/{patientId}/records/{recordId}")
     public ResponseEntity<?> deleteRecord(@PathVariable (value = "patientId") Long patientId, @PathVariable (value = "recordId") Long recordId) {
         if(!patientRepository.existsById(patientId)) {
-            throw new ResourceNotFoundException("PostId " + patientId + " not found");
+            throw new ResourceNotFoundException("PatientId " + patientId + " not found");
         }
 
         return recordRepository.findById(recordId).map(record -> {
