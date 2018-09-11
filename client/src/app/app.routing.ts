@@ -7,6 +7,7 @@ import { PatientEditComponent } from './patient-edit/patient-edit.component';
 import { PatientViewComponent } from './patient-view/patient-view.component';
 import { RecordEditComponent } from './record-edit/record-edit.component';
 import { BillingEditComponent } from './billing-edit/billing-edit.component';
+import { PaymentEditComponent } from './payment-edit/payment-edit.component';
 import { LoginComponent } from './login/login.component';
 
 const appRoutes: Routes = [
@@ -22,6 +23,8 @@ const appRoutes: Routes = [
     { path: 'patients/:patientId/records/edit/:id', component: RecordEditComponent, canActivate: [AuthGuard]  },
     { path: 'patients/:patientId/billings/add', component: BillingEditComponent, canActivate: [AuthGuard]  },
     { path: 'patients/:patientId/billings/edit/:id', component: BillingEditComponent, canActivate: [AuthGuard]  },
+    { path: 'patients/:patientId/payments/add', component: PaymentEditComponent, canActivate: [AuthGuard]  },
+    { path: 'patients/:patientId/payments/edit/:id', component: PaymentEditComponent, canActivate: [AuthGuard]  },
     { path: 'login', component: LoginComponent },
     { path: '**', redirectTo: '' }
 ];

@@ -56,6 +56,7 @@ import { LoginComponent } from './login/login.component'
 import { routing } from './app.routing';
 import { BillingEditComponent } from './billing-edit/billing-edit.component';
 import { StripePipe } from './stripe.pipe';
+import { PaymentEditComponent } from './payment-edit/payment-edit.component';
 
 @NgModule({
   declarations: [
@@ -69,7 +70,8 @@ import { StripePipe } from './stripe.pipe';
     MaskPipe,
     LoginComponent,
     BillingEditComponent,
-    StripePipe
+    StripePipe,
+    PaymentEditComponent
   ],
   imports: [
     BrowserModule,
