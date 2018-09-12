@@ -1,0 +1,17 @@
+---
+- name: STOP API SERVICE
+  become: true
+  systemd:
+    name: app-api
+    state: stopped
+
+- name: "DEPLOY API"
+  synchronize:
+    src: "../target/app-api.jar"
+    dest: "{{ api_root }}app-api.jar"
+
+- name: START API SERVICE
+  become: true
+  systemd:
+    name: app-api
+    state: started

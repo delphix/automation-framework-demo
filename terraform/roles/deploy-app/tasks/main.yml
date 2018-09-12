@@ -1,0 +1,38 @@
+---
+- name: "DEPLOY HTML"
+  become: true
+  synchronize:
+    src: "../client/dist/client/"
+    dest: "{{ html_root }}"
+
+- set_fact: set_owner=true
+  when: set_owner is undefined
+
+- set_fact: set_mode=true
+  when: set_mode is undefined
+
+- name: "SET OWNERSHIP"
+  become: true
+  file: path={{ html_root }} owner=apache group=apache recurse=yes
+  when: set_owner
+
+- name: "SET FILES TO 0644"
+  become: true
+  command: find {{ html_root }} -type f -exec chmod 0644 {} \;
+  when: set_mode
+
+- name: "SET DIRECTORIES TO 0755"
+  become: true
+  command: find {{ html_root }} -type d -exec chmod 0755 {} \;
+  when: set_mode
+
+- name: "SET DIRECTORIES TO +S"
+  become: true
+  command: find {{ html_root }} -type d -exec chmod +s {} \;
+  when: set_mode
+
+- name: Start service httpd, if not running
+  become: true
+  systemd:
+    name: httpd
+    state: started

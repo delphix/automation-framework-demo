@@ -1,0 +1,27 @@
+mat-toolbar {
+  width: 398px;
+  padding: 16px;
+  display: block;
+  margin-top: 10px;
+  margin-left:auto;
+  margin-right:auto;
+  vertical-align:middle;
+}
+
+mat-card{
+  width: 350px;
+  display: block;
+  margin-top: 10px;
+  margin-left:auto;
+  margin-right:auto;
+  vertical-align:middle;
+}
+
+.mat-card-actions {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+mat-form-field {
+  width: 346px;
+}

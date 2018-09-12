@@ -1,0 +1,88 @@
+.menu{
+  margin-left: 15px;
+}
+
+.wrapper-container {
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+
+.wrapper-is-mobile .wrapper-toolbar {
+  position: fixed;
+  /* Make sure the toolbar will stay on top of the content as it scrolls past. */
+  z-index: 2;
+}
+
+h1.wrapper-app-name {
+  margin-left: 8px;
+}
+
+.wrapper-sidenav-container {
+  /* When the sidenav is not fixed, stretch the sidenav container to fill the available space. This
+     causes `<mat-sidenav-content>` to act as our scrolling element for desktop layouts. */
+  flex: 1;
+  height: calc( 100vh - 65px );
+}
+
+.wrapper-is-mobile .wrapper-sidenav-container {
+  /* When the sidenav is fixed, don't constrain the height of the sidenav container. This allows the
+     `<body>` to be our scrolling element for mobile layouts. */
+  flex: 1 0 auto;
+}
+
+.wrapper-sidenav {
+background-color: #262f3d;
+}
+
+.sidenav-btn{
+  color:white;
+  padding-left: 50px;
+  padding-right: 50px;
+}
+
+.icon-white {
+  color:white !important;
+}
+
+.wrapper-toolbar{
+  padding-left: 41px;
+}
+
+.pl-15{
+  padding-left:15px;
+}
+
+a.header-link {
+  text-decoration: none;
+  color: #FFF;
+}
+.sidenav-outlet{
+  background-color:#e2e8ef;
+}
+
+.active-link { border-right: 5px solid #1e88e5; }
+
+.mat-nav-list {
+    padding-top: 15px;
+}
+.spacer {
+  flex: 1 1 auto;
+}
+
+.img-circle{
+    border-radius: 50%;
+    width:40px;
+}
+
+.auth_icon{
+  padding-right: 30px;
+}
+
+.vert-align-mid{
+  vertical-align: middle;
+}

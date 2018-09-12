@@ -1,0 +1,6 @@
+---
+- name: "INSTALL PACKAGES"
+  command: chdir=../client yarn install
+
+- name: "BUILD HTML"
+  command: chdir=../client ng build --prod

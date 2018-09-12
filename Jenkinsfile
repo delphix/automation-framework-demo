@@ -1,8 +1,5 @@
 pipeline {
     agent any
-    environment {
-        TERRAFORM = 'docker run --network host -w /app -v ${HOME}/.aws:/root/.aws -v ${HOME}/.ssh:/root/.ssh -v `pwd`:/app hashicorp/terraform:light'
-    }
     stages {
         stage('checkout repo') {
             steps {
@@ -11,10 +8,65 @@ pipeline {
                     env.GIT_COMMIT = scmVars.GIT_COMMIT
                     env.GIT_BRANCH = scmVars.GIT_BRANCH
                 }
+                sh "cp ./src/main/resources/application.properties.example ./src/main/resources/application.properties"
+            }
+        }
+
+        stage('init terraform backend') {
+            steps {
+              dir ('terraform') {
+                sh  "terraform init -backend=true -input=false"
+                sh  "terraform workspace select production"
+              }
+            }
+        }
+
+        stage ('taint application environment') {
+            steps {
+                script {
+                    if ("${env.GIT_BRANCH}" == "origin/develop") {
+                        stage ('develop') {
+                          dir ('terraform') {
+                            sh  "terraform taint -module=dev_web_server null_resource.deploy_stack"
+                          }
+                        }
+                    }
+                    if ("${env.GIT_BRANCH}" == "origin/master") {
+                        stage ('prod') {
+                          dir ('terraform') {
+                            sh  "terraform taint -module=prod_web_server null_resource.deploy_stack"
+                          }
+                        }
+                    }
+                }
+            }
+        }
+
+        stage('plan environment changes') {
+            steps {
+              dir ('terraform') {
+                sh  "terraform plan -out=tfplan -input=false"
+                script {
+                    timeout(time: 10, unit: 'MINUTES') {
+                        input(id: "Deploy Gate", message: "Deploy ${params.project_name}?", ok: 'Deploy')
+                    }
+                }
+              }
+            }
+        }
+
+        stage('apply environment changes') {
+            steps {
+              dir ('terraform') {
+                sh  "terraform apply -lock=false -input=false tfplan"
+              }
             }
         }
 
         stage('run delphix automation framework') {
+            when {
+                expression { "${env.GIT_BRANCH}" != "origin/master" }
+            }
             steps {
                 writeFile file: 'payload.json', text: payload
                 script {
@@ -28,42 +80,20 @@ pipeline {
             }
         }
 
-        stage('pull latest light terraform image') {
+        stage ('migrate schema') {
+            when {
+                expression { "${env.GIT_BRANCH}" != "origin/master" }
+            }
             steps {
-                sh  "docker pull hashicorp/terraform:light"
+                sh 'mvn liquibase:update'
             }
         }
-        stage('init') {
+
+        stage('deploy application') {
             steps {
-                dir ('terraform') {
-                    sh  "${TERRAFORM} init -backend=true -input=false"
-                }
-            }
-        }
-        stage('workspace') {
-            steps {
-                dir ('terraform') {
-                    sh  "${TERRAFORM} workspace select production"
-                }
-            }
-        }
-        stage('plan') {
-            steps {
-                dir ('terraform') {
-                    sh  "${TERRAFORM} plan -out=tfplan -input=false"
-                    script {
-                        timeout(time: 10, unit: 'MINUTES') {
-                            input(id: "Deploy Gate", message: "Deploy ${params.project_name}?", ok: 'Deploy')
-                        }
-                    }
-                }
-            }
-        }
-        stage('apply') {
-            steps {
-                dir ('terraform') {
-                    sh  "${TERRAFORM} apply -lock=false -input=false tfplan"
-                }
+              dir ('terraform') {
+                sh  "ansible-playbook deploy.yaml -vvv"
+              }
             }
         }
     }

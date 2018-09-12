@@ -1,0 +1,19 @@
+databaseChangeLog:
+  - include:
+      file: migrations/0001-create-users.yml
+      relativeToChangelogFile: true
+  - include:
+      file: migrations/0002-create-patients.yml
+      relativeToChangelogFile: true
+  - include:
+      file: migrations/0003-create-records.yml
+      relativeToChangelogFile: true
+  - include:
+      file: migrations/0004-users-passwords.yml
+      relativeToChangelogFile: true
+  - include:
+      file: migrations/0005-create-billings.yml
+      relativeToChangelogFile: true
+  - include:
+      file: migrations/0006-create-payments.yml
+      relativeToChangelogFile: true

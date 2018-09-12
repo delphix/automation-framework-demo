@@ -21,3 +21,8 @@ variable "project" {
   description = "Tag to designate affiliated project"
   default = "daf"
 }
+
+variable "static_ips" {
+  description = "Array of white-listed static IPs."
+  default = ["69.180.21.111/32","76.217.115.65/32"]
+}

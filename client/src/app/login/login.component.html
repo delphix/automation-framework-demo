@@ -1,0 +1,22 @@
+<mat-toolbar class="mat-elevation-z2" color="secondary">
+  <h2>Login</h2>
+  <span class="fill-space"></span>
+</mat-toolbar>
+
+<mat-card class="mat-elevation-z2">
+  <form #loginForm="ngForm" (ngSubmit)="onSubmit(loginForm.value)">
+    <mat-card-content>
+      <mat-form-field>
+        <input matInput ngModel placeholder="Username" required name="username" #username>
+      </mat-form-field>
+      <mat-form-field>
+        <input type="password" matInput ngModel placeholder="Password" required name="password" #password>
+      </mat-form-field>
+    </mat-card-content>
+    <mat-card-actions>
+      <button mat-raised-button color="primary" type="submit" [disabled]="!loginForm.form.valid">Save</button>
+      <a mat-button [routerLink]="returnUrl">Cancel</a>
+    </mat-card-actions>
+    <mat-card-footer></mat-card-footer>
+  </form>
+</mat-card>

@@ -1,0 +1,29 @@
+<mat-toolbar class="mat-elevation-z2 m-15" color="secondary">
+  <h2>Users</h2>
+  <span class="fill-space"></span>
+  <button mat-icon-button [routerLink]="['/users/add']"><mat-icon color="primary" class="md-36">add_circle</mat-icon></button>
+</mat-toolbar>
+
+<mat-table [dataSource]=dataSource matSort class="mat-elevation-z2 m-15">
+  <ng-container matColumnDef="username">
+    <mat-header-cell *matHeaderCellDef mat-sort-header> User Name </mat-header-cell>
+    <mat-cell *matCellDef="let element"> {{element.username}}</mat-cell>
+  </ng-container>
+  <ng-container matColumnDef="firstname">
+    <mat-header-cell *matHeaderCellDef mat-sort-header> First Name </mat-header-cell>
+    <mat-cell *matCellDef="let element"> {{element.firstname}} </mat-cell>
+  </ng-container>
+  <ng-container matColumnDef="lastname">
+    <mat-header-cell *matHeaderCellDef mat-sort-header> Last Name </mat-header-cell>
+    <mat-cell *matCellDef="let element"> {{element.lastname}} </mat-cell>
+  </ng-container>
+  <ng-container matColumnDef="actions">
+    <mat-header-cell *matHeaderCellDef> Actions </mat-header-cell>
+    <mat-cell *matCellDef="let element">
+      <button mat-icon-button [routerLink]="['/users/edit', element.id]"><mat-icon class="md-24">edit</mat-icon></button>
+      <button mat-icon-button (click)="remove(element.id)"><mat-icon class="md-24">cancel</mat-icon></button>
+    </mat-cell>
+  </ng-container>
+  <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+  <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+</mat-table>

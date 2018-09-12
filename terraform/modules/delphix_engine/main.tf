@@ -27,25 +27,30 @@ output "subnet_id" {
     value = "${aws_subnet.server_sub.id}"
 }
 
-
-data "http" "your_ip" {
-  url = "http://ipv4.icanhazip.com"
-
-  # Optional request headers
-  request_headers {
-    "Accept" = "application/json"
-  }
-}
-
 resource "aws_security_group" "security_group" {
   name = "${var.project}_Delphix_Engine"
   description = "Allow all inbound traffic"
   vpc_id = "${var.vpc_id}"
+
   ingress {
       from_port = 0
       to_port = 0
       protocol = "-1"
-      cidr_blocks = ["10.0.0.0/16", "${chomp("${data.http.your_ip.body}")}/32"]
+      cidr_blocks = ["10.0.0.0/16"]
+  }
+
+  ingress {
+      from_port = 0
+      to_port = 0
+      protocol = "-1"
+      cidr_blocks = "${var.static_ips}"
+  }
+
+  ingress {
+      from_port = 0
+      to_port = 0
+      protocol = "-1"
+      security_groups = ["${var.jenkins_sg}"]
   }
 
   egress {
@@ -62,6 +67,7 @@ resource "aws_security_group" "security_group" {
     "dlpx:Expiration" = "${var.expiration}"
     "dlpx:CostCenter" = "${var.cost_center}"
   }
+
 }
 
 output "security_group_id" {
