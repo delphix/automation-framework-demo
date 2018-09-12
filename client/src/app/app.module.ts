@@ -43,6 +43,7 @@ import { UserService } from './shared/user/user.service';
 import { PatientService } from './shared/patient/patient.service';
 import { RecordService } from './shared/record/record.service';
 import { BillingService } from './shared/billing/billing.service';
+import { PaymentService } from './shared/payment/payment.service';
 import { AuthenticationService } from './shared/authentication/authentication.service';
 import { UserListComponent } from './user-list/user-list.component';
 import { UserEditComponent } from './user-edit/user-edit.component';
@@ -54,6 +55,9 @@ import { MaskPipe } from './mask.pipe';
 import { LoginComponent } from './login/login.component'
 import { routing } from './app.routing';
 import { BillingEditComponent } from './billing-edit/billing-edit.component';
+import { StripePipe } from './stripe.pipe';
+import { PaymentEditComponent } from './payment-edit/payment-edit.component';
+import { PaymentListComponent } from './payment-list/payment-list.component';
 
 @NgModule({
   declarations: [
@@ -66,7 +70,10 @@ import { BillingEditComponent } from './billing-edit/billing-edit.component';
     RecordEditComponent,
     MaskPipe,
     LoginComponent,
-    BillingEditComponent
+    BillingEditComponent,
+    StripePipe,
+    PaymentEditComponent,
+    PaymentListComponent
   ],
   imports: [
     BrowserModule,
@@ -109,7 +116,7 @@ import { BillingEditComponent } from './billing-edit/billing-edit.component';
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
-    UserService, PatientService, RecordService, BillingService, AuthenticationService
+    UserService, PatientService, RecordService, BillingService, PaymentService, AuthenticationService
   ],
   bootstrap: [AppComponent]
 })

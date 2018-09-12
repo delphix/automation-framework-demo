@@ -14,3 +14,6 @@ databaseChangeLog:
   - include:
       file: migrations/0005-create-billings.yml
       relativeToChangelogFile: true
+  - include:
+      file: migrations/0006-create-payments.yml
+      relativeToChangelogFile: true
