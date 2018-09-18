@@ -25,7 +25,7 @@ databaseChangeLog:
                   nullable: false
           - column:
               name: authcode
-              type: varchar(32)
+              type: varchar(36)
               constraints:
                   nullable: false
           - column:
@@ -41,6 +41,6 @@ databaseChangeLog:
                   nullable: false
           - column:
               name: type
-              type: varchar(32)
+              type: varchar(55)
               constraints:
                   nullable: false
