@@ -13,6 +13,8 @@ connectors:
   - postgres:
       file: /src/main/resources/application.properties
       jdbc: spring.datasource.url
+      host: spring.database.url
+      database: spring.database.database
       username: spring.datasource.username
       password: spring.datasource.password
 environments:
