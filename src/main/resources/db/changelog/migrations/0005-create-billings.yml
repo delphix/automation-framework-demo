@@ -25,7 +25,7 @@ databaseChangeLog:
                   nullable: false
           - column:
               name: cctype
-              type: varchar(20)
+              type: varchar(55)
               constraints:
                   nullable: false
           - column:
