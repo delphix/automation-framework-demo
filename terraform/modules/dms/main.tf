@@ -81,7 +81,7 @@ resource "aws_dms_replication_task" "dms" {
   replication_instance_arn  = "${aws_dms_replication_instance.dms.replication_instance_arn}"
   replication_task_id       = "dms-replication-task-${var.environment}"
   source_endpoint_arn       = "${aws_dms_endpoint.source.endpoint_arn}"
-  table_mappings            = "{\"rules\":[{\"rule-type\":\"selection\",\"rule-id\":\"1\",\"rule-name\":\"1\",\"object-locator\":{\"schema-name\":\"public\",\"table-name\":\"%\"},\"rule-action\":\"include\"}]}"
+  table_mappings            = "{\"rules\":[{\"rule-type\":\"selection\",\"rule-id\":\"1\",\"rule-name\":\"1\",\"object-locator\":{\"schema-name\":\"public\",\"table-name\":\"%\"},\"rule-action\":\"include\"},{\"rule-type\":\"selection\",\"rule-id\":\"2\",\"rule-name\":\"2\",\"object-locator\":{\"schema-name\":\"public\",\"table-name\":\"databasechange%\"},\"rule-action\":\"exclude\"}]}"
   replication_task_settings = "${trimspace(replace(replace(file("${path.module}/settings/replication_settings.json"), "/\\n\\s+/", ""),"/\\s+/", ""))}"
   target_endpoint_arn       = "${aws_dms_endpoint.target.endpoint_arn}"
 
