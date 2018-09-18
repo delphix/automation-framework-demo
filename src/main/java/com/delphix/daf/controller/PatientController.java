@@ -48,6 +48,7 @@ public class PatientController {
                     patient.setCity(patientRequest.getCity());
                     patient.setState(patientRequest.getState());
                     patient.setZip(patientRequest.getZip());
+                    patient.setNotes(patientRequest.getNotes());
                     return patientRepository.save(patient);
                 }).orElseThrow(() -> new ResourceNotFoundException("Patient not found with id " + patientId));
     }

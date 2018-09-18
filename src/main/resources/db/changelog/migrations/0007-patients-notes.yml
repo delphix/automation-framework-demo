@@ -1,0 +1,11 @@
+databaseChangeLog:
+  - changeSet:
+      id: addNotesToPatients
+      author: Derek Smart
+      changes:
+      - addColumn:
+          tableName: patients
+          columns:
+          - column:
+              name: notes
+              type: clob

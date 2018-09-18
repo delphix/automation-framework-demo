@@ -17,3 +17,6 @@ databaseChangeLog:
   - include:
       file: migrations/0006-create-payments.yml
       relativeToChangelogFile: true
+  - include:
+      file: migrations/0007-patients-notes.yml
+      relativeToChangelogFile: true
