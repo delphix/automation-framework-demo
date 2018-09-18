@@ -15,6 +15,7 @@ connectors:
       jdbc: spring.datasource.url
       host: spring.database.url
       database: spring.database.database
+      port: spring.database.port
       username: spring.datasource.username
       password: spring.datasource.password
 environments:
