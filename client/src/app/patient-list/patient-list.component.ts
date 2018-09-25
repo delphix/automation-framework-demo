@@ -26,13 +26,17 @@ export interface Patient{
 
 export class PatientListComponent implements OnInit {
 
-  displayedColumns: string[] = ['firstname', 'middlename', 'lastname', 'city', 'state', 'actions'];
+  displayedColumns: string[] = ['firstname', 'middlename', 'lastname', 'city', 'state', 'ssn', 'actions'];
   dataSource = new MatTableDataSource([]);
   @ViewChild(MatSort) sort: MatSort;
 
   constructor(private patientService: PatientService) { }
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
+
+  applyFilter(filterValue: string) {
+    this.dataSource.filter = filterValue.trim().toLowerCase();
+  }
 
   ngOnInit() {
     this.patientService.getAll().subscribe(data => {
