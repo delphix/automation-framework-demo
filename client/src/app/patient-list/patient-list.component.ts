@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
 import { PatientService } from '../shared/patient/patient.service';
-import { MatTableDataSource, MatSort } from '@angular/material';
+import { MatPaginator, MatTableDataSource, MatSort } from '@angular/material';
 
 export interface Patient{
   id: number;
@@ -32,11 +32,14 @@ export class PatientListComponent implements OnInit {
 
   constructor(private patientService: PatientService) { }
 
+  @ViewChild(MatPaginator) paginator: MatPaginator;
+
   ngOnInit() {
     this.patientService.getAll().subscribe(data => {
       var patientData: Patient[] = data.content;
       this.dataSource = new MatTableDataSource(patientData);
       this.dataSource.sort = this.sort;
+      this.dataSource.paginator = this.paginator;
     });
   }
 
@@ -47,6 +50,7 @@ export class PatientListComponent implements OnInit {
           var patientData: Patient[] = data.content;
           this.dataSource = new MatTableDataSource(patientData);
           this.dataSource.sort = this.sort;
+          this.dataSource.paginator = this.paginator;
         });
       }, error => console.error(error));
     }
