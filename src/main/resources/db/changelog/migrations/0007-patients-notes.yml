@@ -10,7 +10,7 @@ databaseChangeLog:
         - onError: HALT
         - sqlCheck:
             expectedResult: 0
-            sql: SELECT column_name FROM information_schema.columns WHERE table_name='patients' AND column_name='notes';
+            sql: SELECT COUNT(*) FROM information_schema.columns WHERE table_name='patients' AND column_name='notes';
       changes:
       - addColumn:
           tableName: patients

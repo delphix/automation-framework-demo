@@ -10,7 +10,7 @@ databaseChangeLog:
         - onError: HALT
         - sqlCheck:
             expectedResult: 0
-            sql: SELECT table_name FROM information_schema.tables WHERE table_name='records';
+            sql: SELECT COUNT(*) FROM information_schema.tables WHERE table_name='records';
       changes:
       - createTable:
           tableName: records
