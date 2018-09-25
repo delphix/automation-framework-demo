@@ -1,5 +1,6 @@
 template: DAF
 api_key: 5iYCK2lApzMxUuVM3qFtq0OzBORwGpjfR9K
+parent: dms-source
 config:
   notes: DAF Datasources
   data-sources:

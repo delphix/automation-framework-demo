@@ -1,7 +1,16 @@
 databaseChangeLog:
+  - preConditions:
+    - dbms:
+        type: postgresql
   - changeSet:
       id: createPaymentsTable
       author: Derek Smart
+      preConditions:
+        - onFail: MARK_RAN
+        - onError: HALT
+        - sqlCheck:
+            expectedResult: 0
+            sql: SELECT count(*) FROM payments;
       changes:
       - createTable:
           tableName: payments

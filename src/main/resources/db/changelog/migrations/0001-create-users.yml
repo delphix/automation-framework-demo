@@ -1,7 +1,16 @@
 databaseChangeLog:
+  - preConditions:
+    - dbms:
+        type: postgresql
   - changeSet:
       id: createUsersTable
       author: Derek Smart
+      preConditions:
+        - onFail: MARK_RAN
+        - onError: HALT
+        - sqlCheck:
+            expectedResult: 0
+            sql: SELECT count(*) FROM users;
       changes:
       - createTable:
           tableName: users
