@@ -85,11 +85,11 @@ pipeline {
                         env.DELPHIX_PASS = pass
                     }
                 }
-                sh "echo $GIT_COMMIT > .env"
-                sh "echo $GIT_BRANCH >> .env"
-                sh "echo $DELPHIX_ENGINE >> .env"
-                sh "echo $DELPHIX_USER >> .env"
-                sh "echo $DELPHIX_PASS >> .env"
+                sh "echo GIT_COMMIT=$GIT_COMMIT > .env"
+                sh "echo GIT_BRANCH=$GIT_BRANCH >> .env"
+                sh "echo DELPHIX_ENGINE=$DELPHIX_ENGINE >> .env"
+                sh "echo DELPHIX_USER=$DELPHIX_USER >> .env"
+                sh "echo DELPHIX_PASS=$DELPHIX_PASS >> .env"
                 sh "${DAF}"
             }
         }
