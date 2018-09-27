@@ -98,8 +98,7 @@ pipeline {
             steps {
               script {
                 try {
-                    //sh 'mvn liquibase:update'
-                    sh "exit 1"
+                    sh 'mvn liquibase:update'
                 } catch (Exception e) {
                     sh "echo GIT_EVENT=build-failure >> .env"
                     sh "${DAF}"
