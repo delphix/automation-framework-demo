@@ -1,5 +1,8 @@
 pipeline {
     agent any
+    environment {
+      DAF = 'docker run -v ${PWD}:/daf/app --env-file ${PWD}/.env mcred/daf'
+    }
     stages {
         stage('checkout repo') {
             steps {
@@ -63,6 +66,12 @@ pipeline {
             }
         }
 
+        stage('get latest delphix automation framework image') {
+            steps {
+                sh  "docker pull mcred/daf"
+            }
+        }
+
         stage('run delphix automation framework') {
             when {
                 expression { "${env.GIT_BRANCH}" != "origin/master" }
@@ -76,7 +85,8 @@ pipeline {
                         env.DELPHIX_PASS = pass
                     }
                 }
-                sh "java -jar daf.jar"
+                sh "env > .env"
+                sh "${DAF}"
             }
         }
 
