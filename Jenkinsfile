@@ -96,7 +96,15 @@ pipeline {
 
         stage ('migrate schema') {
             steps {
-                sh 'mvn liquibase:update'
+              script {
+                try {
+                    //sh 'mvn liquibase:update'
+                    sh "exit 1"
+                } catch (Exception e) {
+                    sh "echo GIT_EVENT=build-failure >> .env"
+                    sh "${DAF}"
+                }
+              }
             }
         }
 
