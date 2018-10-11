@@ -4,7 +4,7 @@ pipeline {
       DAF = 'docker run -v ${PWD}:/daf/app --env-file ${PWD}/.env mcred/daf'
     }
     stages {
-        stage('checkout repo') {
+        stage('Get Payload from GitHub') {
             steps {
                 script {
                     def scmVars = checkout scm
@@ -15,68 +15,48 @@ pipeline {
             }
         }
 
-        stage('init terraform backend') {
+        stage('Apply Infrastructure as Code Changes') {
             steps {
-              dir ('terraform') {
-                sh  "terraform init -backend=true -input=false"
-                sh  "terraform workspace select production"
-              }
-            }
-        }
-
-        stage ('taint application environment') {
-            steps {
+                dir ('terraform') {
+                    sh  "terraform init -backend=true -input=false"
+                    sh  "terraform workspace select production"
+                }
                 script {
                     if ("${env.GIT_BRANCH}" == "origin/develop") {
                         stage ('develop') {
-                          dir ('terraform') {
-                            sh  "terraform taint -module=dev_web_server null_resource.deploy_stack"
-                          }
+                            dir ('terraform') {
+                                sh  "terraform taint -module=dev_web_server null_resource.deploy_stack"
+                            }
                         }
                     }
                     if ("${env.GIT_BRANCH}" == "origin/master") {
                         stage ('prod') {
-                          dir ('terraform') {
-                            sh  "terraform taint -module=prod_web_server null_resource.deploy_stack"
-                          }
+                            dir ('terraform') {
+                                sh  "terraform taint -module=prod_web_server null_resource.deploy_stack"
+                            }
                         }
                     }
                 }
-            }
-        }
-
-        stage('plan environment changes') {
-            steps {
-              dir ('terraform') {
-                sh  "terraform plan -out=tfplan -input=false"
-                script {
-                    timeout(time: 10, unit: 'MINUTES') {
-                        input(id: "Deploy Gate", message: "Deploy ${params.project_name}?", ok: 'Deploy')
+                dir ('terraform') {
+                    sh  "terraform plan -out=tfplan -input=false"
+                    script {
+                        timeout(time: 10, unit: 'MINUTES') {
+                            input(id: "Deploy Gate", message: "Deploy ${params.project_name}?", ok: 'Deploy')
+                        }
                     }
                 }
-              }
+                dir ('terraform') {
+                    sh  "terraform apply -lock=false -input=false tfplan"
+                }
             }
         }
 
-        stage('apply environment changes') {
-            steps {
-              dir ('terraform') {
-                sh  "terraform apply -lock=false -input=false tfplan"
-              }
-            }
-        }
-
-        stage('get latest delphix automation framework image') {
-            steps {
-                sh  "docker pull mcred/daf"
-            }
-        }
-
-        stage('run delphix automation framework') {
+        stage('Apply Database as Code Changes') {
             when {
                 expression { "${env.GIT_BRANCH}" != "origin/master" }
             }
             steps {
+                sh  "docker pull mcred/daf"
                 writeFile file: 'payload.json', text: payload
                 script {
                     withCredentials([string(credentialsId: 'delphix_engine', variable: 'engine'), string(credentialsId: 'delphix_user', variable: 'user'), string(credentialsId: 'delphix_pass', variable: 'pass')]) {
@@ -94,7 +74,7 @@ pipeline {
             }
         }
 
-        stage ('migrate schema') {
+        stage ('Apply Schema as Code Changes') {
             steps {
               script {
                 try {
@@ -107,7 +87,7 @@ pipeline {
             }
         }
 
-        stage('deploy application') {
+        stage('Deploy Application Stack') {
             steps {
               dir ('terraform') {
                 sh  "ansible-playbook deploy.yaml -vvv"
