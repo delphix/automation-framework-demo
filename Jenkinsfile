@@ -12,15 +12,6 @@ pipeline {
                     env.GIT_BRANCH = scmVars.GIT_BRANCH
                 }
                 sh "cp ./src/main/resources/application.properties.example ./src/main/resources/application.properties"
-            }
-        }
-
-        stage('Apply Infrastructure as Code Changes') {
-            steps {
-                dir ('terraform') {
-                    sh  "terraform init -backend=true -input=false"
-                    sh  "terraform workspace select production"
-                }
                 script {
                     if ("${env.GIT_BRANCH}" == "origin/develop") {
                         stage ('develop') {
@@ -37,6 +28,15 @@ pipeline {
                         }
                     }
                 }
+            }
+        }
+
+        stage('Plan Infrastructure as Code Changes') {
+            steps {
+                dir ('terraform') {
+                    sh  "terraform init -backend=true -input=false"
+                    sh  "terraform workspace select production"
+                }
                 dir ('terraform') {
                     sh  "terraform plan -out=tfplan -input=false"
                     script {
@@ -50,6 +50,15 @@ pipeline {
                 }
             }
         }
+
+        stage('Apply Infrastructure as Code Changes') {
+            steps {
+                dir ('terraform') {
+                    sh  "terraform apply -lock=false -input=false tfplan"
+                }
+            }
+        }
+
 
         stage('Apply Database as Code Changes') {
             when {
