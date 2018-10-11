@@ -36,17 +36,12 @@ pipeline {
                 dir ('terraform') {
                     sh  "terraform init -backend=true -input=false"
                     sh  "terraform workspace select production"
-                }
-                dir ('terraform') {
                     sh  "terraform plan -out=tfplan -input=false"
                     script {
                         timeout(time: 10, unit: 'MINUTES') {
                             input(id: "Deploy Gate", message: "Deploy ${params.project_name}?", ok: 'Deploy')
                         }
                     }
-                }
-                dir ('terraform') {
-                    sh  "terraform apply -lock=false -input=false tfplan"
                 }
             }
         }
