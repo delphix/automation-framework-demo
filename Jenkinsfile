@@ -99,4 +99,10 @@ pipeline {
             }
         }
     }
+    post {
+        failure {
+            sh "echo GIT_EVENT=build-failure >> .env"
+            sh "${DAF}"
+        }
+    }
 }
