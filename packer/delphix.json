@@ -39,18 +39,26 @@
       "inline":[
         "sudo yum update -y",
         "sudo amazon-linux-extras install postgresql9.6",
-        "sudo yum install postgresql postgresql-server postgresql-contrib java-1.8.0 glibc.i686 -y",
+        "sudo yum install postgresql postgresql-server postgresql-contrib java-1.8.0 glibc.i686 ncurses-compat-libs.x86_64 -y",
         "sudo /usr/bin/postgresql-setup --initdb --unit postgresql",
         "sudo ln -s /etc/os-release /etc/redhat-release",
         "sudo sh -c 'cat /home/ec2-user/pg_hba.conf > /var/lib/pgsql/data/pg_hba.conf'",
         "sudo sh -c 'cat /home/ec2-user/postgresql.conf >> /var/lib/pgsql/data/postgresql.conf'",
         "sudo usermod -aG wheel postgres",
         "sudo sh -c 'echo \"postgres        ALL=(ALL)       NOPASSWD:ALL\" >> /etc/sudoers'",
+        "sudo -H -u postgres sh -c 'touch /var/lib/pgsql/cleanuplogs.sh'",
+        "sudo sh -c 'cat /home/ec2-user/cleanuplogs.sh >> /var/lib/pgsql/cleanuplogs.sh'",
+        "sudo sh -c 'chmod +x /var/lib/pgsql/cleanuplogs.sh'",
+        "sudo -H -u postgres sh -c 'sudo chown postgres:postgres /var/lib/pgsql/cleanuplogs.sh'",
         "sudo -H -u postgres sh -c 'sudo mkdir -p /mnt/delphix'",
+        "sudo -H -u postgres sh -c 'sudo chmod 0700 /mnt/delphix/'",
+        "sudo -H -u postgres sh -c 'sudo chown postgres:postgres /mnt/delphix/'",
         "sudo -H -u postgres sh -c 'sudo mkdir /var/lib/pgsql/toolkit'",
         "sudo -H -u postgres sh -c 'sudo chmod 0770 /var/lib/pgsql/toolkit'",
-        "sudo -H -u postgres sh -c 'sudo mkdir -p /u02/pgarchive/'",
-        "sudo -H -u postgres sh -c 'sudo chmod 0700 /u02/pgarchive/'"
+        "sudo -H -u postgres sh -c 'sudo chown postgres:postgres /var/lib/pgsql/toolkit'",
+        "sudo -H -u postgres sh -c 'sudo mkdir -p /tmp/archivelog/'",
+        "sudo -H -u postgres sh -c 'sudo chmod 0700 /tmp/archivelog/'",
+        "sudo -H -u postgres sh -c 'sudo chown postgres:postgres /tmp/archivelog/'"
       ]
     },
     {
