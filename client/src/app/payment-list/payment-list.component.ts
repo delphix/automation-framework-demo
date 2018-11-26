@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
 import { PaymentService } from '../shared/payment/payment.service';
 import { PatientService } from '../shared/patient/patient.service';
-import { MatTableDataSource, MatSort } from '@angular/material';
+import { MatPaginator, MatTableDataSource, MatSort } from '@angular/material';
 
 export interface Patient {
   id: number;
@@ -39,6 +39,8 @@ export class PaymentListComponent implements OnInit {
     private patientService: PatientService
   ) { }
 
+  @ViewChild(MatPaginator) paginator: MatPaginator;
+
   ngOnInit() {
     this.paymentService.getAll().subscribe(data => {
       var paymentData: Payment[] = data.content;
@@ -50,10 +52,9 @@ export class PaymentListComponent implements OnInit {
         });
       });
 
-      console.log(paymentData);
-
       this.payments = new MatTableDataSource(paymentData);
       this.payments.sort = this.sort;
+      this.payments.paginator = this.paginator;
     });
   }
 }

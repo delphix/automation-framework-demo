@@ -1,0 +1,20 @@
+databaseChangeLog:
+  - preConditions:
+    - dbms:
+        type: postgresql
+  - changeSet:
+      id: addNotesToPatients
+      author: Derek Smart
+      preConditions:
+        - onFail: MARK_RAN
+        - onError: HALT
+        - sqlCheck:
+            expectedResult: 0
+            sql: SELECT COUNT(*) FROM information_schema.columns WHERE table_name='patients' AND column_name='notes';
+      changes:
+      - addColumn:
+          tableName: patients
+          columns:
+          - column:
+              name: notes
+              type: clob

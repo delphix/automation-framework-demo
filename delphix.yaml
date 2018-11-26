@@ -1,34 +1,43 @@
 template: DAF
-api_key: not_yet_set
+api_key: 5iYCK2lApzMxUuVM3qFtq0OzBORwGpjfR9K
+parent: dms-source
 config:
-  notes: RDS Postgres Sources
+  notes: DAF Datasources
   data-sources:
     - postgres:
-        notes: Here are notes
+        notes: Postgres Replica
         replica: Default
-        source: dbdhcp3
+        source: postgres
         start-order: 1
         ami: ami-0dfffed98347ecd
 connectors:
   - postgres:
-      host: hostname
-      port: port
-      database: database
-      username: username
-      password: password
+      file: /src/main/resources/application.properties
+      jdbc: spring.datasource.url
+      host: spring.database.url
+      database: spring.database.database
+      port: spring.database.port
+      username: spring.datasource.username
+      password: spring.datasource.password
 environments:
   - staging:
       branch: origin/staging
       datapod: Staging
       when:
+        - push: bookmark.create
         - push: datapod.refresh
+        - build-failure: datapod.undo
   - uat:
       branch: origin/test
       datapod: Test
       when:
         - push: datapod.refresh
+        - pull-request-opened: datapod.create
+        - pull-request-closed: datapod.delete
+        - build-failure: datapod.undo
   - develop:
       branch: origin/develop
       datapod: Develop
       when:
         - push: datapod.refresh
+        - build-failure: datapod.undo

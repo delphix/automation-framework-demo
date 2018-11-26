@@ -24,5 +24,5 @@ variable "project" {
 
 variable "static_ips" {
   description = "Array of white-listed static IPs."
-  default = ["69.180.21.111/32","76.217.115.65/32"]
+  default = ["69.180.21.111/32","76.217.115.65/32","4.16.207.62/32"]
 }

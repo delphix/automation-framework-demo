@@ -31,3 +31,5 @@
   <mat-header-row *matHeaderRowDef="paymentColumns"></mat-header-row>
   <mat-row *matRowDef="let row; columns: paymentColumns;"></mat-row>
 </mat-table>
+
+<mat-paginator class="mat-elevation-z2 m-15" [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>

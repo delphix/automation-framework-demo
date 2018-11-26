@@ -64,7 +64,7 @@ data "aws_kms_secrets" "db" {
 }
 
 resource "aws_db_instance" "daf-postgres" {
-  allocated_storage        = 80 # gigabytes
+  allocated_storage        = 100 # gigabytes
   backup_retention_period  = 7   # in days
   db_subnet_group_name     = "${var.project}_database_subnet_group"
   engine                   = "postgres"

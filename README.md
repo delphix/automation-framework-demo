@@ -1,4 +1,4 @@
-# Automation Framework Demo Application Tester
+# Automation Framework Demo Application
 
 #### Table of Contents
 1.  [Contribute](#contribute)
@@ -10,7 +10,7 @@
 4.  [License](#license)
 
 ## Note for OSX Users
-Replace SED with GSED.
+Replace SED with GSED. 
 
 ## <a id="contribute"></a>Contribute
 

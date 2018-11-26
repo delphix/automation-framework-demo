@@ -1,7 +1,16 @@
 databaseChangeLog:
+  - preConditions:
+    - dbms:
+        type: postgresql
   - changeSet:
       id: createPaymentsTable
       author: Derek Smart
+      preConditions:
+        - onFail: MARK_RAN
+        - onError: HALT
+        - sqlCheck:
+            expectedResult: 0
+            sql: SELECT COUNT(*) FROM information_schema.tables WHERE table_name='payments';
       changes:
       - createTable:
           tableName: payments
@@ -25,7 +34,7 @@ databaseChangeLog:
                   nullable: false
           - column:
               name: authcode
-              type: varchar(32)
+              type: varchar(36)
               constraints:
                   nullable: false
           - column:
@@ -41,6 +50,6 @@ databaseChangeLog:
                   nullable: false
           - column:
               name: type
-              type: varchar(32)
+              type: varchar(55)
               constraints:
                   nullable: false
