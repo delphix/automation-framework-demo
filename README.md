@@ -1,5 +1,6 @@
 # Automation Framework Demo Application
 
+
 #### Table of Contents
 1.  [Contribute](#contribute)
     *   [Code of conduct](#code-of-conduct)
