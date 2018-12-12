@@ -22,5 +22,4 @@ public class Patient extends AuditModel {
     private @NonNull String city;
     private @NonNull String state;
     private @NonNull String zip;
-    private String notes;
 }
