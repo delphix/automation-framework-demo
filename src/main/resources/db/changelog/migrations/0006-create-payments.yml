@@ -53,3 +53,13 @@ databaseChangeLog:
               type: varchar(55)
               constraints:
                   nullable: false
+          - column:
+              name: created_at
+              type: timestamp
+              constraints:
+                nullable: false
+          - column:
+              name: updated_at
+              type: timestamp
+              constraints:
+                nullable: false
