@@ -1,0 +1,68 @@
+{
+  "variables": {
+    "aws_access_key": "{{env `AWS_ACCESS_KEY_ID`}}",
+    "aws_secret_key": "{{env `AWS_SECRET_ACCESS_KEY`}}",
+    "region": "us-west-2"
+  },
+  "builders": [{
+    "type": "amazon-ebs",
+    "access_key": "{{user `aws_access_key`}}",
+    "secret_key": "{{user `aws_secret_key`}}",
+    "region": "{{user `region`}}",
+    "source_ami_filter": {
+      "filters": {
+      "virtualization-type": "hvm",
+      "name": "amzn2-ami-hvm-2.0.*-x86_64-gp2",
+      "root-device-type": "ebs"
+      },
+      "owners": ["137112412989"],
+      "most_recent": true
+    },
+    "instance_type": "t2.micro",
+    "ssh_username": "ec2-user",
+    "ami_name": "daf-jenkins-{{timestamp}}",
+    "tags": {
+      "dlpx:Project" : "daf",
+      "dlpx:Owner" : "Derek Smart",
+      "dlpx:Expiration" : "2020-08-30",
+      "dlpx:CostCenter" : "305000"
+    }
+  }],
+  "provisioners" : [
+    {
+      "type" : "file",
+      "source" : "./data/docker.service",
+      "destination" : "/home/ec2-user/docker.service"
+    },
+    {
+      "type" : "shell",
+      "inline":[
+        "sudo yum update -y",
+        "sudo yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo",
+        "sudo wget -O /etc/yum.repos.d/jenkins.repo http://pkg.jenkins-ci.org/redhat/jenkins.repo",
+        "sudo rpm --import http://pkg.jenkins-ci.org/redhat/jenkins-ci.org.key",
+        "sudo sh -c 'curl --silent --location https://rpm.nodesource.com/setup_10.x | bash -'",
+        "sudo sh -c 'curl --silent --location https://dl.yarnpkg.com/rpm/yarn.repo | tee /etc/yum.repos.d/yarn.repo'",
+        "sudo yum remove -y java-1.7.0-openjdk",
+        "sudo yum install -y java-1.8.0 jenkins git yum-utils device-mapper-persistent-data lvm2 docker maven nodejs yarn",
+        "sudo npm install -g @angular/cli",
+        "sudo ng config -g cli.packageManager yarn",
+        "sudo wget https://releases.hashicorp.com/terraform/0.11.8/terraform_0.11.8_linux_amd64.zip",
+        "sudo unzip terraform_0.11.8_linux_amd64.zip ",
+        "sudo rm terraform_0.11.8_linux_amd64.zip ",
+        "sudo mv terraform /usr/bin/",
+        "sudo usermod -a -G docker ec2-user",
+        "sudo gpasswd -a jenkins docker",
+        "sudo touch /usr/lib/systemd/system/docker.service",
+        "sudo sh -c 'cat /home/ec2-user/docker.service > /usr/lib/systemd/system/docker.service'"
+      ]
+    },
+    {
+      "type" : "shell",
+      "inline":[
+        "sudo chkconfig --add jenkins",
+        "sudo systemctl enable docker.service"
+      ]
+    }
+  ]
+}
