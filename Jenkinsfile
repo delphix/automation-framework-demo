@@ -1,7 +1,7 @@
 pipeline {
     agent any
     environment {
-      DAF = 'docker run -v ${PWD}:/daf/app --env-file ${PWD}/.env mcred/daf'
+      DAF = 'docker run -v ${PWD}:/daf/app --env-file ${PWD}/.env delphix/automation-framework'
     }
     stages {
         stage('Get Payload from GitHub') {
