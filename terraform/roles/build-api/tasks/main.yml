@@ -1,3 +1,0 @@
----
-- name: "BUILD HTML"
-  command: chdir=../ mvn clean package

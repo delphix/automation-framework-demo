@@ -1,7 +1,0 @@
-# Terraform files
-.terraform
-terraform.tfstate
-terraform.tfvars
-*.tfstate*
-/inventory/*.pem
-/inventory/aws_keys
