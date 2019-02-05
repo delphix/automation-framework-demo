@@ -1,0 +1,13 @@
+---
+- name: "INSTALL PACKAGES"
+  command: yarn install
+  args:
+      chdir: '../client'
+  delegate_to: localhost
+
+
+- name: "BUILD HTML"
+  command: /usr/local/lib/npm/bin/ng build --prod
+  args:
+      chdir: '../client'
+  delegate_to: localhost

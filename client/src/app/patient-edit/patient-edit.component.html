@@ -43,9 +43,6 @@
       <mat-form-field>
         <input matInput placeholder="Zip" [(ngModel)]="patient.zip" required name="zip" #zip>
       </mat-form-field>
-      <mat-form-field class="textarea">
-        <textarea matInput placeholder="Notes" [(ngModel)]="patient.notes" required name="notes" #notes></textarea>
-      </mat-form-field>
     </mat-card-content>
     <mat-card-actions>
       <button mat-raised-button color="primary" type="submit" [disabled]="!patientForm.form.valid">Save</button>

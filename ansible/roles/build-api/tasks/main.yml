@@ -1,0 +1,6 @@
+---
+- name: "BUILD HTML"
+  command: mvn clean package
+  args:
+      chdir: '../'
+  delegate_to: localhost

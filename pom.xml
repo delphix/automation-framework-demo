@@ -57,9 +57,9 @@
 		 <optional>true</optional>
 	 </dependency>
 		<dependency>
-			<groupId>org.postgresql</groupId>
-			<artifactId>postgresql</artifactId>
-			<scope>runtime</scope>
+			<groupId>com.oracle</groupId>
+			<artifactId>ojdbc8</artifactId>
+			<version>12.2.0.1</version>
 		</dependency>
 		<dependency>
 			<groupId>org.projectlombok</groupId>
@@ -78,7 +78,6 @@
         <scope>test</scope>
     </dependency>
 	</dependencies>
-
 	<build>
 		<finalName>app-api</finalName>
 		<resources>

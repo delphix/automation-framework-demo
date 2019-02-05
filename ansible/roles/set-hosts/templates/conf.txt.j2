@@ -1,0 +1,6 @@
+ddp_hostname = {{ network.stdout | ipmath(10) }}
+username = {{ delphix_user }}
+password = {{ delphix_pass }}
+skip-validate = 1
+dsource = "Patients Prod"
+vdb = "Patients Masked Master"
