@@ -1,9 +1,13 @@
 ---
 - name: "INSTALL PACKAGES"
-  command: yarn install
+  command: yarn --mutex network install
   args:
       chdir: '../client'
   delegate_to: localhost
+  register: task_result
+  until: task_result is success
+  retries: 5
+  delay: 20
 
 
 - name: "BUILD HTML"
@@ -11,3 +15,7 @@
   args:
       chdir: '../client'
   delegate_to: localhost
+  register: task_result
+  until: task_result is success
+  retries: 5
+  delay: 20
