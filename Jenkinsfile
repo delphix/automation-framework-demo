@@ -9,7 +9,6 @@ pipeline {
       APP_GITURL="/var/lib/jenkins/app_repo.git"
       DATICAL_GITURL="/var/lib/jenkins/datical"
       DATICAL_PROJECT_KEY="PATIENTS"
-      PATH="${REPL}:${ORACLE_HOME}/bin:${PATH}"
       SHORT_BRANCH = "default"
       TARGET_ENV = "default"
       TARGET_WEB = "default"
@@ -26,19 +25,24 @@ pipeline {
                     if ("${GIT_BRANCH}" == "origin/master") {
                         TARGET_ENV = "QA"
                         TARGET_WEB = "testweb"
+                        REPL = "/opt/datical/master/DaticalDB/repl"
                     }
                     if ("${GIT_BRANCH}" == "origin/production") {
                         TARGET_ENV = "PROD"
                         TARGET_WEB = "prodweb"
+                        REPL = "/opt/datical/production/DaticalDB/repl"
                     }
                     if ("${GIT_BRANCH}" != "origin/master" && "${GIT_BRANCH}" != "origin/production") {
                         TARGET_ENV = "DEV"
                         TARGET_WEB = "devweb"
+                        REPL = "/opt/datical/develop/DaticalDB/repl"
                     }
                     DATICAL_COMMIT = sh(returnStdout: true, script: "git show -s --oneline ${GIT_COMMIT}| grep 'Datical automatic check-in' && echo 'true'|| echo 'false'").trim()
+                    env.PATH = "${REPL}:${ORACLE_HOME}/bin:${PATH}"
                 }
                 sh "env"
                 sh "git clean -ffdx"
+                sh "echo $PATH"
             }
         }
 
@@ -127,6 +131,10 @@ pipeline {
                         { set +x; } 2>/dev/null
                         echo
                         echo "==== Running - hammer version ===="
+                        echo ${PATH}
+                        echo ${REPL}
+                        ls -lart ${REPL}
+                        which hammer
                         hammer show version
                 
                         # invoke Datical DB's Deployment Packager
