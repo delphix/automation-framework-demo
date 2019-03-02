@@ -147,26 +147,26 @@ pipeline {
 			} 
         }
 
-        stage('Create Database Code Artifact') {
-            when {
-                expression {
-                    return GIT_BRANCH != 'origin/master' && GIT_BRANCH != 'origin/production' && DATICAL_COMMIT == "false"
-                    }
-            }
-			steps {
-                dir ("${PROJ_DDB}"){
-                    sh """
-                        { set +x; } 2>/dev/null
-                        echo
-                        echo "==== Creating ${APPNAME}-${BUILD_NUMBER}.zip ===="
-                        zip -r ../../${APPNAME}-${BUILD_NUMBER}.zip . -x *.git* -x *Logs* -x *Reports* -x *Snapshots* -x *Profiles* -x .classpath -x .gitignore -x .metadata -x .project -x .reporttemplates -x *daticaldb*.log -x *datical.project* -x deployPackager.properties
+        // stage('Create Database Code Artifact') {
+        //     when {
+        //         expression {
+        //             return GIT_BRANCH != 'origin/master' && GIT_BRANCH != 'origin/production' && DATICAL_COMMIT == "false"
+        //             }
+        //     }
+		// 	steps {
+        //         dir ("${PROJ_DDB}"){
+        //             sh """
+        //                 { set +x; } 2>/dev/null
+        //                 echo
+        //                 echo "==== Creating ${APPNAME}-${BUILD_NUMBER}.zip ===="
+        //                 zip -r ../../${APPNAME}-${BUILD_NUMBER}.zip . -x *.git* -x *Logs* -x *Reports* -x *Snapshots* -x *Profiles* -x .classpath -x .gitignore -x .metadata -x .project -x .reporttemplates -x *daticaldb*.log -x *datical.project* -x deployPackager.properties
     
-                        echo
-                        echo "=====FINISHED===="
-                    """
-                }
-            }
-		}
+        //                 echo
+        //                 echo "=====FINISHED===="
+        //             """
+        //         }
+        //     }
+		// }
 
         // stage('Retrieve Database Code Artifact') {
         //     when {
@@ -227,24 +227,24 @@ pipeline {
             }
         } 
 
-        stage('Update Datical Server') {
-            when {
-                expression { return DATICAL_COMMIT == "false"|| (GIT_BRANCH == 'origin/master' && GIT_BRANCH == 'origin/production')}
-            }
-            steps {
-                dir ("${PROJ_DDB}"){
-                withCredentials([usernamePassword(credentialsId: 'daticaladminacct', passwordVariable: 'DATICAL_PASSWORD', usernameVariable: 'DATICAL_USERNAME')]) {						
-                    sh """
-                        { set +x; } 2>/dev/null
-                        echo
-                        echo ==== Update DMC5 ====
-                        hammer status ${TARGET_ENV}
-                        echo =====FINISHED====
-                    """
-                    }
-                } 
-            } 
-        } 	
+        // stage('Update Datical Server') {
+        //     when {
+        //         expression { return DATICAL_COMMIT == "false"|| (GIT_BRANCH == 'origin/master' && GIT_BRANCH == 'origin/production')}
+        //     }
+        //     steps {
+        //         dir ("${PROJ_DDB}"){
+        //         withCredentials([usernamePassword(credentialsId: 'daticaladminacct', passwordVariable: 'DATICAL_PASSWORD', usernameVariable: 'DATICAL_USERNAME')]) {						
+        //             sh """
+        //                 { set +x; } 2>/dev/null
+        //                 echo
+        //                 echo ==== Update DMC5 ====
+        //                 hammer status ${TARGET_ENV}
+        //                 echo =====FINISHED====
+        //             """
+        //             }
+        //         } 
+        //     } 
+        // } 	
         
         stage('Deploy Application Stack') {
             when {
