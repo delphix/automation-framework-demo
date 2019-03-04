@@ -182,8 +182,12 @@ pipeline {
     }
     post {
         failure {
-            sh "echo GIT_EVENT=build-failure >> .env"
-            sh "${DAF}"
+                sh "echo GIT_EVENT=build-failure >> .env"
+                sh "${DAF}"
+                sh """
+                    CONSOLE=\$(curl http://localhost:8080//job/PatientsPipeline/job/${SHORT_BRANCH}/${env.BUILD_NUMBER}/consoleText)
+                    /usr/local/bin/bz_create_bug.py --hostname localhost --login admin --password password --summary \"testing bug\" --description \"\${CONSOLE}\${DAFOUT}\"
+                """
         }
         always {
          // Jenkins Artifacts
