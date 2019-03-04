@@ -18,7 +18,6 @@ pipeline {
         stage('Prepare Environment'){
             steps {
                 script {
-                    // SHORT_BRANCH = sh(returnStdout: true, script: "echo ${GIT_BRANCH} | cut -d '/' -f2").trim()
                     SHORT_BRANCH = "${GIT_BRANCH}"
                     GIT_BRANCH = "origin/${GIT_BRANCH}"
                     sh "echo ${GIT_BRANCH}"
@@ -88,21 +87,9 @@ pipeline {
             steps {
               dir ('ansible') {
                 sh  "ansible-playbook deploy.yaml -e git_branch=${GIT_BRANCH} -e git_commit=${env.GIT_COMMIT} -e sdlc_env=${TARGET_ENV} --tags \"build\" --limit ${TARGET_WEB}"
-                // sh "echo placeholder"
               }
             }
         }
-
-        // stage('Update Masked Master') {
-        //     when {
-        //         expression {
-        //             return GIT_BRANCH != "origin/production" && DATICAL_COMMIT == "false"
-        //             }
-        //     }
-        //     steps {
-        //         sh "/usr/local/bin/snap_prod_refresh_mm -c conf.txt"
-        //     }
-        // }
 
         stage('Refresh Data Pod') {
             when {
@@ -111,7 +98,6 @@ pipeline {
                     }
             }
             steps {
-                // sh "echo placeholder"
                 sh  "docker pull delphix/automation-framework"
                 sh "cat .env"
                 sh "${DAF}"
@@ -126,8 +112,7 @@ pipeline {
             }
 			steps {
                 dir ("${PROJ_DDB}"){
-                    withCredentials([usernamePassword(credentialsId: 'daticaladminacct', passwordVariable: 'DATICAL_PASSWORD', usernameVariable: 'DATICAL_USERNAME')]) {				
-                        sh """
+                    sh """
                         { set +x; } 2>/dev/null
                         echo
                         echo "==== Running - hammer version ===="
@@ -141,48 +126,10 @@ pipeline {
                         echo "==== Running Deployment Packager ===="
                         echo "hammer groovy deployPackager.groovy pipeline=${DATICAL_PIPELINE} --projectKey=${DATICAL_PROJECT_KEY} scm=true labels=${DATICAL_PIPELINE},${APPNAME}-${BUILD_NUMBER}"
                         hammer groovy deployPackager.groovy pipeline=${DATICAL_PIPELINE} --projectKey=${DATICAL_PROJECT_KEY} scm=true labels=${DATICAL_PIPELINE},${APPNAME}-${BUILD_NUMBER}
-                        """
-                    }
+                    """
                 }
 			} 
         }
-
-        // stage('Create Database Code Artifact') {
-        //     when {
-        //         expression {
-        //             return GIT_BRANCH != 'origin/master' && GIT_BRANCH != 'origin/production' && DATICAL_COMMIT == "false"
-        //             }
-        //     }
-		// 	steps {
-        //         dir ("${PROJ_DDB}"){
-        //             sh """
-        //                 { set +x; } 2>/dev/null
-        //                 echo
-        //                 echo "==== Creating ${APPNAME}-${BUILD_NUMBER}.zip ===="
-        //                 zip -r ../../${APPNAME}-${BUILD_NUMBER}.zip . -x *.git* -x *Logs* -x *Reports* -x *Snapshots* -x *Profiles* -x .classpath -x .gitignore -x .metadata -x .project -x .reporttemplates -x *daticaldb*.log -x *datical.project* -x deployPackager.properties
-    
-        //                 echo
-        //                 echo "=====FINISHED===="
-        //             """
-        //         }
-        //     }
-		// }
-
-        // stage('Retrieve Database Code Artifact') {
-        //     when {
-        //         expression {
-        //             return (GIT_BRANCH == 'origin/master' || GIT_BRANCH == 'origin/production') && DATICAL_COMMIT == "false"
-        //         }
-        //     }
-		// 	steps {
-        //         sh """
-        //             { set +x; } 2>/dev/null
-        //             echo
-        //             echo "==== Retrieving ${APPNAME}-${BUILD_NUMBER}.zip ===="
-        //             unzip ../${APPNAME}-${BUILD_NUMBER}.zip
-        //             """
-        //     }
-        // }
 
         stage('Forecast Database Changes') {
             when {
@@ -190,19 +137,17 @@ pipeline {
             }
             steps {
                 dir ("${PROJ_DDB}"){
-                    withCredentials([usernamePassword(credentialsId: 'daticaladminacct', passwordVariable: 'DATICAL_PASSWORD', usernameVariable: 'DATICAL_USERNAME')]) {						
-                        sh """
-                            { set +x; } 2>/dev/null       
-                            echo ==== Running - hammer version ====
-                            hammer show version
+                    sh """
+                        { set +x; } 2>/dev/null       
+                        echo ==== Running - hammer version ====
+                        hammer show version
 
-                            # invoke Datical DB's Deployment Packager
-                            echo ==== Running Forecast ====
-                            echo hammer forecast ${TARGET_ENV} --labels=\"${DATICAL_PIPELINE},${APPNAME}-${BUILD_NUMBER}\" --pipeline=${DATICAL_PIPELINE} --projectKey=${DATICAL_PROJECT_KEY}
-                            hammer forecast ${TARGET_ENV} --labels=\"${DATICAL_PIPELINE},${APPNAME}-${BUILD_NUMBER}\" --pipeline=${DATICAL_PIPELINE} --projectKey=${DATICAL_PROJECT_KEY}
-                            echo =====FINISHED====
-                        """
-                    }   
+                        # invoke Datical DB's Deployment Packager
+                        echo ==== Running Forecast ====
+                        echo hammer forecast ${TARGET_ENV} --labels=\"${DATICAL_PIPELINE},${APPNAME}-${BUILD_NUMBER}\" --pipeline=${DATICAL_PIPELINE} --projectKey=${DATICAL_PROJECT_KEY}
+                        hammer forecast ${TARGET_ENV} --labels=\"${DATICAL_PIPELINE},${APPNAME}-${BUILD_NUMBER}\" --pipeline=${DATICAL_PIPELINE} --projectKey=${DATICAL_PROJECT_KEY}
+                        echo =====FINISHED====
+                    """
                 } 
             }
         }
@@ -212,40 +157,18 @@ pipeline {
                 expression { return DATICAL_COMMIT == "false" || (GIT_BRANCH == 'origin/master' && GIT_BRANCH == 'origin/production')}
             }
             steps {
-                dir ("${PROJ_DDB}"){
-                    withCredentials([usernamePassword(credentialsId: 'daticaladminacct', passwordVariable: 'DATICAL_PASSWORD', usernameVariable: 'DATICAL_USERNAME')]) {						
-                        sh """
-                            { set +x; } 2>/dev/null
-                            # invoke Datical DB's Deployment Packager
-                            echo ==== Running Deploy ====
-                            echo hammer deploy ${TARGET_ENV} --labels=\"${DATICAL_PIPELINE},${APPNAME}-${BUILD_NUMBER}\" --pipeline=${DATICAL_PIPELINE} --projectKey=${DATICAL_PROJECT_KEY}
-                            hammer deploy ${TARGET_ENV} --labels=\"${DATICAL_PIPELINE},${APPNAME}-${BUILD_NUMBER}\" --pipeline=${DATICAL_PIPELINE} --projectKey=${DATICAL_PROJECT_KEY}
-                            echo =====FINISHED====
-                        """
-                    }
+                dir ("${PROJ_DDB}"){					
+                    sh """
+                        { set +x; } 2>/dev/null
+                        # invoke Datical DB's Deployment Packager
+                        echo ==== Running Deploy ====
+                        echo hammer deploy ${TARGET_ENV} --labels=\"${DATICAL_PIPELINE},${APPNAME}-${BUILD_NUMBER}\" --pipeline=${DATICAL_PIPELINE} --projectKey=${DATICAL_PROJECT_KEY}
+                        hammer deploy ${TARGET_ENV} --labels=\"${DATICAL_PIPELINE},${APPNAME}-${BUILD_NUMBER}\" --pipeline=${DATICAL_PIPELINE} --projectKey=${DATICAL_PROJECT_KEY}
+                        echo =====FINISHED====
+                    """
                 }	
             }
         } 
-
-        // stage('Update Datical Server') {
-        //     when {
-        //         expression { return DATICAL_COMMIT == "false"|| (GIT_BRANCH == 'origin/master' && GIT_BRANCH == 'origin/production')}
-        //     }
-        //     steps {
-        //         dir ("${PROJ_DDB}"){
-        //         withCredentials([usernamePassword(credentialsId: 'daticaladminacct', passwordVariable: 'DATICAL_PASSWORD', usernameVariable: 'DATICAL_USERNAME')]) {						
-        //             sh """
-        //                 { set +x; } 2>/dev/null
-        //                 echo
-        //                 echo ==== Update DMC5 ====
-        //                 hammer status ${TARGET_ENV}
-        //                 echo =====FINISHED====
-        //             """
-        //             }
-        //         } 
-        //     } 
-        // } 	
-        
         stage('Deploy Application Stack') {
             when {
                 expression { return DATICAL_COMMIT == "false"|| (GIT_BRANCH == 'origin/master' && GIT_BRANCH == 'origin/production')}
@@ -253,7 +176,6 @@ pipeline {
             steps {
                 dir ('ansible') {
                 sh  "ansible-playbook deploy.yaml -e git_branch=${GIT_BRANCH} -e sdlc_env=${TARGET_ENV} --tags \"deploy\" --limit ${TARGET_WEB}"
-                // sh "echo placeholder"
                 }
             }
         }
