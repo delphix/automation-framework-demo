@@ -1,0 +1,13 @@
+---
+- hosts: [web]
+  serial: 1
+  gather_facts: yes
+  vars:
+    html_root: "/var/www/html/"
+    api_root: "/home/centos/"
+  roles:
+  - {role: set-hosts, tags: [build]}
+  - {role: build-api, tags: [build]}
+  - {role: build-app, tags: [build]}
+  - {role: deploy-api, tags: [deploy]}
+  - {role: deploy-app, tags: [deploy]}

@@ -1,0 +1,21 @@
+---
+- name: "INSTALL PACKAGES"
+  command: yarn --mutex network install
+  args:
+      chdir: '../client'
+  delegate_to: localhost
+  register: task_result
+  until: task_result is success
+  retries: 5
+  delay: 20
+
+
+- name: "BUILD HTML"
+  command: /usr/local/lib/npm/bin/ng build --prod
+  args:
+      chdir: '../client'
+  delegate_to: localhost
+  register: task_result
+  until: task_result is success
+  retries: 5
+  delay: 20

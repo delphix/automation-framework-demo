@@ -1,0 +1,48 @@
+---
+- shell: |
+        STUDENT=$(echo {{ ansible_default_ipv4.address }} | cut -d. -f3)
+        echo "10.0.${STUDENT}.0"
+  register: network
+- debug:
+        msg: "This network is {{ network.stdout }}"
+- name: get external IP
+  shell: curl -s http://169.254.169.254/latest/meta-data/public-hostname
+  args:
+    warn: False
+  register: external_dns
+
+- name: Set external_dns fact
+  set_fact:
+    external_dns: "{{ external_dns.stdout }}"
+
+- debug:
+    msg: "{{ external_dns }}"
+  delegate_to: localhost
+
+- name: Include OS-Specific variables
+  include_vars: "{{ sdlc_env }}.yml"
+  delegate_to: localhost
+
+- name: Config application.properties
+  template: 
+    src: application.properties.j2
+    dest: "../src/main/resources/application.properties"
+  delegate_to: localhost
+
+- name: Config environment.ts
+  template: 
+    src: environment.ts.j2
+    dest: "../client/src/environments/environment.prod.ts"
+  delegate_to: localhost
+
+- name: Create docker .env file
+  template: 
+    src: env.j2
+    dest: "../.env"
+  delegate_to: localhost
+
+- name: Create go ini file
+  template: 
+    src: conf.txt.j2
+    dest: "../conf.txt"
+  delegate_to: localhost

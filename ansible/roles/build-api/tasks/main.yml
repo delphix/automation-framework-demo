@@ -1,0 +1,10 @@
+---
+- name: "BUILD HTML"
+  command: mvn clean package
+  args:
+      chdir: '../'
+  delegate_to: localhost
+  register: task_result
+  until: task_result is success
+  retries: 5
+  delay: 20

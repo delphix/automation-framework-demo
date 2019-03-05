@@ -1,0 +1,10 @@
+---
+  #expecting one of DEV, TEST, PROD
+  sdlc_env: DEV
+  #expecting remote/branch
+  git_branch: origin/branch
+  git_commit: ""
+  #delphix_engine: "{{ ansible_default_ipv4.network | ipmath(10) }}"
+  delphix_user: delphix_admin
+  delphix_pass: landshark
+  git_event: push

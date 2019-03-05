@@ -20,20 +20,11 @@ connectors:
       username: spring.datasource.username
       password: spring.datasource.password
 environments:
-  - staging:
-      branch: origin/staging
-      datapod: Staging
-      when:
-        - push: bookmark.create
-        - push: datapod.refresh
-        - build-failure: datapod.undo
-  - uat:
-      branch: origin/test
+  - test:
+      branch: origin/master
       datapod: Test
       when:
         - push: datapod.refresh
-        - pull-request-opened: datapod.create
-        - pull-request-closed: datapod.delete
         - build-failure: datapod.undo
   - develop:
       branch: origin/develop

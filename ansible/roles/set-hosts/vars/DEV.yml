@@ -1,0 +1,8 @@
+---
+db_hostname: devdb
+db_port: 1521
+db_name: devdb
+db_username: delphixdb
+db_password: delphixdb
+jwt_secret: LDdhUPyvOFkZcsdBqIWaIHlrldM7McPTBVyLfdInftQ
+web_port: 8080

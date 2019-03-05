@@ -1,4 +1,0 @@
----
-html_root: "/var/www/html/"
-api_root: "/home/ec2-user/"
-public_ip: ""
