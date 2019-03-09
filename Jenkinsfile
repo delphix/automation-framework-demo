@@ -1,236 +1,108 @@
 pipeline {
     agent any
     environment {
-      DAF = 'docker run -v ${PWD}:/daf/app --env-file ${PWD}/.env delphix/automation-framework'
-      DATICAL_PIPELINE = 'pipeline1'
-      APPNAME = 'PATIENTS'
-      PROJ_DDB="ddb"
-      PROJ_SQL="app_src"
-      APP_GITURL="/var/lib/jenkins/app_repo.git"
-      DATICAL_GITURL="/var/lib/jenkins/datical"
-      DATICAL_PROJECT_KEY="PATIENTS"
-      SHORT_BRANCH = "default"
-      TARGET_ENV = "default"
-      TARGET_WEB = "default"
-      DATICAL_COMMIT = "false"
+      DAF = 'docker run -v ${PWD}:/daf/app --env-file ${PWD}/.env mcred/daf'
     }
     stages {
-        stage('Prepare Environment'){
+        stage('Get Payload from GitHub') {
             steps {
                 script {
-                    SHORT_BRANCH = "${GIT_BRANCH}"
-                    GIT_BRANCH = "origin/${GIT_BRANCH}"
-                    sh "echo ${GIT_BRANCH}"
-                    if ("${GIT_BRANCH}" == "origin/master") {
-                        TARGET_ENV = "QA"
-                        TARGET_WEB = "testweb"
-                        REPL = "/opt/datical/master/DaticalDB/repl"
-                    }
-                    if ("${GIT_BRANCH}" == "origin/production") {
-                        TARGET_ENV = "PROD"
-                        TARGET_WEB = "prodweb"
-                        REPL = "/opt/datical/production/DaticalDB/repl"
-                    }
-                    if ("${GIT_BRANCH}" != "origin/master" && "${GIT_BRANCH}" != "origin/production") {
-                        TARGET_ENV = "DEV"
-                        TARGET_WEB = "devweb"
-                        REPL = "/opt/datical/develop/DaticalDB/repl"
-                    }
-                    DATICAL_COMMIT = sh(returnStdout: true, script: "git show -s --oneline ${GIT_COMMIT}| grep 'Datical automatic check-in' && echo 'true'|| echo 'false'").trim()
-                    env.PATH = "${REPL}:${ORACLE_HOME}/bin:${PATH}"
+                    def scmVars = checkout scm
+                    env.GIT_COMMIT = scmVars.GIT_COMMIT
+                    env.GIT_BRANCH = scmVars.GIT_BRANCH
                 }
-                sh "env"
-                sh "git clean -ffdx"
-                sh "echo $PATH"
-            }
-        }
-
-        stage("Prepare Workspace") {
-            when {
-                expression { return DATICAL_COMMIT == "false" || (GIT_BRANCH == 'origin/master' && GIT_BRANCH == 'origin/production')}
-            }
-            steps {
-				checkout([
-					$class: 'GitSCM', 
-					branches: [[name: '*/master']], 
-					doGenerateSubmoduleConfigurations: false, 
-					extensions: [
-					  [$class: 'RelativeTargetDirectory', relativeTargetDir: "${PROJ_DDB}"],
-					  [$class: 'LocalBranch', localBranch: 'master']],
-					submoduleCfg: [], 
-					userRemoteConfigs: [[url: "${DATICAL_GITURL}"]]
-				])
-                dir ("${PROJ_DDB}"){
-                    sh "git branch --set-upstream-to=origin/master master"
-                }
-                checkout([
-                        $class: 'GitSCM', 
-                        branches: [[name: "${SHORT_BRANCH}"]], 
-                        doGenerateSubmoduleConfigurations: false, 
-                        extensions: [
-                        [$class: 'RelativeTargetDirectory', relativeTargetDir: "${PROJ_SQL}"], 
-                        [$class: 'LocalBranch', localBranch: "${SHORT_BRANCH}"], 
-                        [$class: 'UserIdentity', email: 'jenkins@company.com', name: 'jenkins']], 
-                        submoduleCfg: [], 
-                        userRemoteConfigs: [[url: "${APP_GITURL}"]]
-                ])
-                dir ("${PROJ_SQL}"){
-                    sh "git branch --set-upstream-to=${GIT_BRANCH} ${SHORT_BRANCH} && git status"
+                sh "cp ./src/main/resources/application.properties.example ./src/main/resources/application.properties"
+                script {
+                    if ("${env.GIT_BRANCH}" == "origin/develop") {
+                        stage ('develop') {
+                            dir ('terraform') {
+                                sh  "terraform taint -module=dev_web_server null_resource.deploy_stack"
+                            }
+                        }
+                    }
+                    if ("${env.GIT_BRANCH}" == "origin/master") {
+                        stage ('prod') {
+                            dir ('terraform') {
+                                sh  "terraform taint -module=prod_web_server null_resource.deploy_stack"
+                            }
+                        }
+                    }
                 }
             }
         }
 
-        stage('Compile Application') {
+        stage('Plan Infrastructure as Code Changes') {
+            steps {
+                dir ('terraform') {
+                    sh  "terraform init -backend=true -input=false"
+                    sh  "terraform workspace select production"
+                    sh  "terraform plan -out=tfplan -input=false"
+                    script {
+                        timeout(time: 10, unit: 'MINUTES') {
+                            input(id: "Deploy Gate", message: "Deploy ${params.project_name}?", ok: 'Deploy')
+                        }
+                    }
+                }
+            }
+        }
+
+        stage('Apply Infrastructure as Code Changes') {
+            steps {
+                dir ('terraform') {
+                    sh  "terraform apply -lock=false -input=false tfplan"
+                }
+            }
+        }
+
+
+        stage('Apply Database as Code Changes') {
             when {
-                expression { return DATICAL_COMMIT == "false" || (GIT_BRANCH == 'origin/master' && GIT_BRANCH == 'origin/production')}
+                expression { "${env.GIT_BRANCH}" != "origin/master" }
             }
             steps {
-              dir ('ansible') {
-                sh  "ansible-playbook deploy.yaml -e git_branch=${GIT_BRANCH} -e git_commit=${env.GIT_COMMIT} -e sdlc_env=${TARGET_ENV} --tags \"build\" --limit ${TARGET_WEB}"
+                sh  "docker pull mcred/daf"
+                writeFile file: 'payload.json', text: payload
+                script {
+                    withCredentials([string(credentialsId: 'delphix_engine', variable: 'engine'), string(credentialsId: 'delphix_user', variable: 'user'), string(credentialsId: 'delphix_pass', variable: 'pass')]) {
+                        env.DELPHIX_ENGINE = engine
+                        env.DELPHIX_USER = user
+                        env.DELPHIX_PASS = pass
+                    }
+                }
+                sh "echo GIT_COMMIT=$GIT_COMMIT > .env"
+                sh "echo GIT_BRANCH=$GIT_BRANCH >> .env"
+                sh "echo DELPHIX_ENGINE=$DELPHIX_ENGINE >> .env"
+                sh "echo DELPHIX_USER=$DELPHIX_USER >> .env"
+                sh "echo DELPHIX_PASS=$DELPHIX_PASS >> .env"
+                sh "${DAF}"
+            }
+        }
+
+        stage ('Apply Schema as Code Changes') {
+            steps {
+              script {
+                try {
+                    sh 'mvn liquibase:update'
+                } catch (Exception e) {
+                    //sh "echo GIT_EVENT=build-failure >> .env"
+                    //sh "${DAF}"
+                }
               }
             }
         }
 
-        stage('Refresh Data Pod') {
-            when {
-                expression {
-                    return GIT_BRANCH != "origin/production" && DATICAL_COMMIT == "false"
-                    }
-            }
-            steps {
-                script {
-                    refresh = true
-                    startMillis = System.currentTimeMillis()
-                    timeoutMillis = 30000
-
-                    try { 
-                    timeout(time: timeoutMillis, unit: 'MILLISECONDS') {
-                     input(
-                        id: 'refresh', message: 'Proceed with Refresh', parameters: [
-                        [$class: 'BooleanParameterDefinition', defaultValue: true, 
-                        description: '', name: 'Abort continues without refresh']
-                        ])
-                    } 
-                    } catch (org.jenkinsci.plugins.workflow.steps.FlowInterruptedException e) {
-                        cause = e.causes.get(0)
-                        endMillis = System.currentTimeMillis()
-                        if (cause.getUser().toString() != 'SYSTEM') {
-                            refresh = false
-                            echo "Refresh skipped."
-                        } else {
-                                if (endMillis - startMillis >= timeoutMillis) {
-                                echo "Approval timed out. Continuing with refresh."
-                            } else {
-                                echo "Something weird happened"
-                            }
-                        }
-                    }
-                    if ( refresh == true ) {
-                        sh "cat .env"
-                        sh "${DAF}"
-                    } else {
-                        echo "User chose to skip data refresh"
-                    }
-                }
-            }
-        }
-
-        stage('Package and Test SQL Changes') {
-            when {
-                expression {
-                    return GIT_BRANCH != 'origin/master' && GIT_BRANCH != 'origin/production' && DATICAL_COMMIT == "false"
-                    }
-            }
-			steps {
-                dir ("${PROJ_DDB}"){
-                    sh """
-                        { set +x; } 2>/dev/null
-                        echo
-                        echo "==== Running - hammer version ===="
-                        echo ${PATH}
-                        echo ${REPL}
-                        ls -lart ${REPL}
-                        which hammer
-                        hammer show version
-                
-                        # invoke Datical DB's Deployment Packager
-                        echo "==== Running Deployment Packager ===="
-                        echo "hammer groovy deployPackager.groovy pipeline=${DATICAL_PIPELINE} --projectKey=${DATICAL_PROJECT_KEY} scm=true labels=${DATICAL_PIPELINE},${APPNAME}-${BUILD_NUMBER}"
-                        hammer groovy deployPackager.groovy pipeline=${DATICAL_PIPELINE} --projectKey=${DATICAL_PROJECT_KEY} scm=true labels=${DATICAL_PIPELINE},${APPNAME}-${BUILD_NUMBER}
-                    """
-                }
-			} 
-        }
-
-        stage('Forecast Database Changes') {
-            when {
-                expression { return DATICAL_COMMIT == "false" || (GIT_BRANCH == 'origin/master' && GIT_BRANCH == 'origin/production')}
-            }
-            steps {
-                dir ("${PROJ_DDB}"){
-                    sh """
-                        { set +x; } 2>/dev/null       
-                        echo ==== Running - hammer version ====
-                        hammer show version
-
-                        # invoke Datical DB's Deployment Packager
-                        echo ==== Running Forecast ====
-                        echo hammer forecast ${TARGET_ENV} --labels=\"${DATICAL_PIPELINE},${APPNAME}-${BUILD_NUMBER}\" --pipeline=${DATICAL_PIPELINE} --projectKey=${DATICAL_PROJECT_KEY}
-                        hammer forecast ${TARGET_ENV} --labels=\"${DATICAL_PIPELINE},${APPNAME}-${BUILD_NUMBER}\" --pipeline=${DATICAL_PIPELINE} --projectKey=${DATICAL_PROJECT_KEY}
-                        echo =====FINISHED====
-                    """
-                } 
-            }
-        }
-
-        stage('Deploy Database Changes') {
-            when {
-                expression { return DATICAL_COMMIT == "false" || (GIT_BRANCH == 'origin/master' && GIT_BRANCH == 'origin/production')}
-            }
-            steps {
-                dir ("${PROJ_DDB}"){					
-                    sh """
-                        { set +x; } 2>/dev/null
-                        # invoke Datical DB's Deployment Packager
-                        echo ==== Running Deploy ====
-                        echo hammer deploy ${TARGET_ENV} --labels=\"${DATICAL_PIPELINE},${APPNAME}-${BUILD_NUMBER}\" --pipeline=${DATICAL_PIPELINE} --projectKey=${DATICAL_PROJECT_KEY}
-                        hammer deploy ${TARGET_ENV} --labels=\"${DATICAL_PIPELINE},${APPNAME}-${BUILD_NUMBER}\" --pipeline=${DATICAL_PIPELINE} --projectKey=${DATICAL_PROJECT_KEY}
-                        echo =====FINISHED====
-                    """
-                }	
-            }
-        } 
         stage('Deploy Application Stack') {
-            when {
-                expression { return DATICAL_COMMIT == "false"|| (GIT_BRANCH == 'origin/master' && GIT_BRANCH == 'origin/production')}
-            }
             steps {
-                dir ('ansible') {
-                sh  "ansible-playbook deploy.yaml -e git_branch=${GIT_BRANCH} -e sdlc_env=${TARGET_ENV} --tags \"deploy\" --limit ${TARGET_WEB}"
-                }
+              dir ('terraform') {
+                sh  "ansible-playbook deploy.yaml -vvv"
+              }
             }
         }
     }
     post {
         failure {
-            sh """
-                CONSOLE=\$(curl http://localhost:8080//job/PatientsPipeline/job/${SHORT_BRANCH}/${env.BUILD_NUMBER}/consoleText)
-                BUG=\$(/usr/local/bin/bz_create_bug.py --hostname localhost --login admin --password password --summary \"testing bug\" --description \"\${CONSOLE}\${DAFOUT}\")
-                /usr/local/bin/dx_jetstream_container.py --template "Patients" --container "Test" \
-                    --operation bookmark --bookmark_name "${env.BUILD_TAG}" --bookmark_tags "\${BUG},${env.GIT_COMMIT}" \
-                    --bookmark_shared true --conf /var/lib/jenkins/dxtools.conf
-            """
             sh "echo GIT_EVENT=build-failure >> .env"
             sh "${DAF}"
         }
-        always {
-         // Jenkins Artifacts
-            script {
-                if (DATICAL_COMMIT == "false" || (GIT_BRANCH == 'origin/master' && GIT_BRANCH == 'origin/production')) {
-                    archiveArtifacts '**/daticaldb.log, **/Reports/**, **/Logs/**, **/Snapshots/**'
-                }
-            }
-       }
     }
 }
- 
