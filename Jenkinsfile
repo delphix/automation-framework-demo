@@ -98,9 +98,40 @@ pipeline {
                     }
             }
             steps {
-                sh  "docker pull delphix/automation-framework"
-                sh "cat .env"
-                sh "${DAF}"
+                script {
+                    refresh = true
+                    startMillis = System.currentTimeMillis()
+                    timeoutMillis = 30000
+
+                    try { 
+                    timeout(time: timeoutMillis, unit: 'MILLISECONDS') {
+                     input(
+                        id: 'refresh', message: 'Proceed with Refresh', parameters: [
+                        [$class: 'BooleanParameterDefinition', defaultValue: true, 
+                        description: '', name: 'Abort continues without refresh']
+                        ])
+                    } 
+                    } catch (org.jenkinsci.plugins.workflow.steps.FlowInterruptedException e) {
+                        cause = e.causes.get(0)
+                        endMillis = System.currentTimeMillis()
+                        if (cause.getUser().toString() != 'SYSTEM') {
+                            refresh = false
+                            echo "Refresh skipped."
+                        } else {
+                                if (endMillis - startMillis >= timeoutMillis) {
+                                echo "Approval timed out. Continuing with refresh."
+                            } else {
+                                echo "Something weird happened"
+                            }
+                        }
+                    }
+                    if ( refresh == true ) {
+                        sh "cat .env"
+                        sh "${DAF}"
+                    } else {
+                        echo "User chose to skip data refresh"
+                    }
+                }
             }
         }
 
@@ -182,12 +213,15 @@ pipeline {
     }
     post {
         failure {
-                sh "echo GIT_EVENT=build-failure >> .env"
-                sh "${DAF}"
-                sh """
-                    CONSOLE=\$(curl http://localhost:8080//job/PatientsPipeline/job/${SHORT_BRANCH}/${env.BUILD_NUMBER}/consoleText)
-                    /usr/local/bin/bz_create_bug.py --hostname localhost --login admin --password password --summary \"testing bug\" --description \"\${CONSOLE}\${DAFOUT}\"
-                """
+            sh """
+                CONSOLE=\$(curl http://localhost:8080//job/PatientsPipeline/job/${SHORT_BRANCH}/${env.BUILD_NUMBER}/consoleText)
+                BUG=\$(/usr/local/bin/bz_create_bug.py --hostname localhost --login admin --password password --summary \"testing bug\" --description \"\${CONSOLE}\${DAFOUT}\")
+                /usr/local/bin/dx_jetstream_container.py --template "Patients" --container "Test" \
+                    --operation bookmark --bookmark_name "${env.BUILD_TAG}" --bookmark_tags "\${BUG},${env.GIT_COMMIT}" \
+                    --bookmark_shared true --conf /var/lib/jenkins/dxtools.conf
+            """
+            sh "echo GIT_EVENT=build-failure >> .env"
+            sh "${DAF}"
         }
         always {
          // Jenkins Artifacts
@@ -199,3 +233,4 @@ pipeline {
        }
     }
 }
+ 
