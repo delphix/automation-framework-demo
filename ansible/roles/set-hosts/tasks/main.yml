@@ -46,3 +46,9 @@
     src: conf.txt.j2
     dest: "../conf.txt"
   delegate_to: localhost
+
+- name: Create index.html
+  template: 
+    src: index.html.j2
+    dest: "../client/src/index.html"
+  delegate_to: localhost

@@ -1,0 +1,31 @@
+<div class="wrapper-container" [class.wrapper-is-mobile]="mobileQuery.matches">
+	<mat-toolbar color="primary" class="wrapper-toolbar">
+		<button *ngIf="isLoginPage()" mat-icon-button (click)="snav.toggle()">
+			<mat-icon>apps</mat-icon>
+		</button>
+		<div class="pl-15"><a class="header-link" routerLink="/">Patients {{ sdlc_env }}</a></div>
+		<span class="spacer"></span>
+		<a [routerLink]="['/login']" class="auth_icon">
+			<mat-icon class="icon-white md-36">exit_to_app</mat-icon>
+		</a>
+	</mat-toolbar>
+	<mat-sidenav-container class="wrapper-sidenav-container" [style.marginTop.px]="mobileQuery.matches ? 56 : 0">
+		<mat-sidenav *ngIf="isLoginPage()" #snav class="wrapper-sidenav" [mode]="mobileQuery.matches ? 'over' : 'side'" [fixedInViewport]="mobileQuery.matches" fixedTopGap="56" [opened]="mobileQuery.matches ? false : true">
+			<mat-nav-list>
+				<mat-menu></mat-menu>
+				<button mat-menu-item class="sidenav-btn" routerLinkActive="active-link" routerLink="/patients" (click)="sendToRoute('/patients',mobileQuery.matches)">
+					<mat-icon class="icon-white">folder_shared</mat-icon> Patients
+				</button>
+				<button mat-menu-item class="sidenav-btn" routerLinkActive="active-link" routerLink="/payments" (click)="sendToRoute('/payments',mobileQuery.matches)">
+					<mat-icon class="icon-white">monetization_on</mat-icon> Payments
+				</button>
+				<button mat-menu-item class="sidenav-btn" routerLinkActive="active-link" routerLink="/users" (click)="sendToRoute('/users',mobileQuery.matches)">
+					<mat-icon class="icon-white">supervisor_account</mat-icon> Users
+				</button>
+			</mat-nav-list>
+		</mat-sidenav>
+		<mat-sidenav-content class="sidenav-outlet">
+			<router-outlet></router-outlet>
+		</mat-sidenav-content>
+	</mat-sidenav-container>
+</div>
