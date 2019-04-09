@@ -22,35 +22,6 @@ pipeline {
                     GIT_BRANCH = "origin/${GIT_BRANCH}"
                     sh "echo ${GIT_BRANCH}"
                     
-                    if ("${GIT_BRANCH}" != "origin/production") {
-                        refresh = true
-                        startMillis = System.currentTimeMillis()
-                        timeoutMillis = 30000
-
-                        try { 
-                        timeout(time: timeoutMillis, unit: 'MILLISECONDS') {
-                        input(
-                            id: 'refresh', message: 'Proceed with Refresh', parameters: [
-                            [$class: 'BooleanParameterDefinition', defaultValue: true, 
-                            description: '', name: 'Abort continues without refresh']
-                            ])
-                        } 
-                        } catch (org.jenkinsci.plugins.workflow.steps.FlowInterruptedException e) {
-                            cause = e.causes.get(0)
-                            endMillis = System.currentTimeMillis()
-                            if (cause.getUser().toString() != 'SYSTEM') {
-                                refresh = false
-                                echo "Refresh skipped."
-                            } else {
-                                    if (endMillis - startMillis >= timeoutMillis) {
-                                    echo "Approval timed out. Continuing with refresh."
-                                } else {
-                                    echo "Something weird happened"
-                                }
-                            }
-                        }
-                    }
-                    
                     if ("${GIT_BRANCH}" == "origin/master") {
                         TARGET_ENV = "QA"
                         TARGET_WEB = "testweb"
@@ -129,7 +100,33 @@ pipeline {
             }
             steps {
                 script {
-                    if ( params.refresh == true ) {
+                    refresh = true
+                    startMillis = System.currentTimeMillis()
+                    timeoutMillis = 30000
+
+                    try { 
+                    timeout(time: timeoutMillis, unit: 'MILLISECONDS') {
+                    input(
+                        id: 'refresh', message: 'Proceed with Refresh', parameters: [
+                        [$class: 'BooleanParameterDefinition', defaultValue: true, 
+                        description: '', name: 'Abort continues without refresh']
+                        ])
+                    } 
+                    } catch (org.jenkinsci.plugins.workflow.steps.FlowInterruptedException e) {
+                        cause = e.causes.get(0)
+                        endMillis = System.currentTimeMillis()
+                        if (cause.getUser().toString() != 'SYSTEM') {
+                            refresh = false
+                            echo "Refresh skipped."
+                        } else {
+                                if (endMillis - startMillis >= timeoutMillis) {
+                                echo "Approval timed out. Continuing with refresh."
+                            } else {
+                                echo "Something weird happened"
+                            }
+                        }
+                    }
+                    if ( refresh == true ) {
                         sh "cat .env"
                         sh "${DAF}"
                     } else {
