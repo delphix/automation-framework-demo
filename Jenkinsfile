@@ -13,6 +13,7 @@ pipeline {
       TARGET_ENV = "default"
       TARGET_WEB = "default"
       DATICAL_COMMIT = "false"
+      DATAPOD = "default"
     }
     stages {
         stage('Prepare Environment'){
@@ -26,6 +27,7 @@ pipeline {
                         TARGET_ENV = "QA"
                         TARGET_WEB = "testweb"
                         REPL = "/opt/datical/master/DaticalDB/repl"
+                        DATAPOD = "Test"
                     }
                     if ("${GIT_BRANCH}" == "origin/production") {
                         TARGET_ENV = "PROD"
@@ -36,6 +38,7 @@ pipeline {
                         TARGET_ENV = "DEV"
                         TARGET_WEB = "devweb"
                         REPL = "/opt/datical/develop/DaticalDB/repl"
+                        DATAPOD = "Develop"
                     }
                     DATICAL_COMMIT = sh(returnStdout: true, script: "git show -s --oneline ${GIT_COMMIT}| grep 'Datical automatic check-in' && echo 'true'|| echo 'false'").trim()
                     env.PATH = "${REPL}:${ORACLE_HOME}/bin:${PATH}"
@@ -217,7 +220,7 @@ pipeline {
             sh """
                 CONSOLE=\$(curl http://localhost:8080//job/PatientsPipeline/job/${SHORT_BRANCH}/${env.BUILD_NUMBER}/consoleText)
                 BUG=\$(/usr/local/bin/bz_create_bug.py --hostname localhost --login admin --password password --summary \"testing bug\" --description \"\${CONSOLE}\${DAFOUT}\")
-                /usr/local/bin/dx_jetstream_container.py --template "Patients" --container "Test" \
+                /usr/local/bin/dx_jetstream_container.py --template "Patients" --container "${DATAPOD}" \
                     --operation bookmark --bookmark_name "${env.BUILD_TAG}" --bookmark_tags "\${BUG},${env.GIT_COMMIT}" \
                     --bookmark_shared true --conf /var/lib/jenkins/dxtools.conf
             """
