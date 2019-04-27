@@ -90,7 +90,7 @@ pipeline {
             }
             steps {
               dir ('ansible') {
-                sh  "exit1 && ansible-playbook deploy.yaml -e delphix_pass=${DELPHIX_ADMIN_PASS} -e git_branch=${GIT_BRANCH} -e git_commit=${env.GIT_COMMIT} -e sdlc_env=${TARGET_ENV} --tags \"build\" --limit ${TARGET_WEB}"
+                sh  "ansible-playbook deploy.yaml -e delphix_pass=${DELPHIX_ADMIN_PASS} -e git_branch=${GIT_BRANCH} -e git_commit=${env.GIT_COMMIT} -e sdlc_env=${TARGET_ENV} --tags \"build\" --limit ${TARGET_WEB}"
               }
             }
         }
