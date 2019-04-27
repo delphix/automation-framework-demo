@@ -13,7 +13,7 @@ pipeline {
       TARGET_ENV = "default"
       TARGET_WEB = "default"
       DATICAL_COMMIT = "false"
-      DATAPOD = "default"
+      DATAPOD = ""
     }
     stages {
         stage('Prepare Environment'){
@@ -90,7 +90,7 @@ pipeline {
             }
             steps {
               dir ('ansible') {
-                sh  "ansible-playbook deploy.yaml -e delphix_pass=${DELPHIX_ADMIN_PASS} -e git_branch=${GIT_BRANCH} -e git_commit=${env.GIT_COMMIT} -e sdlc_env=${TARGET_ENV} --tags \"build\" --limit ${TARGET_WEB}"
+                sh  "exit1 && ansible-playbook deploy.yaml -e delphix_pass=${DELPHIX_ADMIN_PASS} -e git_branch=${GIT_BRANCH} -e git_commit=${env.GIT_COMMIT} -e sdlc_env=${TARGET_ENV} --tags \"build\" --limit ${TARGET_WEB}"
               }
             }
         }
@@ -217,15 +217,26 @@ pipeline {
     }
     post {
         failure {
+            //Open a bug in Bugzilla and bookmark the datapod with the information
             sh """
+                { set +x; } 2>/dev/null
                 CONSOLE=\$(curl http://localhost:8080//job/PatientsPipeline/job/${SHORT_BRANCH}/${env.BUILD_NUMBER}/consoleText)
                 BUG=\$(/usr/local/bin/bz_create_bug.py --hostname localhost --login admin --password password --summary \"testing bug\" --description \"\${CONSOLE}\${DAFOUT}\")
-                /usr/local/bin/dx_jetstream_container.py --template "Patients" --container "${DATAPOD}" \
-                    --operation bookmark --bookmark_name "${env.BUILD_TAG}" --bookmark_tags "\${BUG},${env.GIT_COMMIT}" \
-                    --bookmark_shared true --conf /var/lib/jenkins/dxtools.conf
+                
+                if [[ -n "${DATAPOD}" ]]; then
+                    /usr/local/bin/dx_jetstream_container.py --template "Patients" --container "${DATAPOD}" \
+                        --operation bookmark --bookmark_name "${env.BUILD_TAG}" --bookmark_tags "\${BUG},${env.GIT_COMMIT}" \
+                        --bookmark_shared true --conf /var/lib/jenkins/dxtools.conf
+                fi
             """
-            sh "echo GIT_EVENT=build-failure >> .env"
-            sh "${DAF}"
+            //Run DAF if the .env file exists; otherwise data was not involved
+            sh """ 
+                { set +x; } 2>/dev/null
+                if [[ -f .env ]]; then
+                    echo "GIT_EVENT=build-failure" >> .env
+                    ${DAF}
+                fi
+            """
         }
         always {
          // Jenkins Artifacts
