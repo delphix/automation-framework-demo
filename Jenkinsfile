@@ -220,10 +220,15 @@ pipeline {
             //Open a bug in Bugzilla and bookmark the datapod with the information
             sh """
                 { set +x; } 2>/dev/null
+                #Create a bug and grab the id
+                echo +++Creating BUG+++
                 CONSOLE=\$(curl http://localhost:8080//job/PatientsPipeline/job/${SHORT_BRANCH}/${env.BUILD_NUMBER}/consoleText)
                 BUG=\$(/usr/local/bin/bz_create_bug.py --hostname localhost --login admin --password password --summary \"testing bug\" --description \"\${CONSOLE}\${DAFOUT}\")
-                
+                echo +++\${BUG}+++
+
+                #Create a bookmark on the datapod with the information, if a non-prod build
                 if [[ -n "${DATAPOD}" ]]; then
+                    echo +++Bookmarking Datapod+++
                     /usr/local/bin/dx_jetstream_container.py --template "Patients" --container "${DATAPOD}" \
                         --operation bookmark --bookmark_name "${env.BUILD_TAG}" --bookmark_tags "\${BUG},${env.GIT_COMMIT}" \
                         --bookmark_shared true --conf /var/lib/jenkins/dxtools.conf
@@ -233,6 +238,7 @@ pipeline {
             sh """ 
                 { set +x; } 2>/dev/null
                 if [[ -f .env ]]; then
+                    echo +++Running DAF+++
                     echo "GIT_EVENT=build-failure" >> .env
                     ${DAF}
                 fi
