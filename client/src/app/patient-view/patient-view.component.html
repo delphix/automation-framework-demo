@@ -9,7 +9,7 @@
   <mat-grid-list cols="2" rowHeight="2:1">
     <mat-grid-tile>
       SSN: {{ patient.ssn | mask:'front':6 }}<br />
-      DOB: {{ patient.dobmonth }} / {{ patient.dobday }} / {{ patient.dobyear }}
+      DOB: {{ patient.dob }}
     </mat-grid-tile>
     <mat-grid-tile>
       {{ patient.address1 }} {{ patient.address2 }}<br />

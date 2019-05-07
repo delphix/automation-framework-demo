@@ -14,9 +14,7 @@ public class Patient extends AuditModel {
     private @NonNull String middlename;
     private @NonNull String lastname;
     private @NonNull String ssn;
-    private @NonNull Integer dobyear;
-    private @NonNull Integer dobmonth;
-    private @NonNull Integer dobday;
+    private @NonNull String dob;
     private @NonNull String address1;
     private @NonNull String address2;
     private @NonNull String city;

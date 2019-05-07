@@ -8,9 +8,7 @@ export interface Patient{
   middlename: string;
   lastname: string;
   ssn: string;
-  dobyear: number;
-  dobmonth: number;
-  dobday: number;
+  dob: string;
   address1: string;
   address2: string;
   city: string;

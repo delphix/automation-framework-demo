@@ -40,9 +40,7 @@ public class PatientController {
                     patient.setMiddlename(patientRequest.getMiddlename());
                     patient.setLastname(patientRequest.getLastname());
                     patient.setSsn(patientRequest.getSsn());
-                    patient.setDobyear(patientRequest.getDobyear());
-                    patient.setDobmonth(patientRequest.getDobmonth());
-                    patient.setDobday(patientRequest.getDobday());
+                    patient.setDob(patientRequest.getDob());
                     patient.setAddress1(patientRequest.getAddress1());
                     patient.setAddress2(patientRequest.getAddress2());
                     patient.setCity(patientRequest.getCity());

@@ -20,13 +20,7 @@
         <input matInput placeholder="SSN" [(ngModel)]="patient.ssn" required name="ssn" #ssn>
       </mat-form-field>
       <mat-form-field>
-        <input matInput placeholder="DOB Year" [(ngModel)]="patient.dobyear" required name="dobyear" #dobyear>
-      </mat-form-field>
-      <mat-form-field>
-        <input matInput placeholder="DOB Month" [(ngModel)]="patient.dobmonth" required name="dobmonth" #dobmonth>
-      </mat-form-field>
-      <mat-form-field>
-        <input matInput placeholder="DOB Day" [(ngModel)]="patient.dobday" required name="dobday" #dobday>
+        <input matInput placeholder="DOB" [(ngModel)]="patient.dob" required name="dob" type="text" datetime="dd/MM/yyyy" #dob>
       </mat-form-field>
       <mat-form-field>
         <input matInput placeholder="Address 1" [(ngModel)]="patient.address1" required name="address1" #address1>
