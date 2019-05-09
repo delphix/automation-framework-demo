@@ -12,7 +12,7 @@ export class PatientService {
   }
 
   getAll(): Observable<any> {
-    return this.http.get(this.PATIENT_API + '?size=500');
+    return this.http.get(this.PATIENT_API + '?size=1000');
   }
 
   get(id: string) {

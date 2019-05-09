@@ -11,7 +11,7 @@ export class PaymentService {
   constructor(private http: HttpClient) { }
 
   getAll(): Observable<any> {
-    return this.http.get(this.API + '/payments' + '?size=500');
+    return this.http.get(this.API + '/payments' + '?size=1000');
   }
 
   getAllByPatient(patientId: string): Observable<any> {
