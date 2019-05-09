@@ -239,7 +239,7 @@ pipeline {
                 { set +x; } 2>/dev/null
                 if [[ -f .env ]]; then
                     echo +++Running DAF+++
-                    echo "GIT_EVENT=build-failure" >> .env
+                    echo -e "\nGIT_EVENT=build-failure" >> .env
                     ${DAF}
                 fi
             """
