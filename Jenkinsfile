@@ -14,6 +14,7 @@ pipeline {
       TARGET_WEB = "default"
       DATICAL_COMMIT = "false"
       DATAPOD = ""
+      DELPHIXPY_EXAMPLES_DIR="/opt/delphixpy-examples"
     }
     stages {
         stage('Prepare Environment'){
@@ -229,9 +230,9 @@ pipeline {
                 #Create a bookmark on the datapod with the information, if a non-prod build
                 if [[ -n "${DATAPOD}" ]]; then
                     echo +++Bookmarking Datapod+++
-                    /usr/local/bin/dx_jetstream_container.py --template "Patients" --container "${DATAPOD}" \
+                    ${DELPHIXPY_EXAMPLES_DIR}/dx_jetstream_container.py --template "Patients" --container "${DATAPOD}" \
                         --operation bookmark --bookmark_name "${env.BUILD_TAG}" --bookmark_tags "\${BUG},${env.GIT_COMMIT}" \
-                        --bookmark_shared true --conf /var/lib/jenkins/dxtools.conf
+                        --bookmark_shared true --conf ${DELPHIXPY_EXAMPLES_DIR}/dxtools.conf
                 fi
             """
             //Run DAF if the .env file exists; otherwise data was not involved
