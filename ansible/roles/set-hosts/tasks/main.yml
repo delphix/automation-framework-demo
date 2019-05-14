@@ -13,7 +13,9 @@
 
 - name: Set external_dns fact
   set_fact:
+    #temp change for Accenture
     external_dns: "{{ external_dns.stdout }}"
+    external_dns: "{{ ansible_default_ipv4.address }}"
 
 - debug:
     msg: "{{ external_dns }}"
