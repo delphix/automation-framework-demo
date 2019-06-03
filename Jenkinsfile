@@ -215,6 +215,14 @@ pipeline {
                 }
             }
         }
+        stage('Automated Testing') {
+            when {
+                expression { GIT_BRANCH == 'origin/master' }
+            }
+            steps {
+                sh  "/var/lib/jenkins/daf_tests"
+            }
+        }
     }
     post {
         failure {
@@ -246,12 +254,12 @@ pipeline {
             """
         }
         always {
-         // Jenkins Artifacts
             script {
                 if (DATICAL_COMMIT == "false" || GIT_BRANCH == 'origin/master' || GIT_BRANCH == 'origin/production') {
                     archiveArtifacts '**/daticaldb.log, **/Reports/**, **/Logs/**, **/Snapshots/**'
                 }
             }
+            junit 'build/reports/*.xml'
        }
     }
 }
