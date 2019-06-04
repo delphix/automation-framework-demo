@@ -221,6 +221,7 @@ pipeline {
             }
             steps {
                 sh  "/var/lib/jenkins/daf_tests"
+                junit 'build/reports/*.xml'
             }
         }
     }
@@ -259,7 +260,6 @@ pipeline {
                     archiveArtifacts '**/daticaldb.log, **/Reports/**, **/Logs/**, **/Snapshots/**'
                 }
             }
-            junit 'build/reports/*.xml'
        }
     }
 }
