@@ -15,11 +15,13 @@ pipeline {
       DATICAL_COMMIT = "false"
       DATAPOD = ""
       DELPHIXPY_EXAMPLES_DIR="/opt/delphixpy-examples"
+      LAST_STAGE=""
     }
     stages {
         stage('Prepare Environment'){
             steps {
                 script {
+                    LAST_STAGE = env.STAGE_NAME
                     SHORT_BRANCH = "${GIT_BRANCH}"
                     GIT_BRANCH = "origin/${GIT_BRANCH}"
                     sh "echo ${GIT_BRANCH}"
@@ -55,6 +57,9 @@ pipeline {
                 expression { return DATICAL_COMMIT == "false" || GIT_BRANCH == 'origin/master' || GIT_BRANCH == 'origin/production'}
             }
             steps {
+                script {
+                    LAST_STAGE = env.STAGE_NAME
+                }
 				checkout([
 					$class: 'GitSCM', 
 					branches: [[name: '*/master']], 
@@ -90,9 +95,12 @@ pipeline {
                 expression { return DATICAL_COMMIT == "false" || GIT_BRANCH == 'origin/master' || GIT_BRANCH == 'origin/production'}
             }
             steps {
-              dir ('ansible') {
-                sh  "ansible-playbook deploy.yaml -e delphix_pass=${DELPHIX_ADMIN_PASS} -e git_branch=${GIT_BRANCH} -e git_commit=${env.GIT_COMMIT} -e sdlc_env=${TARGET_ENV} --tags \"build\" --limit ${TARGET_WEB}"
-              }
+                script {
+                    LAST_STAGE = env.STAGE_NAME
+                }
+                dir ('ansible') {
+                    sh  "ansible-playbook deploy.yaml -e delphix_pass=${DELPHIX_ADMIN_PASS} -e git_branch=${GIT_BRANCH} -e git_commit=${env.GIT_COMMIT} -e sdlc_env=${TARGET_ENV} --tags \"build\" --limit ${TARGET_WEB}"
+                }
             }
         }
 
@@ -104,6 +112,7 @@ pipeline {
             }
             steps {
                 script {
+                    LAST_STAGE = env.STAGE_NAME
                     refresh = true
                     startMillis = System.currentTimeMillis()
                     timeoutMillis = 30000
@@ -147,6 +156,9 @@ pipeline {
                     }
             }
 			steps {
+                script {
+                    LAST_STAGE = env.STAGE_NAME
+                }
                 dir ("${PROJ_DDB}"){
                     sh """
                         { set +x; } 2>/dev/null
@@ -172,6 +184,9 @@ pipeline {
                 expression { return DATICAL_COMMIT == "false" || GIT_BRANCH == 'origin/master' || GIT_BRANCH == 'origin/production' }
             }
             steps {
+                script {
+                    LAST_STAGE = env.STAGE_NAME
+                }
                 dir ("${PROJ_DDB}"){
                     sh """
                         { set +x; } 2>/dev/null       
@@ -193,6 +208,9 @@ pipeline {
                 expression { return DATICAL_COMMIT == "false" || GIT_BRANCH == 'origin/master' || GIT_BRANCH == 'origin/production'}
             }
             steps {
+                script {
+                    LAST_STAGE = env.STAGE_NAME
+                }
                 dir ("${PROJ_DDB}"){					
                     sh """
                         { set +x; } 2>/dev/null
@@ -210,6 +228,9 @@ pipeline {
                 expression { return DATICAL_COMMIT == "false"|| GIT_BRANCH == 'origin/master' || GIT_BRANCH == 'origin/production' }
             }
             steps {
+                script {
+                    LAST_STAGE = env.STAGE_NAME
+                }
                 dir ('ansible') {
                 sh  "ansible-playbook deploy.yaml -e git_branch=${GIT_BRANCH} -e sdlc_env=${TARGET_ENV} --tags \"deploy\" --limit ${TARGET_WEB}"
                 }
@@ -220,44 +241,47 @@ pipeline {
                 expression { GIT_BRANCH == 'origin/master' }
             }
             steps {
+                script {
+                    LAST_STAGE = env.STAGE_NAME
+                }
                 sh  "/var/lib/jenkins/daf_tests"
                 junit 'build/reports/*.xml'
             }
         }
     }
     post {
-        failure {
-            //Open a bug in Bugzilla and bookmark the datapod with the information
-            sh """
-                { set +x; } 2>/dev/null
-                #Create a bug and grab the id
-                echo +++Creating BUG+++
-                CONSOLE=\$(curl http://localhost:8080//job/PatientsPipeline/job/${SHORT_BRANCH}/${env.BUILD_NUMBER}/consoleText)
-                BUG=\$(/usr/local/bin/bz_create_bug.py --hostname localhost --login admin --password password --summary \"testing bug\" --description \"\${CONSOLE}\${DAFOUT}\")
-                echo +++\${BUG}+++
-
-                #Create a bookmark on the datapod with the information, if a non-prod build
-                if [[ -n "${DATAPOD}" ]]; then
-                    echo +++Bookmarking Datapod+++
-                    ${DELPHIXPY_EXAMPLES_DIR}/dx_jetstream_container.py --template "Patients" --container "${DATAPOD}" \
-                        --operation bookmark --bookmark_name "${env.BUILD_TAG}" --bookmark_tags "\${BUG},${env.GIT_COMMIT}" \
-                        --bookmark_shared true --conf ${DELPHIXPY_EXAMPLES_DIR}/dxtools.conf
-                fi
-            """
-            //Run DAF if the .env file exists; otherwise data was not involved
-            sh """ 
-                { set +x; } 2>/dev/null
-                if [[ -f .env ]]; then
-                    echo +++Running DAF+++
-                    echo -e "\nGIT_EVENT=build-failure" >> .env
-                    ${DAF}
-                fi
-            """
-        }
         always {
             script {
                 if (DATICAL_COMMIT == "false" || GIT_BRANCH == 'origin/master' || GIT_BRANCH == 'origin/production') {
                     archiveArtifacts '**/daticaldb.log, **/Reports/**, **/Logs/**, **/Snapshots/**'
+                }
+                if (currentBuild.result == 'FAILURE' || currentBuild.result == 'UNSTABLE' ){
+                    //Open a bug in Bugzilla and bookmark the datapod with the information
+                    sh """
+                        { set +x; } 2>/dev/null
+                        #Create a bug and grab the id
+                        echo +++Creating BUG+++
+                        CONSOLE=\$(curl http://localhost:8080//job/PatientsPipeline/job/${SHORT_BRANCH}/${env.BUILD_NUMBER}/consoleText)
+                        BUG=\$(/usr/local/bin/bz_create_bug.py --hostname localhost --login admin --password password --summary \"${SHORT_BRANCH} ${env.BUILD_NUMBER} ${LAST_STAGE}\" --description \"\${CONSOLE}\${DAFOUT}\")
+                        echo +++\${BUG}+++
+
+                        #Create a bookmark on the datapod with the information, if a non-prod build
+                        if [[ -n "${DATAPOD}" ]]; then
+                            echo +++Bookmarking Datapod+++
+                            ${DELPHIXPY_EXAMPLES_DIR}/dx_jetstream_container.py --template "Patients" --container "${DATAPOD}" \
+                                --operation bookmark --bookmark_name "${env.BUILD_TAG}" --bookmark_tags "\${BUG},${env.GIT_COMMIT}" \
+                                --bookmark_shared true --conf ${DELPHIXPY_EXAMPLES_DIR}/dxtools.conf
+                        fi
+                    """
+                    //Run DAF if the .env file exists; otherwise data was not involved
+                    sh """ 
+                        { set +x; } 2>/dev/null
+                        if [[ -f .env ]]; then
+                            echo +++Running DAF+++
+                            echo -e "\nGIT_EVENT=build-failure" >> .env
+                            ${DAF}
+                        fi
+                    """
                 }
             }
        }
