@@ -31,6 +31,12 @@
     dest: "../src/main/resources/application.properties"
   delegate_to: localhost
 
+- name: Config app.component.html
+  template: 
+    src: app.component.html.j2
+    dest: "../client/src/app/app.component.html"
+  delegate_to: localhost
+
 - name: Config environment.ts
   template: 
     src: environment.ts.j2
