@@ -193,7 +193,7 @@ pipeline {
                         echo ==== Running - hammer version ====
                         hammer show version
 
-                        # invoke Datical DB's Deployment Packager
+                        # invoke Datical DB's Forecaster
                         echo ==== Running Forecast ====
                         echo hammer forecast ${TARGET_ENV} --labels=\"${DATICAL_PIPELINE},${APPNAME}-${BUILD_NUMBER}\" --pipeline=${DATICAL_PIPELINE} --projectKey=${DATICAL_PROJECT_KEY}
                         hammer forecast ${TARGET_ENV} --labels=\"${DATICAL_PIPELINE},${APPNAME}-${BUILD_NUMBER}\" --pipeline=${DATICAL_PIPELINE} --projectKey=${DATICAL_PROJECT_KEY}
