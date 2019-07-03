@@ -6,8 +6,8 @@ pipeline {
       APPNAME = 'PATIENTS'
       PROJ_DDB="ddb"
       PROJ_SQL="app_src"
-      APP_GITURL="/var/lib/jenkins/app_repo.git"
-      DATICAL_GITURL="/var/lib/jenkins/datical"
+      APP_GITURL="git@localhost:/var/lib/jenkins/app_repo.git"
+      DATICAL_GITURL="git@localhost:/var/lib/jenkins/datical"
       DATICAL_PROJECT_KEY="PATIENTS"
       SHORT_BRANCH = "default"
       TARGET_ENV = "default"
