@@ -25,10 +25,8 @@ environments:
       datapod: Test
       when:
         - push: datapod.refresh
-        - build-failure: datapod.undo
   - develop:
       branch: origin/develop
       datapod: Develop
       when:
         - push: datapod.refresh
-        - build-failure: datapod.undo
