@@ -1,6 +1,6 @@
 ---
 - name: "INSTALL PACKAGES"
-  command: yarn --mutex network install
+  command: yarn --mutex network install --check-files
   args:
       chdir: '../client'
   delegate_to: localhost
