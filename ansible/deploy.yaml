@@ -11,3 +11,50 @@
   - {role: build-app, tags: [build]}
   - {role: deploy-api, tags: [deploy]}
   - {role: deploy-app, tags: [deploy]}
+  post_tasks:
+    - name: Create Test User to Ensure App-Api is running.
+      uri:
+        url: "http://localhost:8080/auth/sign-up"
+        method: POST
+        body: '{
+          "username": "test_user",
+          "firstname": "test",
+          "lastname": "test",
+          "password": "test"
+        }'
+        body_format: json
+        status_code: 200
+      register: testuser
+      until: testuser.status == 200
+      retries: 60
+      delay: 1
+      tags:
+        - web_test
+
+    - name: Login as test user.
+      uri:
+        url: "http://localhost:8080/auth/login"
+        method: POST
+        body_format: json
+        status_code: 200
+        body: '{
+          "username": "test_user",
+          "password": "test"
+        }'
+        return_content: yes
+      register: login
+      tags:
+        - web_test
+
+    - name: Delete test user.
+      uri:
+        url: "http://localhost:8080/users/{{ testuser.json.id }}"
+        method: DELETE
+        body_format: json
+        status_code: 200
+        return_content: yes
+        headers:
+          Authorization: "Bearer {{ login.content }}"
+      register: delete
+      tags:
+        - web_test
