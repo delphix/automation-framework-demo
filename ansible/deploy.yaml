@@ -29,7 +29,7 @@
       retries: 60
       delay: 1
       tags:
-        - web_test
+        - deploy
 
     - name: Login as test user.
       uri:
@@ -44,7 +44,7 @@
         return_content: yes
       register: login
       tags:
-        - web_test
+        - deploy
 
     - name: Delete test user.
       uri:
@@ -57,4 +57,4 @@
           Authorization: "Bearer {{ login.content }}"
       register: delete
       tags:
-        - web_test
+        - deploy
