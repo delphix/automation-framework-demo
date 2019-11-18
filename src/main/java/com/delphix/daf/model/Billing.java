@@ -25,7 +25,7 @@ public class Billing extends AuditModel {
     private @NonNull Integer ccexpmonth;
     private @NonNull Integer ccexpyear;
     private @NonNull String address1;
-    private @NonNull String address2;
+    private String address2;
     private @NonNull String city;
     private @NonNull String state;
     private @NonNull String zip;
